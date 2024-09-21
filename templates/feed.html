@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <title>Feedback System</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #a6f2f2, #1f586e);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .head {
+            background-color: white;
+            border-radius: 5px;
+            height: 50px;
+            width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .staff_details {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: large;
+        }
+
+        .staff_subject {
+            background-color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+
+        /* chat gpt part start*/
+        .container_wrapper {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 500%;
+        }
+        /*chat gpt part end*/   /*importent one */
+
+        .main_container {
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            gap: 30px;
+            padding: 30px;
+            margin: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .questions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .option select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            font-size: 16px;
+        }
+
+        .button_column {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .last_butten {
+            width: 150px;
+            height: 40px;
+            border-radius: 20px;
+            border-style: none;
+            background-color: #1f586e;
+            color: white;
+            font-size: large;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .last_butten:hover {
+            background-color: #16424d;
+        }
+
+        hr {
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+            html, body {
+            height: 100%;
+            margin: 0;
+            overflow:auto;
+           
+        }
+            .main_container {
+                flex-direction: column;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="head">
+        <p class="letters">Staff Name</p>
+    </div>
+</header>
+
+<div class="staff_details">
+    <p class="staff_subject">Subject name and subject code with their names</p>
+</div>
+
+<!-- Wrapper for the sliding effect -->
+<div class="container_wrapper">
+    <div class="slider">
+        <!-- First container -->
+        <div class="main_container">
+          <div class="left_container">
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="averI'mage">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="average">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="average">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="average">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="average">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+              
+          </div>
+      
+          <div class="right_container">
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="average">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="average">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="average">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="average">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+              <div class="questions">
+                  <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                  <div class="option">
+                      <select>
+                          <option value="excellent">Excellent</option>
+                          <option value="good">Good</option>
+                          <option value="average">Average</option>
+                          <option value="poor">Poor</option>
+                      </select>
+                  </div>
+              </div>
+              <hr>
+          </div>
+      </div>
+      <!--2nd main_conatiner-->>
+      <div class="main_container">
+        <div class="left_container">
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            
+        </div>
+    
+        <div class="right_container">
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+
+      <div class="main_container">
+        <div class="left_container">
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            
+        </div>
+    
+        <div class="right_container">
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+            <div class="questions">
+                <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+                <div class="option">
+                    <select>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="average">Average</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+            </div>
+            <hr>
+        </div>
+
+    </div>
+    <!--3ed main_container-->
+    <div class="main_container">
+      <div class="left_container">
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          
+      </div>
+  
+      <div class="right_container">
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+      </div>
+  </div>
+    <!--5th main_container-->
+    <div class="main_container">
+      <div class="left_container">
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          
+      </div>
+  
+      <div class="right_container">
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+          <div class="questions">
+              <p>How well does the teacher plan lessons, manage the classroom, and collaborate with students?</p>
+              <div class="option">
+                  <select>
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="average">Average</option>
+                      <option value="poor">Poor</option>
+                  </select>
+              </div>
+          </div>
+          <hr>
+      </div>
+  </div>
+  
+    </div>
+</div>
+
+<div class="button_column">
+    <button class="last_butten" onclick="slide(-1)">Back</button>
+    <button class="last_butten" onclick="slide(1)">Next</button>
+</div>
+
+
+
+
+<!--chat gpt java script part-->>
+
+<script>
+let currentSlide = 0;
+
+function slide(direction) {
+    const slider = document.querySelector('.slider');
+    const containerWrapper = document.querySelector('.container_wrapper');
+    const containerWidth = containerWrapper.offsetWidth; // Get the width of the visible container
+    const totalSlides = slider.children.length; // Get the total number of slides
+
+    // Update current slide index
+    currentSlide += direction;
+
+    // Make sure the current slide stays within bounds
+    if (currentSlide >= totalSlides) {
+        currentSlide = totalSlides - 1; // Limit to the last slide
+    } else if (currentSlide < 0) {
+        currentSlide = 0; // Limit to the first slide
+    }
+
+    
+    slider.style.transform = `translateX(-${currentSlide * containerWidth}px)`;
+}
+</script>
+
+</body>
+</html>
