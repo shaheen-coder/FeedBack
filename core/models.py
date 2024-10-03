@@ -17,6 +17,7 @@ class Student(models.Model):
     regno = models.BigIntegerField()
     dept = models.CharField(max_length=50,choices=DEPARTMENT)
     section = models.CharField(max_length=1)
+    year = models.SmallIntegerField()
     def __str__(self):
         return f'{self.name} - {self.dept}'
 class Staff(models.Model):

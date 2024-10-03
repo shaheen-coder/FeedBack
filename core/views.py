@@ -8,16 +8,32 @@ class Profile(View):
         staff = Staff.objects.get(id=id)
         return render(self.request,'analysis.html',{'profile':staff})
 class StudentLogin(View):
-    def get(self,request):
-        return render(self.request,'login.html')
-    def post(self,request):
-        name = request.POST.get('name')
-        regno = request.POST.get('regno')
-        section = request.POST.get('section')
-        print(f'name : {name} reg no : {regno}')
-        student = Student.objects.create(name=name,regno=regno,section=section)
+    def __init__(self):
+        self.DEPARTMENT = (
+            ('Computer Science and Engineering','CSE'),
+            ('Tnformation Technology','IT'),
+            ('Instrumentation and Controls Engineering','IT'),
+            ('Electrical and Electronics Engineering','EEE')
+        )
 
-        return redirect('feed',sid=student.id,catid=0) 
+    def pass_valid(self,password):
+        dept,yr,sec = password.split('-')
+        for department,key in self.DEPARTMENT:
+            if dept in key: dept = department
+        return (dept,yr,sec)
+    def get(self,request):
+        return render(self.request,'login1.html')
+    def post(self,request):
+        try :
+            name = request.POST.get('name')
+            regno = request.POST.get('regno')
+            password = request.POST.get('info')
+            dept,year,section = self.pass_valid(password)
+            print(f'name : {name} reg no : {regno}')
+            student = Student.objects.create(name=name,regno=regno,section=section,dept=dept,year=year)
+            return redirect('feed',sid=student.id,catid=0)
+        except Exception as error:
+            return render(self.request,'login1.html',{'error':error})
 def score(data:str) -> int :
     if data == 'excellent': return 5
     elif data == 'good': return 4
@@ -29,7 +45,7 @@ class FeedBackView(View):
         #if catid == 0 :
         student = Student.objects.get(id=sid)
         class_staff = ClassStaff.objects.filter(section=student.section)
-        if len(class_staff) == catid: return redirect('home')
+        if len(class_staff) == catid: return redirect('login')
         return render(self.request,'feed.html',{'data':class_staff[catid],'sid':sid,'catid':catid})
     def post(self,request,sid,catid):
         student = Student.objects.get(id=sid)
@@ -57,4 +73,12 @@ class FeedBackView(View):
 
         catid += 1
         return redirect('feed',sid=sid,catid=catid)
-       
+
+
+class Search(View):
+    def get(self,request):
+        return render(self.request,'search.html')
+    def post(self,request):
+        query = request.POST.get('query')
+        staff = Staff.objects.filter(name__icontains=query)
+        return render(self.request,'search.html',{'staffs':staff,'result':len(staff)})
