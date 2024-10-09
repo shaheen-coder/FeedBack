@@ -15,7 +15,7 @@
     <style>
         html,
         body {
-            height: 100%;
+            height: 690px;
             margin: 0;
             overflow: hidden;
         }
@@ -53,7 +53,7 @@
             display: flex;
             justify-content: center;
             margin-top: 20px;
-            font-size: large;
+            font-size:larger;
         }
 
         .staff_subject {
@@ -68,13 +68,13 @@
         /* chat gpt part start*/
         .container_wrapper {
             overflow: hidden;
-            width: 100%;
+            
         }
 
         .slider {
             display: flex;
             transition: transform 0.5s ease-in-out;
-            width: 500%;
+            height: 460px;
         }
 
         /*chat gpt part end*/
@@ -88,14 +88,14 @@
             padding: 30px;
             margin: 20px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
+            
         }
 
         .questions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .option select {
@@ -110,6 +110,7 @@
             display: flex;
             justify-content: space-around;
         }
+        
 
         .last_butten {
             width: 150px;
@@ -127,6 +128,13 @@
         .last_butten:hover {
             background-color: #16424d;
         }
+
+        #feedbackForm{
+            margin: 0%;
+            padding: 0%;
+            height: 40px;
+        }
+
 
         hr {
             margin-bottom: 12px;
@@ -218,6 +226,9 @@
 		display: inline-block;
 		margin: 100px auto;
 	}
+    p{
+        margin: 0%;
+    }
     </style>
 </head>
 
@@ -225,7 +236,7 @@
 
     <header>
         <div class="head">
-            <p class="letters">{{data.staff.name}}</p>
+            <h4 class="letters">{{data.staff.name}}</h4>
         </div>
     </header>
 
@@ -308,7 +319,7 @@
                                 </select>
                             </div>
                         </div>
-                        <hr>
+                     
 
                     </div>
 
@@ -380,7 +391,7 @@
                                 </select>
                             </div>
                         </div>
-                        <hr>
+                       
                     </div>
                 </div>
         </div>
@@ -404,16 +415,17 @@
             </div>
         </div>
     </div>
-    <div class="button_column">
         <form id="feedbackForm" action="{% url 'feed' sid catid %}" method="POST">
             {% csrf_token %}
-            <input type="hidden" name="staff_name" value="{{data.staff.id}}">
-            <input type="hidden" name="subject_code" value="{{data.subject.subject_code}}">
-            <button type="submit" class="last_butten" >Back</button>
-            <button type="submit" class="last_butten" >Next</button>
+            <div class="button_column">
+                <input type="hidden" name="staff_name" value="{{data.staff.id}}">
+                <input type="hidden" name="subject_code" value="{{data.subject.subject_code}}">
+                <button type="submit" class="last_butten" >Back</button>
+                <button type="submit" class="last_butten" >Next</button>
+            </div>
         </form>
-    </div>
-    </form>
+    
+  
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('feedbackForm');            
