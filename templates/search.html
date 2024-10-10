@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="author" content="nitheesh">
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/avc.jpeg' %}"> 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,600,700" rel="stylesheet" />
     <link href="{% static 'css/main.css' %}" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/extra_stuff.css' %}">
@@ -29,28 +30,30 @@
             <div class="row">
               <div class="input-field">
                 <div class="input-select">
-                  <select data-trigger="" name="choices-single-defaul">
-                    <option placeholder="" value="">Accessories</option>
-                    <option>Subject b</option>
-                    <option>Subject c</option>
+                  <select name="choices-single-defaul">
+                    <option placeholder="" value="">Department</option>
+                    <option value="CSE">computer scince </option>
+                    <option value="IT">information technology </option>
                   </select>
                 </div>
               </div>
               <div class="input-field">
                 <div class="input-select">
-                  <select data-trigger="" name="choices-single-defaul">
-                    <option placeholder="" value="">Color</option>
-                    <option>Subject b</option>
-                    <option>Subject c</option>
+                  <select name="choices-single-defaul">
+                    <option placeholder="" value="">Gender</option>
+                    <option value="male">male</option>
+                    <option value="female">Female</option>
                   </select>
                 </div>
               </div>
               <div class="input-field">
                 <div class="input-select">
-                  <select data-trigger="" name="choices-single-defaul">
-                    <option placeholder="" value="">Size</option>
-                    <option>Subject b</option>
-                    <option>Subject c</option>
+                  <select name="choices-single-defaul">
+                    <option placeholder="" value="">Year</option>
+                    <option value="1">first yr</option>
+                    <option value="2">second yr</option>
+                    <option value="3">third yr</option>
+                    <option value="4">fourth yr</option>
                   </select>
                 </div>
               </div>
@@ -77,11 +80,11 @@
               <div class="faculty">
                 <div class="seprate">
                 <div class="there_image">
-                  <img class = "images" src="Apple_ipod_by_fluid_art.jpg" alt="">
+                  <img class = "images" src="{{staff.proflie_pic.url}}" alt="profile-img">
                 </div>
                 <p>{{staff.name}}</p>
                 </div>
-                <button class="click_hear" onclick="redirect('{{staff.id}}')">click hear</button>
+                <button class="click_hear" type="button" onclick="redirect('{{staff.id}}')">click hear</button>
               </div>
               {% endfor %}
             </div>
@@ -92,30 +95,18 @@
         </div>
       </form>
     </div>
-    <script src="{% static 'js/extention/choices.js' %}"></script>
+    <!-- <script src="{% static 'js/extention/flatpicker.js' %}"></script> -->
     <script>
-      const customSelects = document.querySelectorAll("select");
-      const deleteBtn = document.getElementById('delete')
-      const choices = new Choices('select',
-      {
-        searchEnabled: false,
-        itemSelectText: '',
-        removeItemButton: true,
-      });
-      deleteBtn.addEventListener("click", function(e)
-      {
-        e.preventDefault()
-        const deleteAll = document.querySelectorAll('.choices__button')
-        for (let i = 0; i < deleteAll.length; i++)
-        {
-          deleteAll[i].click();
-        }
-      });
+        document.getElementById("search").addEventListener("keydown", function(event) {
+          if (event.key === "Enter") {
+            event.preventDefault(); // Prevent form submission
+            console.log("Enter key pressed, form submission prevented.");
+          }
+        });
+        const form = document.querySelector('form');
       function redirect(id){
-        window.location.href = `http://127.0.0.1:8000/staff/${id}/`;
-
+          window.location.href = `http://127.0.0.1:8000/staff/${id}/`;
       }
-
     </script>
   </body>
 </html>

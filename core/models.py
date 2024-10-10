@@ -6,6 +6,8 @@ DEPARTMENT = (
     ('Instrumentation and Controls Engineering','IT'),
     ('Electrical and Electronics Engineering','EEE')
 )
+def profile_path(instance,filename):
+    return f'profile/{instance.fname}/{filename}'
 
 class Subject(models.Model):
     name = models.CharField(max_length=20)
@@ -26,10 +28,18 @@ class Staff(models.Model):
         (0,'female')
     )
     name = models.CharField(max_length=20)
+    fname = models.CharField(max_length=20)
+    sname = models.CharField(max_length=20)
+    intial = models.CharField(max_length=1)
+    proflie_pic = models.ImageField(upload_to=profile_path,null=True,blank=True)
     dept = models.CharField(max_length=50,choices=DEPARTMENT)
     gender = models.BooleanField(choices=GENDER)
     hclass = models.CharField(max_length=1)
     subject = models.ForeignKey(Subject,on_delete=models.CASCADE)
+    def save(self, *args, **kwargs):
+        if not self.proflie_pic:
+            self.proflie_pic = 'male.png' if self.gender == 1 else 'female.png'
+        super().save(*args, **kwargs)
     def __str__(self):
         return f'{self.name} - {self.dept}'
 
