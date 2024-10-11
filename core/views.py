@@ -140,15 +140,18 @@ class FeedBackView(View):
 
 
 class Search(View):
+    def gender_vaild(self,gender):
+        return 1 if gender == 'male' else 0
     def get(self, request):
         return render(self.request, 'search.html')
     def post(self, request):
         query = request.POST.get('query')
-        dept = request.POST.get('dept')  
-        gender = request.POST.get('gender')
-        hclass = request.POST.get('hclass')  
-        if not query:
-            return render(self.request, 'search.html', {'error': 'Empty search'})
+        dept = request.POST.get('department')  
+        gender = self.gender_vaild(request.POST.get('gender'))
+        hclass = request.POST.get('hclass') 
+        print(f'dept : {dept} gender : {gender} hclass : {hclass}')
+        #if query:
+            #return render(self.request, 'search.html', {'error': 'Empty search'})
         staff = Staff.objects.filter(
             Q(fname__icontains=query) | Q(sname__icontains=query)
         )
