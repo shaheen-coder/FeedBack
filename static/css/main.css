@@ -16,6 +16,7 @@ body {
   margin: 0;
   background: linear-gradient(to bottom, #a6f2f2, #1f586e);
   font-family: 'Poppins', sans-serif;
+  overflow: hidden;
 }
 
 /**
@@ -816,6 +817,7 @@ legend {
   min-height: 100vh;
   display: -ms-flexbox;
   display: flex;
+  flex-direction: column;
   -ms-flex-pack: center;
       justify-content: center;
   -ms-flex-align: center;
