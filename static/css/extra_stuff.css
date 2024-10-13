@@ -1,6 +1,7 @@
 .forth{
-    height: 300px;
-    margin-top: 40px;
+    height: 240px;
+    width: 790px;
+    margin-top: 10px;
     overflow-x: auto;
     border-color: black;
     border-style: 5px solid;
@@ -69,3 +70,41 @@
     transform: scale(1); /* Reset scaling on click */
    
 }
+
+.input-select select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: #333;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .input-select select:focus {
+    border-color: #4CAF50;
+  }
+  
+  .input-select {
+    position: relative;
+    max-width: 300px;
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  .input-select::after {
+    content: '▼';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 12px;
+    color: #333;
+  }
+  
