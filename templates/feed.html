@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/avc.jpeg' %}"> 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -428,10 +429,10 @@
             const form = document.getElementById('feedbackForm');            
             function validateForm() {
                 let isValid = true;
-                for (let i = 0; i <= 4; i++) {
+                for (let i = 0; i <= 9; i++) {
                     const input = document.querySelector(`input[name="cat_${i}"]`);
-                    //console.log(`input[name="cat_${i}"]`, input);
                     if (!input || input.value.trim() === "") {
+                        console.log(`input[name="cat_${i}"]`, input);
                         isValid = false;
                         break;
                     }

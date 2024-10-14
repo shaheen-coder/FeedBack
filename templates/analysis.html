@@ -219,7 +219,7 @@
             <div class="card text-center" style="border-radius: 10px;">
                 <img  src="{{profile.proflie_pic.url}}" alt="profile-pic">
                 <div class="card-body pd-1">
-                    <h5 class="card-title">{{profile.name}}</h5>
+                    <h5 class="card-title">{{profile.fname}} {{profile.sname}}</h5>
                     <p class="card-text">{{profile.dept}}<br>{{profile.subject.name}}- {{profile.subject.subject_code}}</p>
                 </div>
             </div>
@@ -227,41 +227,26 @@
         <div class="box2 " style="text-align: center; font-size: 25px; font-weight: bold;">Data overview</div>
         <div class="box3">
             <div>
-          
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Table Header</th>
-                                <th>Table Header</th>
-                                <th>Table Header</th>
-                                <th>Table Header</th>
+                                <th>categories</th>
+                                <th>5 points </th>
+                                <th>4 points </th>
+                                <th>3 points </th>
+                                <th>2 points </th>
                             </tr>
                         </thead>
                         <tbody>
+                          {% for cat,data in score_count.items %}
                             <tr>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
+                                <td>{{cat}}</td>
+                                <td>{{ data.5 }}</td>
+                                <td>{{ data.4 }}</td>
+                                <td>{{ data.3 }}</td>
+                                <td>{{ data.2 }}</td>
                             </tr>
-                            <tr>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                            </tr>
-                            <tr>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                            </tr>
-                            <tr>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                                <td>Table Body</td>
-                            </tr>
+                          {% endfor %}
                             <!-- Add more rows as needed -->
                         </tbody>
                     </table>
@@ -277,33 +262,46 @@
 
         </div>
         <div class="box5">
-           
-                
-                <div class="over">
-                    <h5>Project states</h5>
-                    <p>Teaching skill</p>
-                    <div class="progress-bar orange">
-                      <span>30%</span>
-                    </div>
-                    <p>Flexibility</p>
-                    <div class="progress-bar red">
-                      <span>70%</span>
-                    </div>
-                    <p>Communication</p>
-                    <div class="progress-bar blue">
-                      <span>50%</span>
-                    </div>
-                    <p>Creativity</p>
-                    <div class="progress-bar green">
-                      <span>85%</span>
-                    </div>
-                    <p>Communication</p>
-                    <div class="progress-bar red">
-                      <span>70%</span>
-                    </div>
-              
-                    <!-- Add more progress bars as needed -->
-                </div>
+          <div class="over">
+              <h5>Percentage</h5>
+              <p>Teaching skill</p>
+              <div class="progress-bar red">
+                <span>30%</span>
+              </div>
+              <p>Flexibility</p>
+              <div class="progress-bar blue">
+                <span>70%</span>
+              </div>
+              <p>Communication</p>
+              <div class="progress-bar green">
+                <span>50%</span>
+              </div>
+              <p>Creativity</p>
+              <div class="progress-bar orange">
+                <span>85%</span>
+              </div>
+              <p>Communication</p>
+              <div class="progress-bar yellow">
+                <span>70%</span>
+              </div>
+              <p>Caring</p>
+              <div class="progress-bar black">
+                <span>70%</span>
+              </div>
+              <p>Interrating</p>
+              <div class="progress-bar pink">
+                <span>70%</span>
+              </div>
+              <p>Coding</p>
+              <div class="progress-bar purple">
+                <span>70%</span>
+              </div>
+              <p>Teaching</p>
+              <div class="progress-bar grey">
+                <span>70%</span>
+              </div>
+          </div>
+      </div>      
                 
         </div>
         
@@ -336,11 +334,16 @@
         result.average.cat2, 
         result.average.cat3, 
         result.average.cat4, 
-        result.average.cat5
+        result.average.cat5,
+        result.average.cat6,
+        result.average.cat7,
+        result.average.cat8,
+        result.average.cat9,
+        result.average.cat10
       ];
 
       // Define corresponding labels for the categories
-      const chartLabels = ['Cat 1', 'Cat 2', 'Cat 3', 'Cat 4', 'Cat 5'];
+      const chartLabels = ['Cat 1', 'Cat 2', 'Cat 3', 'Cat 4', 'Cat 5','Cat 6','Cat 7','Cat 8','Cat 9','Cat 10'];
 
       // Update the pie chart with fetched data
       updatePieChart(myPieChart, chartData, chartLabels);
@@ -356,7 +359,7 @@
     data: {
       datasets: [{
         data: [], // Initially empty, will be updated with API data
-        backgroundColor: ['#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e74c3c']
+        backgroundColor: ['#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e74c3c','#7DCEA0','#AF7AC5','#A569BD','#E67E22','#52BE80']
       }],
       labels: [] // Initially empty, will be updated with API data
     }
@@ -371,7 +374,12 @@
         { element: document.querySelector('.red'), percentage: staff_data.percentage.cat1},
         { element: document.querySelector('.blue'), percentage: staff_data.percentage.cat2 },
         { element: document.querySelector('.green'), percentage: staff_data.percentage.cat3 },
-        { element: document.querySelector('.orange'), percentage: staff_data.percentage.cat4 }
+        { element: document.querySelector('.orange'), percentage: staff_data.percentage.cat4 },
+        { element: document.querySelector('.yello'), percentage: staff_data.percentage.cat6 },
+        { element: document.querySelector('.black'), percentage: staff_data.percentage.cat7 },
+        { element: document.querySelector('.pink'), percentage: staff_data.percentage.cat8 },
+        { element: document.querySelector('.purple'), percentage: staff_data.percentage.cat9 },
+        { element: document.querySelector('.grey'), percentage: staff_data.percentage.cat10 }
     ];
 
     progressBarData.forEach((progress) => {

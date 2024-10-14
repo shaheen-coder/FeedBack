@@ -8,52 +8,80 @@ from django.db.models import Q
 
 class Home(TemplateView):
     template_name = 'landing.html'
-
+def score_count(id):
+    feedbacks = FeedBack.objects.filter(staff__id=id)
+    category_counts = {
+        'cat1': {5: 0, 4: 0, 3: 0, 2: 0},
+        'cat2': {5: 0, 4: 0, 3: 0, 2: 0},
+        'cat3': {5: 0, 4: 0, 3: 0, 2: 0},
+        'cat4': {5: 0, 4: 0, 3: 0, 2: 0},
+        'cat5': {5: 0, 4: 0, 3: 0, 2: 0},
+        'cat6': {5: 0, 4: 0, 3: 0, 2: 0},
+        'cat7': {5: 0, 4: 0, 3: 0, 2: 0},
+        'cat8': {5: 0, 4: 0, 3: 0, 2: 0},
+        'cat9': {5: 0, 4: 0, 3: 0, 2: 0},
+        'cat10': {5: 0, 4: 0, 3: 0, 2: 0},
+    }
+    for feedback in feedbacks:
+        for cat in range(1, 11): 
+            value = getattr(feedback, f'cat{cat}')
+            if value in category_counts[f'cat{cat}']:
+                category_counts[f'cat{cat}'][value] += 1
+    return category_counts
 class Profile(View):
     def get(self,request,id):
         staff = Staff.objects.get(id=id)
-        return render(self.request,'analysis.html',{'profile':staff})
+        score = score_count(id)
+        return render(self.request,'analysis.html',{'profile':staff,'score_count':score})
 class StaffStatsView(View):
     def get(self, request, sid,subject_code):
         staff = get_object_or_404(Staff, id=sid)
         subject = get_object_or_404(Subject, subject_code=subject_code)
         
-        # Get all feedback related to this staff
         feedbacks = FeedBack.objects.filter(staff=staff,subject=subject)
         
-        # Initialize totals
         total_feedbacks = feedbacks.count()
         if total_feedbacks == 0:
             return JsonResponse({
                 "error": "No feedback found for this staff member."
             }, status=404)
 
-        # Initialize category sums
-        sum_cat1 = sum_cat2 = sum_cat3 = sum_cat4 = sum_cat5 = 0
+        sum_cat1 = sum_cat2 = sum_cat3 = sum_cat4 = sum_cat5 =  sum_cat6 = 0
+        sum_cat7 = sum_cat8 = sum_cat9 = sum_cat10 = 0
 
-        # Calculate sum for each category
         for feedback in feedbacks:
             sum_cat1 += feedback.cat1
             sum_cat2 += feedback.cat2
             sum_cat3 += feedback.cat3
             sum_cat4 += feedback.cat4
             sum_cat5 += feedback.cat5
+            sum_cat6 += feedback.cat6
+            sum_cat7 += feedback.cat7
+            sum_cat8 += feedback.cat8
+            sum_cat9 += feedback.cat9
+            sum_cat10 += feedback.cat10
 
-        # Calculate averages for each category
         avg_cat1 = int(sum_cat1 / total_feedbacks)
         avg_cat2 = int(sum_cat2 / total_feedbacks)
         avg_cat3 = int(sum_cat3 / total_feedbacks)
         avg_cat4 = int(sum_cat4 / total_feedbacks)
         avg_cat5 = int(sum_cat5 / total_feedbacks)
+        avg_cat6 = int(sum_cat6 / total_feedbacks)
+        avg_cat7 = int(sum_cat7 / total_feedbacks)
+        avg_cat8 = int(sum_cat8 / total_feedbacks)
+        avg_cat9 = int(sum_cat9 / total_feedbacks)
+        avg_cat10 = int(sum_cat10 / total_feedbacks)
 
-        # Since max points for each category is 5, calculate percentages
-        percentage_cat1 = (avg_cat1 / 5) * 100
-        percentage_cat2 = (avg_cat2 / 5) * 100
-        percentage_cat3 = (avg_cat3 / 5) * 100
-        percentage_cat4 = (avg_cat4 / 5) * 100
-        percentage_cat5 = (avg_cat5 / 5) * 100
-
-        # Create response data
+        percentage_cat1 = (avg_cat1 / 10) * 100
+        percentage_cat2 = (avg_cat2 / 10) * 100
+        percentage_cat3 = (avg_cat3 / 10) * 100
+        percentage_cat4 = (avg_cat4 / 10) * 100
+        percentage_cat5 = (avg_cat5 / 10) * 100
+        percentage_cat6 = (avg_cat6 / 10) * 100
+        percentage_cat7 = (avg_cat7 / 10) * 100
+        percentage_cat8 = (avg_cat8 / 10) * 100
+        percentage_cat9 = (avg_cat9 / 10) * 100
+        percentage_cat10 = (avg_cat10 / 10) * 100
         data = {
             'staff': staff.fname,
             'total_feedbacks': total_feedbacks,
@@ -62,14 +90,24 @@ class StaffStatsView(View):
                 'cat2': avg_cat2,
                 'cat3': avg_cat3,
                 'cat4': avg_cat4,
-                'cat5': avg_cat5
+                'cat5': avg_cat5,
+                'cat5': avg_cat6,
+                'cat7': avg_cat7,
+                'cat8': avg_cat8,
+                'cat9': avg_cat9,
+                'cat10': avg_cat10,
             },
             'percentage': {
                 'cat1': percentage_cat1,
                 'cat2': percentage_cat2,
                 'cat3': percentage_cat3,
                 'cat4': percentage_cat4,
-                'cat5': percentage_cat5
+                'cat5': percentage_cat5,
+                'cat6': percentage_cat6,
+                'cat7': percentage_cat7,
+                'cat8': percentage_cat8,
+                'cat9': percentage_cat9,
+                'cat10': percentage_cat10,
             }
         }
 
@@ -156,14 +194,23 @@ class FeedBackView(View):
 
 class Search(View):
     def gender_vaild(self,gender):
+        print(f'gender : {gender}')
         return 1 if gender == 'male' else 0
+    def dept_vaild(self,dept):
+        depts = {
+            'CSE' : 'Computer Science and Engineering',
+            'IT' : 'Information Technology'
+        }
+        return depts[dept] if dept in depts else None
+    def handleclass_valid(self,hclass):
+        return hclass if hclass != '' else None
     def get(self, request):
         return render(self.request, 'search.html')
     def post(self, request):
         query = request.POST.get('query')
-        dept = request.POST.get('department')  
+        dept = self.dept_vaild(request.POST.get('department'))  
         gender = self.gender_vaild(request.POST.get('gender'))
-        hclass = request.POST.get('hclass') 
+        hclass = self.handleclass_valid(request.POST.get('hclass')) 
         print(f'dept : {dept} gender : {gender} hclass : {hclass}')
         #if query:
             #return render(self.request, 'search.html', {'error': 'Empty search'})

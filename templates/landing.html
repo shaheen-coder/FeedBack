@@ -33,11 +33,11 @@
               <a href="#" class="nav_menu_link">team</a>
             </li>
             <li class="nav_menu_item">
-              <a href="#" class="nav_menu_link">about</a>
+              <a href="{% url 'admin:index' %}" class="nav_menu_link">staff login</a>
             </li>
             
             <li class="nav_menu_item">
-              <a href="#" class="nav_menu_link">contact</a>
+              <a href="{% url 'search' %}" class="nav_menu_link">search</a>
             </li>
           </ul>
         </div>
@@ -70,7 +70,7 @@
                     developed by CSE coders community
               </button>
 
-              <button class="btn documentation_btn">login</button>
+              <button class="btn documentation_btn" onclick="login()">login</button>
             </div>
           </div>
           <div class="grid-item-2">
@@ -93,6 +93,11 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
 
-    <script src="{% static 'js/script.js' %}" defer></script>
+    <script>
+      function login() {
+        window.location.href = "{% url 'login' %}"; 
+      }
+
+    </script>
   </body>
 </html>
