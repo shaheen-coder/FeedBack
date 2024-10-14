@@ -1,9 +1,14 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
+from django.views.generic import TemplateView
 from core.models import Staff,Student,ClassStaff,Subject,FeedBack
 from django.http import JsonResponse
 from django.db.models import Q
 # Create your views here
+
+class Home(TemplateView):
+    template_name = 'landing.html'
+
 class Profile(View):
     def get(self,request,id):
         staff = Staff.objects.get(id=id)
@@ -50,7 +55,7 @@ class StaffStatsView(View):
 
         # Create response data
         data = {
-            'staff': staff.name,
+            'staff': staff.fname,
             'total_feedbacks': total_feedbacks,
             'average': {
                 'cat1': avg_cat1,
@@ -120,8 +125,13 @@ class FeedBackView(View):
         cat1 = score(request.POST.get('cat_1'))
         cat2 = score(request.POST.get('cat_2'))
         cat3 = score(request.POST.get('cat_3'))
-        cat4 = score(request.POST.get('cat_3'))
-        cat5 = score(request.POST.get('cat_4'))
+        cat4 = score(request.POST.get('cat_4'))
+        cat5 = score(request.POST.get('cat_5'))
+        cat6 = score(request.POST.get('cat_6'))
+        cat7 = score(request.POST.get('cat_7'))
+        cat8 = score(request.POST.get('cat_8'))
+        cat9 = score(request.POST.get('cat_9'))
+        cat10 = score(request.POST.get('cat_10'))
         feedback, created = FeedBack.objects.update_or_create(
             subject=subject,
             student=student,
@@ -132,6 +142,11 @@ class FeedBackView(View):
                 'cat3': cat3,
                 'cat4': cat4,
                 'cat5': cat5,
+                'cat6' : cat6,
+                'cat7' : cat7,
+                'cat8' : cat8,
+                'cat9' : cat9,
+                'cat10' : cat10,
             }
         )
 

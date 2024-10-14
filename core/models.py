@@ -10,8 +10,9 @@ def profile_path(instance,filename):
     return f'profile/{instance.fname}/{filename}'
 
 class Subject(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=50)
     subject_code = models.CharField(max_length=6)
+    year = models.SmallIntegerField()
     def __str__(self):
         return f'{self.name} - {self.subject_code}'
 class Student(models.Model):
@@ -27,7 +28,6 @@ class Staff(models.Model):
         (1,'male'),
         (0,'female')
     )
-    name = models.CharField(max_length=20)
     fname = models.CharField(max_length=20)
     sname = models.CharField(max_length=20)
     intial = models.CharField(max_length=1)
@@ -41,7 +41,7 @@ class Staff(models.Model):
             self.proflie_pic = 'male.png' if self.gender == 1 else 'female.png'
         super().save(*args, **kwargs)
     def __str__(self):
-        return f'{self.name} - {self.dept}'
+        return f'{self.fname} - {self.dept}'
 
 class FeedBack(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
@@ -52,6 +52,12 @@ class FeedBack(models.Model):
     cat3 = models.SmallIntegerField()
     cat4 = models.SmallIntegerField()
     cat5 = models.SmallIntegerField()
+    cat6 = models.SmallIntegerField()
+    cat7 = models.SmallIntegerField()
+    cat8 = models.SmallIntegerField()
+    cat9 = models.SmallIntegerField()
+    cat10 = models.SmallIntegerField()
+    
     avg_cat = models.FloatField(editable=False)
     def __str__(self):
         return f'{self.student}-{self.staff}'
@@ -65,4 +71,4 @@ class ClassStaff(models.Model):
     staff = models.ForeignKey(Staff,on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject,on_delete=models.CASCADE)
     def __str__(self):
-        return f'{self.section} - {self.staff.name}'
+        return f'{self.section} - {self.staff.fname}'

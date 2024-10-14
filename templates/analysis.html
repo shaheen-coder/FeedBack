@@ -316,6 +316,7 @@
 <canvas id="pieChart" width="400" height="400"></canvas>
 
 <script>
+  let staff_data;
   // Function to update the chart with API data
   function updatePieChart(chart, data, labels) {
     chart.data.datasets[0].data = data;
@@ -328,7 +329,7 @@
     try {
       const response = await fetch("{% url 'status' profile.id profile.subject.subject_code %}"); // Replace with your actual API URL
       const result = await response.json();
-
+      staff_data = result;
       // Extract the average scores from the API response
       const chartData = [
         result.average.cat1, 
@@ -365,19 +366,21 @@
   fetchChartData();
 </script>
 <script>
-  const progressBarData = [
-      { element: document.querySelector('.red'), percentage: 70 },
-      { element: document.querySelector('.blue'), percentage: 50 },
-      { element: document.querySelector('.green'), percentage: 85 },
-      { element: document.querySelector('.orange'), percentage: 30 }
-  ];
+  setTimeout(() => {
+    const progressBarData = [
+        { element: document.querySelector('.red'), percentage: staff_data.percentage.cat1},
+        { element: document.querySelector('.blue'), percentage: staff_data.percentage.cat2 },
+        { element: document.querySelector('.green'), percentage: staff_data.percentage.cat3 },
+        { element: document.querySelector('.orange'), percentage: staff_data.percentage.cat4 }
+    ];
 
-  progressBarData.forEach((progress) => {
-      const span = progress.element.querySelector('span');
-      const progressBar = progress.element;
-      progressBar.style.width = progress.percentage + '%';
-      span.innerHTML = `${progress.percentage}%`;
-  });
+    progressBarData.forEach((progress) => {
+        const span = progress.element.querySelector('span');
+        const progressBar = progress.element;
+        progressBar.style.width = progress.percentage + '%';
+        span.innerHTML = `${progress.percentage}%`;
+    });
+  },2000);
 </script>
 </body>
 </html>
