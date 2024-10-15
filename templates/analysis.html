@@ -295,7 +295,7 @@
         
         <div class="box4">
            
-                <div class="card-body" style="">
+                <div class="card-body">
                   <h3 style="text-align: center; margin: 14px;" >graph view</h3>
                   <canvas id="pieChart"></canvas>
                 </div>
@@ -359,16 +359,15 @@
   function updatePieChart(chart, data, labels) {
     chart.data.datasets[0].data = data;
     chart.data.labels = labels;
-    chart.update(); // Updates the chart with new data
+    chart.update();
   }
 
-  // Function to fetch data from API and update the pie chart
+  
   async function fetchChartData() {
     try {
-      const response = await fetch("{% url 'status' profile.id profile.subject.subject_code %}"); // Replace with your actual API URL
+      const response = await fetch("{% url 'status' profile.id profile.subject.subject_code %}"); 
       const result = await response.json();
       staff_data = result;
-      // Extract the average scores from the API response
       const chartData = [
         result.average.cat1, 
         result.average.cat2, 
@@ -381,27 +380,22 @@
         result.average.cat9,
         result.average.cat10
       ];
-
-      // Define corresponding labels for the categories
       const chartLabels = ['Cat 1', 'Cat 2', 'Cat 3', 'Cat 4', 'Cat 5','Cat 6','Cat 7','Cat 8','Cat 9','Cat 10'];
-
-      // Update the pie chart with fetched data
       updatePieChart(myPieChart, chartData, chartLabels);
     } catch (error) {
       console.error('Error fetching chart data:', error);
     }
   }
 
-  // Initialize the pie chart
   var ctx = document.getElementById('pieChart').getContext('2d');
   var myPieChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
       datasets: [{
-        data: [], // Initially empty, will be updated with API data
+        data: [], 
         backgroundColor: ['#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e74c3c','#7DCEA0','#AF7AC5','#A569BD','#E67E22','#52BE80']
       }],
-      labels: [] // Initially empty, will be updated with API data
+      labels: [] 
     }
   });
 

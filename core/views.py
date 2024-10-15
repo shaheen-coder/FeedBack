@@ -4,10 +4,15 @@ from django.views.generic import TemplateView
 from core.models import Staff,Student,ClassStaff,Subject,FeedBack
 from django.http import JsonResponse
 from django.db.models import Q
+
 # Create your views here
 
 class Home(TemplateView):
     template_name = 'landing.html'
+class Team(TemplateView):
+    template_name = 'team.html'
+class Error(TemplateView):
+    template_name = '404.html'
 def score_count(id):
     feedbacks = FeedBack.objects.filter(staff__id=id)
     category_counts = {
@@ -135,8 +140,7 @@ class StudentLogin(View):
             name = request.POST.get('name')
             regno = request.POST.get('regno')
             password = request.POST.get('info')
-            dept,year,section = self.pass_valid(password)
-            print(f'name : {name} reg no : {regno}')
+            dept,section,year = self.pass_valid(password)
             student = Student.objects.create(name=name,regno=regno,section=section,dept=dept,year=year)
             return redirect('feed',sid=student.id,catid=0)
         except Exception as error:
@@ -152,7 +156,7 @@ class FeedBackView(View):
         #if catid == 0 :
         student = Student.objects.get(id=sid)
         class_staff = ClassStaff.objects.filter(section=student.section)
-        if len(class_staff) == catid: return redirect('login')
+        if len(class_staff) == catid: return redirect('home')
         return render(self.request,'feed.html',{'data':class_staff[catid],'sid':sid,'catid':catid})
     def post(self,request,sid,catid):
         student = Student.objects.get(id=sid)
@@ -193,9 +197,6 @@ class FeedBackView(View):
 
 
 class Search(View):
-    def gender_vaild(self,gender):
-        print(f'gender : {gender}')
-        return 1 if gender == 'male' else 0
     def dept_vaild(self,dept):
         depts = {
             'CSE' : 'Computer Science and Engineering',
@@ -209,18 +210,15 @@ class Search(View):
     def post(self, request):
         query = request.POST.get('query')
         dept = self.dept_vaild(request.POST.get('department'))  
-        gender = self.gender_vaild(request.POST.get('gender'))
+        year = request.POST.get('year')
         hclass = self.handleclass_valid(request.POST.get('hclass')) 
-        print(f'dept : {dept} gender : {gender} hclass : {hclass}')
-        #if query:
-            #return render(self.request, 'search.html', {'error': 'Empty search'})
         staff = Staff.objects.filter(
             Q(fname__icontains=query) | Q(sname__icontains=query)
         )
         if dept:
             staff = staff.filter(dept=dept)
-        if gender:
-            staff = staff.filter(gender=gender)
+        if year:
+            staff = staff.filter(year=year)
         if hclass:
             staff = staff.filter(hclass=hclass)
         return render(self.request, 'search.html', {

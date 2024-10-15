@@ -19,8 +19,11 @@
     <header class="container header">
       <!-- ==== NAVBAR ==== -->
       <nav class="nav">
+        <div class="avc-logo">
+          <img src="{% static 'assets/avc.jpeg' %}" alt="avc logo" >
+        </div>
         <div class="logo">
-          <h2>AVC collage </h2>
+          <h2>AVCCE Collage </h2>
         </div>
 
         <div class="nav_menu" id="nav_menu">
@@ -30,7 +33,7 @@
 
           <ul class="nav_menu_list">
             <li class="nav_menu_item">
-              <a href="#" class="nav_menu_link">team</a>
+              <a href="{% url 'team' %}" class="nav_menu_link">team</a>
             </li>
             <li class="nav_menu_item">
               <a href="{% url 'admin:index' %}" class="nav_menu_link">staff login</a>
@@ -62,11 +65,11 @@
               </h3>
             </h1>
             <p class="info-text">
-                feedback system developed by @shaheen.vsa and @nitheesh_dev from coders club 
+                feedback system developed by <a href="https://github.com/shaheen-coder/">@shaheen.vsa</a> and <a href="https://github.com/nitheesh-maestro">@nitheesh_dev</a> from coders club 
             </p>
 
             <div class="btn_wrapper">
-              <button class="btn view_more_btn">
+              <button class="btn view_more_btn" onclick="dev()">
                     developed by CSE coders community
               </button>
 
@@ -75,7 +78,7 @@
           </div>
           <div class="grid-item-2">
             <div class="team_img_wrapper">
-              <img src="—Pngtree—hacker programming flat clipart illustration_5388978.png" alt="team-img" />
+              <img src="{% static 'assets/coders.png' %}" alt="team-img" />
             </div>
           </div>
         </div>
@@ -97,7 +100,9 @@
       function login() {
         window.location.href = "{% url 'login' %}"; 
       }
-
+      function dev(){
+        window.location.href = "https://github.com/shaheen-coder/FeedBack";
+      }
     </script>
   </body>
 </html>

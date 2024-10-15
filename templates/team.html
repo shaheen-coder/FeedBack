@@ -1,17 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{% static 'css/team.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://kit.fontawesome.com/dd9af7210e.js" crossorigin="anonymous"></script>
-    <title>Responsive Our Team Section</title>
+    <title>dev page</title>
 </head>
 <body>
   <section id="team">
       <h1 class="heading">
-          <i class="fas fa-rocket"></i><strong>Our Team</strong>
+          <i class="fas fa-rocket"></i><strong>The Core Devlopers</strong>
       </h1>
       <div class="container">
           <div class="box">
@@ -23,16 +25,16 @@
                   </div>
 
                   <div class="details">
-                      <img src="3d-buddha-statue.jpg" alt="">
-                      <strong>shaheen</strong>
+                      <img src="{% static 'assets/shaheen.jpg' %}" alt="shaheen">
+                      <strong>shaheen ahemd</strong>
                       <p>shaheen@gmail.com</p>
                   </div>
 
                   <div class="btn">
-                      <a href="#"><i class="fab fa-facebook-f"></i></a>
+                      <a href="www.shaheenvsa@gmail.com"><i class="bi bi-envelope"></i></a>
                       <a href="#"><i class="fab fa-twitter"></i></a>
-                      <a href="#"><i class="fab fa-instagram"></i></a>
-                      <a href="#"><i class="fab fa-youtube"></i></a>
+                      <a href="https://www.instagram.com/shaheen.vsa/"><i class="fab fa-instagram"></i></a>
+                      <a href="https://github.com/shaheen-coder/"><i class="bi bi-github"></i></a>
                   </div>
               </div>
           <div class="box">
@@ -44,16 +46,17 @@
                   </div>
 
                   <div class="details">
-                      <img src="3d-buddha-statue.jpg" alt="">
+                      <img src="{% static 'assets/nitheesh.jpg' %}" alt="nitheesh">
                       <strong>Nitheesh</strong>
-                      <p>Nitheesh@gmail.com</p>
+                      <p>enitheesh@gmail.com</p>
                   </div>
 
                   <div class="btn">
-                      <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="www.shaheenvsa@gmail.com"><i class="bi bi-envelope"></i></a>
                       <a href="#"><i class="fab fa-twitter"></i></a>
                       <a href="#"><i class="fab fa-instagram"></i></a>
-                      <a href="#"><i class="fab fa-youtube"></i></a>
+                      <a href="https://github.com/nitheesh-maestro"><i class="bi bi-github"></i></a>
+                      
                   </div>
               </div>
           
