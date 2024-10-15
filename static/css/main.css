@@ -963,6 +963,7 @@ legend {
   display: block;
   margin-bottom: 26px;
   font-weight: bold;
+  gap: 10px;
 }
 
 .s009 form .inner-form .advance-search .row {
@@ -973,6 +974,7 @@ legend {
   -ms-flex-align: center;
       align-items: center;
   margin-bottom: 20px;
+  gap: 10px;
 }
 
 .s009 form .inner-form .advance-search .row.second {
@@ -1146,4 +1148,12 @@ legend {
   }
 }
 
-/*# sourceMappingURL=Searchs_009.css.map */
+
+.sub_input{
+  display: block;
+  height: 40px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  margin: 0;
+}

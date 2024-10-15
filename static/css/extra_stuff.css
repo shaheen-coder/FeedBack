@@ -1,11 +1,11 @@
 .forth{
-    height: 240px;
-    width: 790px;
-    margin-top: 10px;
+    height: 300px;
+    width: auto;
+    margin-top: 2px;
     overflow-x: auto;
     border-color: black;
     border-style: 5px solid;
-    
+
 }
 .faculty{
     display: flex;
