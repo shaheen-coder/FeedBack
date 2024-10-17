@@ -140,7 +140,7 @@ class StudentLogin(View):
             name = request.POST.get('name')
             regno = request.POST.get('regno')
             password = request.POST.get('info')
-            dept,section,year = self.pass_valid(password)
+            dept,year,section = self.pass_valid(password)
             student = Student.objects.create(name=name,regno=regno,section=section,dept=dept,year=year)
             return redirect('feed',sid=student.id,catid=0)
         except Exception as error:
@@ -211,16 +211,21 @@ class Search(View):
         query = request.POST.get('query')
         dept = self.dept_vaild(request.POST.get('department'))  
         year = request.POST.get('year')
-        hclass = self.handleclass_valid(request.POST.get('hclass')) 
+        hclass = self.handleclass_valid(request.POST.get('hclass'))
+        subject_code = request.POST.get('subject_code') 
         staff = Staff.objects.filter(
             Q(fname__icontains=query) | Q(sname__icontains=query)
         )
         if dept:
             staff = staff.filter(dept=dept)
-        if year:
-            staff = staff.filter(year=year)
+        #if year and year != '':
+        #    staff = staff.filter(year=year)
         if hclass:
             staff = staff.filter(hclass=hclass)
+        if subject_code:
+            staff_ids = ClassStaff.objects.filter(subject__subject_code=subject_code).values_list('staff_id', flat=True)
+            # Filter Staff by those IDs
+            staff = staff.filter(id__in=staff_ids)
         return render(self.request, 'search.html', {
             'staffs': staff,
             'result': len(staff)
