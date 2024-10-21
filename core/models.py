@@ -12,17 +12,17 @@ def profile_path(instance,filename):
 class Subject(models.Model):
     name = models.CharField(max_length=50)
     subject_code = models.CharField(max_length=6)
-    year = models.SmallIntegerField()
+    semester = models.SmallIntegerField()
     def __str__(self):
         return f'{self.name} - {self.subject_code}'
 class Student(models.Model):
     name = models.CharField(max_length=20)
-    regno = models.BigIntegerField()
+    regno = models.BigIntegerField(unique=True)
     dept = models.CharField(max_length=50,choices=DEPARTMENT)
     section = models.CharField(max_length=1)
-    year = models.SmallIntegerField()
+    semester = models.SmallIntegerField()
     def __str__(self):
-        return f'{self.name} - {self.dept}'
+        return f'{self.name} - {self.section}'
 class Staff(models.Model):
     GENDER = (
         (1,'male'),
@@ -34,39 +34,23 @@ class Staff(models.Model):
     proflie_pic = models.ImageField(upload_to=profile_path,null=True,blank=True)
     dept = models.CharField(max_length=50,choices=DEPARTMENT)
     gender = models.BooleanField(choices=GENDER)
-    hclass = models.CharField(max_length=1)
-    subject = models.ForeignKey(Subject,on_delete=models.CASCADE)
     def save(self, *args, **kwargs):
         if not self.proflie_pic:
             self.proflie_pic = 'male.png' if self.gender == 1 else 'female.png'
         super().save(*args, **kwargs)
     def __str__(self):
-        return f'{self.fname} - {self.dept}'
+        return f'{self.fname} {self.sname}'
 
 class FeedBack(models.Model):
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
     staff = models.ForeignKey(Staff,on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject,on_delete=models.CASCADE)
-    cat1 = models.SmallIntegerField()
-    cat2 = models.SmallIntegerField()
-    cat3 = models.SmallIntegerField()
-    cat4 = models.SmallIntegerField()
-    cat5 = models.SmallIntegerField()
-    cat6 = models.SmallIntegerField()
-    cat7 = models.SmallIntegerField()
-    cat8 = models.SmallIntegerField()
-    cat9 = models.SmallIntegerField()
-    cat10 = models.SmallIntegerField()
-    
-    avg_cat = models.FloatField(editable=False)
+    categories = models.JSONField() 
     def __str__(self):
         return f'{self.student}-{self.staff}'
-    def save(self, *args, **kwargs):
-        self.avg_cat = (self.cat1 + self.cat2 + self.cat3 + self.cat4 + self.cat5) / 5
-        super().save(*args, **kwargs)
-
 
 class ClassStaff(models.Model):
+    semester = models.SmallIntegerField()
     section = models.CharField(max_length=1)
     staff = models.ForeignKey(Staff,on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject,on_delete=models.CASCADE)

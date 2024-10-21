@@ -365,7 +365,7 @@
   
   async function fetchChartData() {
     try {
-      const response = await fetch("{% url 'status' profile.id profile.subject.subject_code %}"); 
+      const response = await fetch("{% url 'status' profile.id subject.subject_code %}"); 
       const result = await response.json();
       staff_data = result;
       const chartData = [

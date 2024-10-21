@@ -20,6 +20,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -120,3 +121,21 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# jazzmin admin settings 
+JAZZMIN_SETTINGS = {
+    "site_title": "AVCCE Admin",
+    "site_header": "admin login",
+    "site_brand": "ACCE Admin",
+    #"site_logo": "assets/avc.jpeg",
+    #"site_logo_classes": "img-circle",
+    #"site_icon": "assests/avc.png",
+     "usermenu_links": [
+        {"name": "code", "url": "https://github.com/shaheen-coder/FeedBack", "new_window": True},
+    ],
+    "welcome_sign": "Welcome to the AVCCE Admin",
+    "copyright": "VSA tech Ltd",
+    
+
+}

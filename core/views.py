@@ -1,11 +1,12 @@
+#django
 from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView
 from core.models import Staff,Student,ClassStaff,Subject,FeedBack
 from django.http import JsonResponse
 from django.db.models import Q
-
-# Create your views here
+# others
+import json 
 
 class Home(TemplateView):
     template_name = 'landing.html'
@@ -29,66 +30,123 @@ def score_count(id):
     }
     for feedback in feedbacks:
         for cat in range(1, 11): 
-            value = getattr(feedback, f'cat{cat}')
+            value = feedback.categories[f'cat_{cat}']
             if value in category_counts[f'cat{cat}']:
                 category_counts[f'cat{cat}'][value] += 1
     return category_counts
 class Profile(View):
-    def get(self,request,id):
+    def get(self,request,id,subject):
         staff = Staff.objects.get(id=id)
+        subject = Subject.objects.get(subject_code=subject)
         score = score_count(id)
-        return render(self.request,'analysis.html',{'profile':staff,'score_count':score})
+        print(f'satff count : {score}')
+        return render(self.request,'analysis.html',{'profile':staff,'subject':subject,'score_count':score})
 class StaffStatsView(View):
     def get(self, request, sid,subject_code):
         staff = get_object_or_404(Staff, id=sid)
-        subject = get_object_or_404(Subject, subject_code=subject_code)
-        
+        subject = get_object_or_404(Subject, subject_code=subject_code)        
         feedbacks = FeedBack.objects.filter(staff=staff,subject=subject)
-        
         total_feedbacks = feedbacks.count()
         if total_feedbacks == 0:
             return JsonResponse({
                 "error": "No feedback found for this staff member."
             }, status=404)
 
-        sum_cat1 = sum_cat2 = sum_cat3 = sum_cat4 = sum_cat5 =  sum_cat6 = 0
-        sum_cat7 = sum_cat8 = sum_cat9 = sum_cat10 = 0
+        avg_cat = {}
+        for data in feedbacks: 
+            for key,value in data.categories.items():
+                try : avg_cat[key] += value
+                except Exception as e : avg_cat[key] = value
+        #print(f'data : {avg_cat}')
+        avg_cat1 = int(avg_cat['cat_1'] / total_feedbacks)
+        avg_cat2 = int(avg_cat['cat_2'] / total_feedbacks)
+        avg_cat3 = int(avg_cat['cat_3'] / total_feedbacks)
+        avg_cat4 = int(avg_cat['cat_4'] / total_feedbacks)
+        avg_cat5 = int(avg_cat['cat_5'] / total_feedbacks)
+        avg_cat6 = int(avg_cat['cat_6'] / total_feedbacks)
+        avg_cat7 = int(avg_cat['cat_7'] / total_feedbacks)
+        avg_cat8 = int(avg_cat['cat_8'] / total_feedbacks)
+        avg_cat9 = int(avg_cat['cat_9'] / total_feedbacks)
+        avg_cat10 = int(avg_cat['cat_10'] / total_feedbacks)
 
-        for feedback in feedbacks:
-            sum_cat1 += feedback.cat1
-            sum_cat2 += feedback.cat2
-            sum_cat3 += feedback.cat3
-            sum_cat4 += feedback.cat4
-            sum_cat5 += feedback.cat5
-            sum_cat6 += feedback.cat6
-            sum_cat7 += feedback.cat7
-            sum_cat8 += feedback.cat8
-            sum_cat9 += feedback.cat9
-            sum_cat10 += feedback.cat10
-
-        avg_cat1 = int(sum_cat1 / total_feedbacks)
-        avg_cat2 = int(sum_cat2 / total_feedbacks)
-        avg_cat3 = int(sum_cat3 / total_feedbacks)
-        avg_cat4 = int(sum_cat4 / total_feedbacks)
-        avg_cat5 = int(sum_cat5 / total_feedbacks)
-        avg_cat6 = int(sum_cat6 / total_feedbacks)
-        avg_cat7 = int(sum_cat7 / total_feedbacks)
-        avg_cat8 = int(sum_cat8 / total_feedbacks)
-        avg_cat9 = int(sum_cat9 / total_feedbacks)
-        avg_cat10 = int(sum_cat10 / total_feedbacks)
-
-        percentage_cat1 = (avg_cat1 / 10) * 100
-        percentage_cat2 = (avg_cat2 / 10) * 100
-        percentage_cat3 = (avg_cat3 / 10) * 100
-        percentage_cat4 = (avg_cat4 / 10) * 100
-        percentage_cat5 = (avg_cat5 / 10) * 100
-        percentage_cat6 = (avg_cat6 / 10) * 100
-        percentage_cat7 = (avg_cat7 / 10) * 100
-        percentage_cat8 = (avg_cat8 / 10) * 100
-        percentage_cat9 = (avg_cat9 / 10) * 100
-        percentage_cat10 = (avg_cat10 / 10) * 100
+        percentage_cat1 = (avg_cat['cat_1'] / 10) * 100
+        percentage_cat2 = (avg_cat['cat_2'] / 10) * 100
+        percentage_cat3 = (avg_cat['cat_3'] / 10) * 100
+        percentage_cat4 = (avg_cat['cat_4'] / 10) * 100
+        percentage_cat5 = (avg_cat['cat_5'] / 10) * 100
+        percentage_cat6 = (avg_cat['cat_6'] / 10) * 100
+        percentage_cat7 = (avg_cat['cat_7'] / 10) * 100
+        percentage_cat8 = (avg_cat['cat_8'] / 10) * 100
+        percentage_cat9 = (avg_cat['cat_9'] / 10) * 100
+        percentage_cat10 = (avg_cat['cat_10'] / 10) * 100
         data = {
             'staff': staff.fname,
+            'total_feedbacks': total_feedbacks,
+            'average': {
+                'cat1': avg_cat1,
+                'cat2': avg_cat2,
+                'cat3': avg_cat3,
+                'cat4': avg_cat4,
+                'cat5': avg_cat5,
+                'cat5': avg_cat6,
+                'cat7': avg_cat7,
+                'cat8': avg_cat8,
+                'cat9': avg_cat9,
+                'cat10': avg_cat10,
+            },
+            'percentage': {
+                'cat1': percentage_cat1,
+                'cat2': percentage_cat2,
+                'cat3': percentage_cat3,
+                'cat4': percentage_cat4,
+                'cat5': percentage_cat5,
+                'cat6': percentage_cat6,
+                'cat7': percentage_cat7,
+                'cat8': percentage_cat8,
+                'cat9': percentage_cat9,
+                'cat10': percentage_cat10,
+            }
+        }
+
+        # Return the data as JSON or pass to a template
+        return JsonResponse(data)
+class ClassStatsView(View):
+    def get(self, request,cname,semester):    
+        feedbacks = FeedBack.objects.filter(student__section=cname,student__semester=semester)
+        total_feedbacks = feedbacks.count()
+        if total_feedbacks == 0:
+            return JsonResponse({
+                "error": "No feedback found for this staff member."
+            }, status=404)
+
+        avg_cat = {}
+        for data in feedbacks: 
+            for key,value in data.categories.items():
+                try : avg_cat[key] += value
+                except Exception as e : avg_cat[key] = value
+        #print(f'data : {avg_cat}')
+        avg_cat1 = int(avg_cat['cat_1'] / total_feedbacks)
+        avg_cat2 = int(avg_cat['cat_2'] / total_feedbacks)
+        avg_cat3 = int(avg_cat['cat_3'] / total_feedbacks)
+        avg_cat4 = int(avg_cat['cat_4'] / total_feedbacks)
+        avg_cat5 = int(avg_cat['cat_5'] / total_feedbacks)
+        avg_cat6 = int(avg_cat['cat_6'] / total_feedbacks)
+        avg_cat7 = int(avg_cat['cat_7'] / total_feedbacks)
+        avg_cat8 = int(avg_cat['cat_8'] / total_feedbacks)
+        avg_cat9 = int(avg_cat['cat_9'] / total_feedbacks)
+        avg_cat10 = int(avg_cat['cat_10'] / total_feedbacks)
+
+        percentage_cat1 = (avg_cat['cat_1'] / 10) * 100
+        percentage_cat2 = (avg_cat['cat_2'] / 10) * 100
+        percentage_cat3 = (avg_cat['cat_3'] / 10) * 100
+        percentage_cat4 = (avg_cat['cat_4'] / 10) * 100
+        percentage_cat5 = (avg_cat['cat_5'] / 10) * 100
+        percentage_cat6 = (avg_cat['cat_6'] / 10) * 100
+        percentage_cat7 = (avg_cat['cat_7'] / 10) * 100
+        percentage_cat8 = (avg_cat['cat_8'] / 10) * 100
+        percentage_cat9 = (avg_cat['cat_9'] / 10) * 100
+        percentage_cat10 = (avg_cat['cat_10'] / 10) * 100
+        data = {
             'total_feedbacks': total_feedbacks,
             'average': {
                 'cat1': avg_cat1,
@@ -141,7 +199,7 @@ class StudentLogin(View):
             regno = request.POST.get('regno')
             password = request.POST.get('info')
             dept,year,section = self.pass_valid(password)
-            student = Student.objects.create(name=name,regno=regno,section=section,dept=dept,year=year)
+            student = Student.objects.create(name=name,regno=regno,section=section,dept=dept,semester=year)
             return redirect('feed',sid=student.id,catid=0)
         except Exception as error:
             return render(self.request,'login.html',{'error':error})
@@ -152,6 +210,12 @@ def score(data:str) -> int :
     elif data == 'poor': return 1
     else : return -1 
 class FeedBackView(View):
+    def convert_json(self,request):
+        data = {}
+        for i in range(1,11):
+            cat = request.POST.get(f'cat_{i}')
+            data[f'cat_{i}'] = score(cat)
+        return data 
     def get(self,request,sid,catid):
         #if catid == 0 :
         student = Student.objects.get(id=sid)
@@ -164,32 +228,12 @@ class FeedBackView(View):
         staff = Staff.objects.get(id=staff)
         subject = request.POST.get('subject_code')
         subject = Subject.objects.get(subject_code=subject)
-        cat1 = score(request.POST.get('cat_1'))
-        cat2 = score(request.POST.get('cat_2'))
-        cat3 = score(request.POST.get('cat_3'))
-        cat4 = score(request.POST.get('cat_4'))
-        cat5 = score(request.POST.get('cat_5'))
-        cat6 = score(request.POST.get('cat_6'))
-        cat7 = score(request.POST.get('cat_7'))
-        cat8 = score(request.POST.get('cat_8'))
-        cat9 = score(request.POST.get('cat_9'))
-        cat10 = score(request.POST.get('cat_10'))
+        categories = self.convert_json(request) 
         feedback, created = FeedBack.objects.update_or_create(
             subject=subject,
             student=student,
             staff=staff,
-            defaults={
-                'cat1': cat1,
-                'cat2': cat2,
-                'cat3': cat3,
-                'cat4': cat4,
-                'cat5': cat5,
-                'cat6' : cat6,
-                'cat7' : cat7,
-                'cat8' : cat8,
-                'cat9' : cat9,
-                'cat10' : cat10,
-            }
+            categories=categories
         )
 
         catid += 1
@@ -230,3 +274,20 @@ class Search(View):
             'staffs': staff,
             'result': len(staff)
         })
+
+
+def get_subjects(request,year):
+    #year = request.GET.get('year')
+    print(f'\n views get_view: year - {year}')
+    subjects = Subject.objects.filter(semester=year)
+    data = [{'id': subject.id, 'name': subject.name,'subject_code':subject.subject_code} for subject in subjects]
+    return JsonResponse(data, safe=False)
+
+class StudentCheck(View):
+    def get(self,request):
+        student = Student.objects.all()
+        return render(self.request,'admin/studentlist.html',{'students':student})
+    def post(self,request):
+        query = request.POST.get('search')
+        students = Student.objects.filter(section=query)
+        return render(self.request,'admin/studentlist.html',{'students':students})
