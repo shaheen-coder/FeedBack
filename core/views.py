@@ -1,5 +1,5 @@
 #django
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
 from core.models import Staff,Student,ClassStaff,Subject,FeedBack
@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 # others
 import json 
+from weasyprint import HTML
 
 class Home(TemplateView):
     template_name = 'landing.html'
@@ -39,7 +40,7 @@ class Profile(View):
         staff = Staff.objects.get(id=id)
         subject = Subject.objects.get(subject_code=subject)
         score = score_count(id)
-        print(f'satff count : {score}')
+        #print(f'satff count : {score}')
         return render(self.request,'analysis.html',{'profile':staff,'subject':subject,'score_count':score})
 class StaffStatsView(View):
     def get(self, request, sid,subject_code):
@@ -208,19 +209,24 @@ def score(data:str) -> int :
     elif data == 'good': return 4
     elif data == 'average': return 2
     elif data == 'poor': return 1
-    else : return -1 
+    else : return -1
+class Manitiory(View):
+    template_name = 'subject.html'
+    def get(self,request):
+        course = Subject.objects.filter(mcourse=True)
+        return render(self.request,self.template_name,{'courses':course}) 
 class FeedBackView(View):
     def convert_json(self,request):
         data = {}
-        for i in range(1,11):
+        for i in range(0,11):
             cat = request.POST.get(f'cat_{i}')
             data[f'cat_{i}'] = score(cat)
         return data 
     def get(self,request,sid,catid):
-        #if catid == 0 :
         student = Student.objects.get(id=sid)
         class_staff = ClassStaff.objects.filter(section=student.section)
-        if len(class_staff) == catid: return redirect('home')
+        if len(class_staff) == catid: 
+            return redirect('home')
         return render(self.request,'feed.html',{'data':class_staff[catid],'sid':sid,'catid':catid})
     def post(self,request,sid,catid):
         student = Student.objects.get(id=sid)
@@ -255,17 +261,15 @@ class Search(View):
         query = request.POST.get('query')
         dept = self.dept_vaild(request.POST.get('department'))  
         year = request.POST.get('year')
-        hclass = self.handleclass_valid(request.POST.get('hclass'))
+        section = self.handleclass_valid(request.POST.get('hclass'))
         subject_code = request.POST.get('subject_code') 
-        staff = Staff.objects.filter(
-            Q(fname__icontains=query) | Q(sname__icontains=query)
+        staff = ClassStaff.objects.filter(
+            Q(staff__fname__icontains=query) | Q(staff__sname__icontains=query)
         )
-        if dept:
-            staff = staff.filter(dept=dept)
-        #if year and year != '':
-        #    staff = staff.filter(year=year)
-        if hclass:
-            staff = staff.filter(hclass=hclass)
+        if year:
+            staff = staff.filter(year=year)
+        if section:
+            staff = staff.filter(section=section)
         if subject_code:
             staff_ids = ClassStaff.objects.filter(subject__subject_code=subject_code).values_list('staff_id', flat=True)
             # Filter Staff by those IDs
@@ -278,16 +282,64 @@ class Search(View):
 
 def get_subjects(request,year):
     #year = request.GET.get('year')
-    print(f'\n views get_view: year - {year}')
+    #print(f'\n views get_view: year - {year}')
     subjects = Subject.objects.filter(semester=year)
     data = [{'id': subject.id, 'name': subject.name,'subject_code':subject.subject_code} for subject in subjects]
     return JsonResponse(data, safe=False)
+#   admin views
 
 class StudentCheck(View):
+    #template_name = 'admin/studentlist.html'
+    template_name = 'student.html'
+    def valid_year(self,year):
+        if year == '1' : return (1,2)
+        elif year == '2' : return (3,4)
+        elif year == '3' : return (5,6)
+        elif year == '4' : return (7,8)
     def get(self,request):
         student = Student.objects.all()
-        return render(self.request,'admin/studentlist.html',{'students':student})
+        return render(self.request,self.template_name,{'students':student})
     def post(self,request):
-        query = request.POST.get('search')
-        students = Student.objects.filter(section=query)
-        return render(self.request,'admin/studentlist.html',{'students':students})
+        sem1,sem2  = self.valid_year(request.POST.get('year'))
+        section = request.POST.get('class')
+        students = Student.objects.filter(Q(semester=sem1) | Q(semester=sem2))
+        if section:
+            students = students.filter(section=section)
+        return render(self.request,self.template_name,{'students':students})
+class ReportView(View):
+    template_name = 'admin/report.html'
+    def score(self,points):
+        if points >= 4.0 : return 'excelent'
+        elif points >= 3.0 : return 'good'
+        else : return 'bad' 
+    def get_data(self):
+        cat_data = {
+            'cat_1' : 0,
+            'cat_2' : 0,
+            'cat_3' : 0,
+            'cat_4' : 0,
+            'cat_5' : 0,
+            'cat_6' : 0,
+            'cat_7' : 0,
+            'cat_8' : 0,
+            'cat_9' : 0,
+            'cat_10' : 0,
+        }
+        feeds = FeedBack.objects.filter(staff__id=1)
+        count = feeds.count()
+        for feed in feeds:
+            for key,data in feed.categories.items():
+                cat_data[key] += data
+        for key,data in cat_data.items():
+            cat_data[key] = [(data / count),(self.score((data / count)))]
+        return cat_data
+    def get(self,request):
+        return render(self.request,self.template_name,{'datas':self.get_data()})
+    def post(self,request):
+        data = self.get_data()
+        html = render(self.request,self.template_name,{'datas':self.get_data()})
+        pdf = HTML(string=html.content).write_pdf()
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        response.write(pdf)
+        return response

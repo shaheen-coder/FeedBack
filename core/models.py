@@ -13,6 +13,7 @@ class Subject(models.Model):
     name = models.CharField(max_length=50)
     subject_code = models.CharField(max_length=6)
     semester = models.SmallIntegerField()
+    mcourse = models.BooleanField(default=False,help_text='manitaory course')
     def __str__(self):
         return f'{self.name} - {self.subject_code}'
 class Student(models.Model):
@@ -50,6 +51,7 @@ class FeedBack(models.Model):
         return f'{self.student}-{self.staff}'
 
 class ClassStaff(models.Model):
+    year = models.SmallIntegerField()
     semester = models.SmallIntegerField()
     section = models.CharField(max_length=1)
     staff = models.ForeignKey(Staff,on_delete=models.CASCADE)

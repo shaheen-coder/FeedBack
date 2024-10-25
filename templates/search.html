@@ -87,15 +87,15 @@
 
     <div class="forth">
 
-      {% for staff in staffs %}
+      {% for data in staffs %}
       <div class="faculty">
         <div class="seprate">
           <div class="there_image">
-            <img class="images" src="{{staff.proflie_pic.url}}" alt="profile-img">
+            <img class="images" src="{{data.staff.proflie_pic.url}}" alt="profile-img">
           </div>
-          <p>{{staff.fname}} {{satff.sname}} - {{staff.dept}}</p>
+          <p>{{data.staff.fname}} {{data.staff.sname}} - {{data.subject.subject_code}}</p>
         </div>
-        <button class="click_hear" type="button" onclick="redirect('{{staff.id}}')">click hear</button>
+        <button class="click_hear" type="button" onclick="redirect('{{data.staff.id}}','{{data.subject.subject_code}}')">click hear</button>
       </div>
       {% endfor %}
     </div>
@@ -112,8 +112,8 @@
       }
     });
     const form = document.querySelector('form');
-    function redirect(id) {
-      window.location.href = `http://127.0.0.1:8000/staff/${id}/`;
+    function redirect(id,subject_code) {
+      window.location.href = `http://127.0.0.1:8000/staff/${id}/${subject_code}/`;
     }
   </script>
 </body>

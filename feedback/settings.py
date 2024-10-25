@@ -131,9 +131,19 @@ JAZZMIN_SETTINGS = {
     #"site_logo": "assets/avc.jpeg",
     #"site_logo_classes": "img-circle",
     #"site_icon": "assests/avc.png",
-     "usermenu_links": [
+    # Links to put along the top menu
+    "topmenu_links": [
+
+        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+
+        {"name": "student check", "url": "student", "new_window": False},
+        {"name": "search", "url": "search", "new_window": False},
+    ],
+ 
+    "usermenu_links": [
         {"name": "code", "url": "https://github.com/shaheen-coder/FeedBack", "new_window": True},
     ],
+
     "welcome_sign": "Welcome to the AVCCE Admin",
     "copyright": "VSA tech Ltd",
     

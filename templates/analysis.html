@@ -362,13 +362,12 @@
     chart.update(); // Updates the chart with new data
   }
 
-  // Function to fetch data from API and update the pie chart
+  
   async function fetchChartData() {
     try {
-      const response = await fetch("{% url 'status' profile.id profile.subject.subject_code %}"); // Replace with your actual API URL
+      const response = await fetch("{% url 'status' profile.id subject.subject_code %}"); 
       const result = await response.json();
       staff_data = result;
-      // Extract the average scores from the API response
       const chartData = [
         result.average.cat1, 
         result.average.cat2, 

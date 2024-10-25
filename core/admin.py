@@ -3,10 +3,10 @@ from core.models import Student,Staff,Subject,FeedBack,ClassStaff
 from core.forms import ClassStaffForm
 # Register your models here.
 
-admin.site.register(Student)
+#admin.site.register(Student)
 admin.site.register(Staff)
 admin.site.register(Subject)
-admin.site.register(FeedBack)
+#admin.site.register(FeedBack)
 
 class ClassStaffAdmin(admin.ModelAdmin):
     form = ClassStaffForm

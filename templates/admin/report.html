@@ -1,0 +1,36 @@
+{% extends 'admin/nav.html' %}
+
+{% block content %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">KK Mam</h5>
+        <h6 class="card-subtitle mb-2 text-muted">computer science and enginnering</h6>
+        <p class="card-text">CS3351 - data structure</p>
+        <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">catagory</th>
+        <th scope="col">points</th>
+        <th scope="col">score</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for key,value in datas.items %}
+      <tr>
+        <th scope="row">1</th>
+        <td>{{key}}</td>
+        <td>{{ value.0 }}</td>
+        <td>{{ value.1 }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

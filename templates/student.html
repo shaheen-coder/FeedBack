@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Admin Panel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <title>Student Check</title>
     <style>
         * {
             padding: 0;
@@ -155,121 +156,69 @@
             </div>
         </div>
         <div class="buttons">
-            <button class="but">Home</button>
+            <button onclick="home()" class="but">Home</button>
             <button class="but log">Logout</button>
         </div>
     </nav>
-
-    <div class="filters">
-        <div class="main_features">
-            <div>
-                <select class="features" name="choices">
-                <option value="option1">year</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-                </select>
+    <form action="{% url 'student' %}" method="post">
+        {% csrf_token %}
+        <div class="filters">
+            <div class="main_features">
+                <div>
+                    <select class="features" name="year">
+                    <option value="">year</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    </select>
+                </div>
+                <div>
+                    <select class="features" name="class">
+                    <option value="">Class</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    </select>
+                </div>
+                <div>
+                    <select class="features" name="choices">
+                    <option value="">Not Filled</option>
+                    <option value="">Option 2</option>
+                    <option value="">Option 3</option>
+                    </select>
+                </div>
             </div>
-            <div>
-                <select class="features" name="choices">
-                <option value="option1">Class</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-                </select>
-            </div>
-            <div>
-                <select class="features" name="choices">
-                <option value="option1">Not Filled</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-                </select>
+            <div class="search">
+            <button type="submit" class="search_bar"> search </button>
             </div>
         </div>
-        <div class="search">
-           <button class="search_bar"> search </button>
-        </div>
-    </div>
-
+    </form>
     <table>
         <thead>
             <tr>
                 <th>Regester no</th>
                 <th>Name</th>
-                <th>deperment</th>
-                <th>year</th>
+                <th>semester</th>
                 <th>Class</th>
                 <th>Filled</th>
             </tr>
         </thead>
         <tbody>
+            {% for student in students %}
             <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <td>Data 3</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-                
-                
+                <td>{{student.regno}}</td>
+                <td>{{student.name}}</td>
+                <td>{{student.semester}}</td>
+                <td>{{student.section}}</td>
+                <td><i class="bi bi-check-circle-fill"></i></td>
             </tr>
-            <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <td>Data 3</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-            </tr>
-            <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <td>Data 3</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-            </tr>
-            <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <td>Data 3</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-            </tr>
-            <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <td>Data 3</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-            </tr>
-            <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <td>Data 3</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-            </tr>
-            <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <td>Data 3</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-            </tr>
-            <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <td>Data 3</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-                <td>Data 4</td>
-            </tr>
+            {% endfor %}
         </tbody>
     </table>
-
+    <script>
+        function home(){
+            window.location.href = "{% url 'admin:index' %}";
+        }
+    </script>
 </body>
 
 </html>
