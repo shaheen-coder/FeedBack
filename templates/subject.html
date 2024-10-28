@@ -22,10 +22,11 @@
     <div class="main_container">
         <div class="sub_container_1">
             {% for course in courses %}
-            <a href="">
+            <a href="{% url 'mfeed' student.id course.id 0 %}">
                 <div class="sub_1">
                     <div class="inner_sub">
-                        {{course.name}} - {{course.subject_code}} 
+                        {{course.subject.name}} - {{course.subject.subject_code}}
+
                     </div>
                     <div>
                         <i class="re bi bi-check-circle"></i>

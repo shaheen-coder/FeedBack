@@ -212,9 +212,36 @@ def score(data:str) -> int :
     else : return -1
 class Manitiory(View):
     template_name = 'subject.html'
-    def get(self,request):
-        course = Subject.objects.filter(mcourse=True)
-        return render(self.request,self.template_name,{'courses':course}) 
+    def get(self,request,sid,cout):
+        student = Student.objects.get(id=sid)
+        course = ClassStaff.objects.filter(semester=student.semester,subject__mcourse=True)
+        return render(self.request,self.template_name,{'student':student,'courses':course,'count':cout})
+class ManitioryForm(View):
+    template_name = 'feed.html'
+    def convert_json(self,request):
+        data = {}
+        for i in range(0,11):
+            cat = request.POST.get(f'cat_{i}')
+            data[f'cat_{i}'] = score(cat)
+        return data 
+    def get(self,request,sid,csid,count):
+        student = Student.objects.get(id=sid)
+        data = ClassStaff.objects.get(id=csid)
+        return render(self.request,self.template_name,{'data':data})
+    def post(self,sid,cout,subjcode):
+        student = Student.objects.get(id=id)
+        staff = request.POST.get('staff_id')
+        staff = Staff.objects.get(id=staff)
+        subject = Subject.objects.get(subject_code=subjcode)
+        categories = self.convert_json(request) 
+        feedback, created = FeedBack.objects.update_or_create(
+            subject=subject,
+            student=student,
+            staff=staff,
+            categories=categories
+        )
+
+
 class FeedBackView(View):
     def convert_json(self,request):
         data = {}
@@ -224,9 +251,10 @@ class FeedBackView(View):
         return data 
     def get(self,request,sid,catid):
         student = Student.objects.get(id=sid)
-        class_staff = ClassStaff.objects.filter(section=student.section)
+        class_staff = ClassStaff.objects.filter(section=student.section,subject__mcourse=False)
         if len(class_staff) == catid: 
-            return redirect('home')
+            if(student.semester > 3) : return redirect('msubject',sid=sid,cout=0)
+            else : return redirect('home')
         return render(self.request,'feed.html',{'data':class_staff[catid],'sid':sid,'catid':catid})
     def post(self,request,sid,catid):
         student = Student.objects.get(id=sid)
