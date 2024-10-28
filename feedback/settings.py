@@ -134,7 +134,7 @@ JAZZMIN_SETTINGS = {
     # Links to put along the top menu
     "topmenu_links": [
 
-        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Home",  "url": "home", "permissions": ["auth.view_user"]},
 
         {"name": "student check", "url": "student", "new_window": False},
         {"name": "search", "url": "search", "new_window": False},

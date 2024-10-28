@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+</head>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.nav_rig {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.but {
+    height: 35px;
+    width: 90px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.log_but{
+    height: 35px;
+    width: 90px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    color: #fff;
+    background-color:  #37b6ff;
+}
+
+.but, .log_but :hover {
+    transform: scale(1.05);
+    
+}
+
+body {
+    background-color: rgba(233, 233, 233, 0.842);
+    padding: 20px 30px;
+}
+
+.main_container {
+    border: 2px solid rgba(197, 197, 197, 0.767);
+    border-radius: 10px;
+    width: auto;
+    background-color: white;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+.search_filters {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+}
+
+.sear {
+    border: 2px solid rgba(197, 197, 197, 0.767);
+    border-radius: 5px;
+    padding: 5px 15px;
+    width: 250px;
+    outline: none;
+}
+
+.filters {
+    display: flex;
+    gap: 15px;
+}
+
+.filter_1, .filter_but, .data_but {
+    border: 2px solid rgba(197, 197, 197, 0.767);
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+.filter_1 {
+    height: 30px;
+    width: 90px;
+}
+
+.filter_but {
+    width: 60px;
+    background-color: rgba(233, 233, 233, 0.842);
+}
+
+.filter_but:hover, .data_but:hover {
+    background-color: #e0e0e0;
+}
+
+.data {
+    border: 2px solid rgba(197, 197, 197, 0.767);
+    border-radius: 10px;
+    width: auto;
+    background-color: white;
+    overflow-y: auto;
+    margin-top: 20px;
+    padding: 15px;
+}
+
+.user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(245, 245, 245, 0.9);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.user:hover {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.stafs {
+    font-size: 1em;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stafs img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.data_but {
+    width: 80px;
+    height: 30px;
+    background-color: rgba(233, 233, 233, 0.842);
+}
+</style>
+<body>
+    <nav>
+        <div class="nav_rig">
+            <div class="logo">
+                logo
+            </div>
+            <div class="logo">
+                AVC Admin
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="but">Home</button>
+            <button class="log_but">Logout</button>
+        </div>
+    </nav>
+    <form method="post" action="{% url 'search' %}">
+    <div class="main_container">
+        <div class="search_filters">
+            <input class="sear" name="subject_code" type="text" placeholder="SUBJECT CODE">
+            <input class="sear" name="name" type="text" placeholder="STAFF NAME">
+            {% csrf_token %}
+            <div class="filters">
+                <select name="year" class="filter_1">
+                    <option value="">year</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+                <select name="class" class="filter_1">
+                    <option value="">class</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                </select>
+                <select name="gender" class="filter_1">
+                    <option value="">gender</option>
+                    <option value="1">male</option>
+                    <option value="0">female</option>
+                </select>
+                
+                <button class="filter_but">Filter</button>
+            </div>
+        </div>
+    </div>
+    <div class="data">
+        {% for staff in staffs %}
+        <div class="user">
+            <div class="stafs">
+                <img src="{{staff.staff.proflie_pic.url}}" alt="User Image">
+            </div>
+            <div>
+                <p>{{staff.staff.fname}} {{staff.staff.sname}}</p>
+            </div>
+            <div>
+                <p>{{staff.subject.subject_code}}</p>
+            </div>
+            <button class="data_but">View</button>
+        </div>
+        {% endfor %}
+        
+    
+    </div>    
+</body>
+</html>

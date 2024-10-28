@@ -10,6 +10,7 @@ urlpatterns = [
     path('search/',views.Search.as_view(),name='search'),
     path('msubject/<int:sid>/<int:cout>/',views.Manitiory.as_view(),name='msubject'),
     path('mcfeed/<int:sid>/<int:csid>/<int:count>/',views.ManitioryForm.as_view(),name='mfeed'),
+    path("search2/",views.Search2.as_view(),name='search2'),
     #api urls 
     path('api/status/<int:sid>/<str:subject_code>/',views.StaffStatsView.as_view(),name='status'),
     path('api/class/status/<str:cname>/<int:semester>/',views.ClassStatsView.as_view(),name='cstatus'),

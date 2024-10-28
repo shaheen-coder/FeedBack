@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 # others
 import json 
-from weasyprint import HTML
+#from weasyprint import HTML
 
 class Home(TemplateView):
     template_name = 'landing.html'
@@ -275,6 +275,7 @@ class FeedBackView(View):
 
 
 class Search(View):
+    template_name = 'search2.html'
     def dept_vaild(self,dept):
         depts = {
             'CSE' : 'Computer Science and Engineering',
@@ -284,13 +285,13 @@ class Search(View):
     def handleclass_valid(self,hclass):
         return hclass if hclass != '' else None
     def get(self, request):
-        return render(self.request, 'search.html')
+        return render(self.request, self.template_name)
     def post(self, request):
-        query = request.POST.get('query')
-        dept = self.dept_vaild(request.POST.get('department'))  
+        query = request.POST.get('name')
         year = request.POST.get('year')
-        section = self.handleclass_valid(request.POST.get('hclass'))
-        subject_code = request.POST.get('subject_code') 
+        section = self.handleclass_valid(request.POST.get('class'))
+        subject_code = request.POST.get('subject_code')
+        gender =  1 if request.POST.get('gender') == '1' else  0
         staff = ClassStaff.objects.filter(
             Q(staff__fname__icontains=query) | Q(staff__sname__icontains=query)
         )
@@ -300,9 +301,10 @@ class Search(View):
             staff = staff.filter(section=section)
         if subject_code:
             staff_ids = ClassStaff.objects.filter(subject__subject_code=subject_code).values_list('staff_id', flat=True)
-            # Filter Staff by those IDs
             staff = staff.filter(id__in=staff_ids)
-        return render(self.request, 'search.html', {
+        if gender:
+            staff = staff.filter(staff__gender=gender)
+        return render(self.request,self.template_name, {
             'staffs': staff,
             'result': len(staff)
         })
@@ -335,7 +337,7 @@ class StudentCheck(View):
             students = students.filter(section=section)
         return render(self.request,self.template_name,{'students':students})
 class ReportView(View):
-    template_name = 'admin/report.html'
+    template_name = 'report.html'
     def score(self,points):
         if points >= 4.0 : return 'excelent'
         elif points >= 3.0 : return 'good'
@@ -362,7 +364,9 @@ class ReportView(View):
             cat_data[key] = [(data / count),(self.score((data / count)))]
         return cat_data
     def get(self,request):
-        return render(self.request,self.template_name,{'datas':self.get_data()})
+        staff = Staff.objects.get(id=1)
+        subject = ClassStaff.objects.get(staff__id=1)
+        return render(self.request,self.template_name,{'datas':self.get_data(),'staff':staff,'subject':subject})
     def post(self,request):
         data = self.get_data()
         html = render(self.request,self.template_name,{'datas':self.get_data()})
@@ -371,3 +375,7 @@ class ReportView(View):
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         response.write(pdf)
         return response
+
+
+class Search2(TemplateView):
+    template_name = 'search2.html'
