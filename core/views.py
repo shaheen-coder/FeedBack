@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 # others
 import json 
-#from weasyprint import HTML
+from weasyprint import HTML
 
 class Home(TemplateView):
     template_name = 'landing.html'
@@ -15,8 +15,11 @@ class Team(TemplateView):
     template_name = 'team.html'
 class Error(TemplateView):
     template_name = '404.html'
-def score_count(id):
-    feedbacks = FeedBack.objects.filter(staff__id=id)
+def score_count(id,is_class=False,section=None,semester=None):
+    if is_class:
+        feedbacks = FeedBack.objects.filter(student__semester=int(semester),student__section=section)
+    else :
+        feedbacks = FeedBack.objects.filter(staff__id=id)
     category_counts = {
         'cat1': {5: 0, 4: 0, 3: 0, 2: 0},
         'cat2': {5: 0, 4: 0, 3: 0, 2: 0},
@@ -42,6 +45,12 @@ class Profile(View):
         score = score_count(id)
         #print(f'satff count : {score}')
         return render(self.request,'analysis.html',{'profile':staff,'subject':subject,'score_count':score})
+
+class ClassProfile(View):
+    template_name = 'analysis2.html'
+    def get(self,request,semester,section):
+        score = score_count(id=None,is_class=True,section=section,semester=semester)
+        return render(self.request,self.template_name,{'semester':semester,'section':section,'score_count':score})
 class StaffStatsView(View):
     def get(self, request, sid,subject_code):
         staff = get_object_or_404(Staff, id=sid)
@@ -112,8 +121,8 @@ class StaffStatsView(View):
         # Return the data as JSON or pass to a template
         return JsonResponse(data)
 class ClassStatsView(View):
-    def get(self, request,cname,semester):    
-        feedbacks = FeedBack.objects.filter(student__section=cname,student__semester=semester)
+    def get(self, request,semester,section):    
+        feedbacks = FeedBack.objects.filter(student__section=section,student__semester=semester)
         total_feedbacks = feedbacks.count()
         if total_feedbacks == 0:
             return JsonResponse({
@@ -212,12 +221,12 @@ def score(data:str) -> int :
     else : return -1
 class Manitiory(View):
     template_name = 'subject.html'
-    def get(self,request,sid,cout):
+    def get(self,request,sid,count):
         student = Student.objects.get(id=sid)
         course = ClassStaff.objects.filter(semester=student.semester,subject__mcourse=True)
-        return render(self.request,self.template_name,{'student':student,'courses':course,'count':cout})
+        return render(self.request,self.template_name,{'student':student,'courses':course,'count':count})
 class ManitioryForm(View):
-    template_name = 'feed.html'
+    template_name = 'mfeed.html'
     def convert_json(self,request):
         data = {}
         for i in range(0,11):
@@ -227,12 +236,14 @@ class ManitioryForm(View):
     def get(self,request,sid,csid,count):
         student = Student.objects.get(id=sid)
         data = ClassStaff.objects.get(id=csid)
-        return render(self.request,self.template_name,{'data':data})
-    def post(self,sid,cout,subjcode):
-        student = Student.objects.get(id=id)
-        staff = request.POST.get('staff_id')
+        return render(self.request,self.template_name,{'data':data,'sid':student,'count':count})
+    def post(self,request,sid,csid,count):
+        student = Student.objects.get(id=sid)
+        staff = int(request.POST.get('staff_name'))
+        print(f'satff id : {staff}')
         staff = Staff.objects.get(id=staff)
-        subject = Subject.objects.get(subject_code=subjcode)
+        subject_code = request.POST.get('subject_code')
+        subject = Subject.objects.get(subject_code=subject_code)
         categories = self.convert_json(request) 
         feedback, created = FeedBack.objects.update_or_create(
             subject=subject,
@@ -240,7 +251,8 @@ class ManitioryForm(View):
             staff=staff,
             categories=categories
         )
-
+        count += 1
+        return redirect('msubject',sid=sid,count=count)
 
 class FeedBackView(View):
     def convert_json(self,request):
@@ -253,7 +265,7 @@ class FeedBackView(View):
         student = Student.objects.get(id=sid)
         class_staff = ClassStaff.objects.filter(section=student.section,subject__mcourse=False)
         if len(class_staff) == catid: 
-            if(student.semester > 3) : return redirect('msubject',sid=sid,cout=0)
+            if(student.semester > 3) : return redirect('msubject',sid=sid,count=0)
             else : return redirect('home')
         return render(self.request,'feed.html',{'data':class_staff[catid],'sid':sid,'catid':catid})
     def post(self,request,sid,catid):
@@ -275,38 +287,48 @@ class FeedBackView(View):
 
 
 class Search(View):
-    template_name = 'search2.html'
+    template_name = 'admin/search.html'
     def dept_vaild(self,dept):
         depts = {
             'CSE' : 'Computer Science and Engineering',
             'IT' : 'Information Technology'
         }
         return depts[dept] if dept in depts else None
+    def year_valid(self,yr):
+        if yr == 1 : return (1,2)
+        elif yr == 2 : return (3,4)
+        elif yr == 3 : return (5,6)
+        elif yr == 4 : return (7,8)
     def handleclass_valid(self,hclass):
         return hclass if hclass != '' else None
     def get(self, request):
         return render(self.request, self.template_name)
     def post(self, request):
+        is_class = bool(request.POST.get('class_search'))
+        print(f'is_class : {is_class}')
         query = request.POST.get('name')
-        year = request.POST.get('year')
+        sem1,sem2 = self.year_valid(int(request.POST.get('year')))
         section = self.handleclass_valid(request.POST.get('class'))
         subject_code = request.POST.get('subject_code')
         gender =  1 if request.POST.get('gender') == '1' else  0
-        staff = ClassStaff.objects.filter(
-            Q(staff__fname__icontains=query) | Q(staff__sname__icontains=query)
-        )
-        if year:
-            staff = staff.filter(year=year)
-        if section:
-            staff = staff.filter(section=section)
-        if subject_code:
-            staff_ids = ClassStaff.objects.filter(subject__subject_code=subject_code).values_list('staff_id', flat=True)
-            staff = staff.filter(id__in=staff_ids)
-        if gender:
-            staff = staff.filter(staff__gender=gender)
+        if is_class:
+            staff = ClassStaff.objects.filter(Q(semester=sem1) | Q(semester=sem2))
+        else :
+            staff = ClassStaff.objects.filter(
+                Q(staff__fname__icontains=query) | Q(staff__sname__icontains=query)
+            )
+            if sem1:
+                staff = staff.filter(Q(semester=sem1) | Q(semester=sem2))
+            if section:
+                staff = staff.filter(section=section)
+            if subject_code:
+                staff_ids = ClassStaff.objects.filter(subject__subject_code=subject_code).values_list('staff_id', flat=True)
+                staff = staff.filter(id__in=staff_ids)
+            if gender:
+                staff = staff.filter(staff__gender=gender)
         return render(self.request,self.template_name, {
             'staffs': staff,
-            'result': len(staff)
+            'is_class' : is_class
         })
 
 
@@ -319,8 +341,7 @@ def get_subjects(request,year):
 #   admin views
 
 class StudentCheck(View):
-    #template_name = 'admin/studentlist.html'
-    template_name = 'student.html'
+    template_name = 'admin/student.html'
     def valid_year(self,year):
         if year == '1' : return (1,2)
         elif year == '2' : return (3,4)
@@ -337,7 +358,7 @@ class StudentCheck(View):
             students = students.filter(section=section)
         return render(self.request,self.template_name,{'students':students})
 class ReportView(View):
-    template_name = 'report.html'
+    template_name = 'admin/report.html'
     def score(self,points):
         if points >= 4.0 : return 'excelent'
         elif points >= 3.0 : return 'good'
@@ -368,14 +389,12 @@ class ReportView(View):
         subject = ClassStaff.objects.get(staff__id=1)
         return render(self.request,self.template_name,{'datas':self.get_data(),'staff':staff,'subject':subject})
     def post(self,request):
+        staff = Staff.objects.get(id=1)
+        subject = ClassStaff.objects.get(staff__id=1)
         data = self.get_data()
-        html = render(self.request,self.template_name,{'datas':self.get_data()})
+        html = render(self.request,self.template_name,{'datas':self.get_data(),'staff':staff,'subject':subject})
         pdf = HTML(string=html.content).write_pdf()
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="report.pdf"'
         response.write(pdf)
         return response
-
-
-class Search2(TemplateView):
-    template_name = 'search2.html'

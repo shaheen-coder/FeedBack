@@ -1,0 +1,479 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/avc.png' %}"> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Feedback System</title>
+    <style>
+        html,
+        body {
+            height: 690px;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #a6f2f2, #1f586e);
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .head {
+            background-color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .staff_details {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            font-size:larger;
+        }
+
+        .staff_subject {
+            background-color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
+        /* chat gpt part start*/
+        .container_wrapper {
+            overflow: hidden;
+            
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 460px;
+        }
+
+        /*chat gpt part end*/
+        /*importent one */
+
+        .main_container {
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            gap: 30px;
+            padding: 15px;
+            margin: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            justify-content:space-around;
+        }
+
+        .questions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .option select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            font-size: 16px;
+        }
+
+        .button_column {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+
+        .last_butten {
+            width: 150px;
+            height: 40px;
+            border-radius: 20px;
+            border-style: none;
+            background-color: #1f586e;
+            color: white;
+            font-size: large;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .last_butten:hover {
+            background-color: #16424d;
+        }
+
+        #feedbackForm{
+            margin: 0%;
+            padding: 0%;
+            height: 40px;
+        }
+
+
+        hr {
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                overflow: auto;
+
+            }
+
+            .main_container {
+                flex-direction: column;
+            }
+        }
+        .modal-confirm {		
+		color: #636363;
+		width: 325px;
+		margin: 80px auto 0;
+	}
+	.modal-confirm .modal-content {
+		padding: 20px;
+		border-radius: 5px;
+		border: none;
+	}
+	.modal-confirm .modal-header {
+		border-bottom: none;   
+        position: relative;
+	}
+	.modal-confirm h4 {
+		text-align: center;
+		font-size: 26px;
+		margin: 30px 0 -15px;
+	}
+	.modal-confirm .form-control, .modal-confirm .btn {
+		min-height: 40px;
+		border-radius: 3px; 
+	}
+	.modal-confirm .close {
+        position: absolute;
+		top: -5px;
+		right: -5px;
+	}	
+	.modal-confirm .modal-footer {
+		border: none;
+		text-align: center;
+		border-radius: 5px;
+		font-size: 13px;
+	}	
+	.modal-confirm .icon-box {
+		color: #fff;		
+		position: absolute;
+		margin: 0 auto;
+		left: 0;
+		right: 0;
+		top: -70px;
+		width: 95px;
+		height: 95px;
+		border-radius: 50%;
+		z-index: 9;
+		background: #ef513a;
+		padding: 15px;
+		text-align: center;
+		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+	}
+	.modal-confirm .icon-box i {
+		font-size: 56px;
+		position: relative;
+		top: 4px;
+	}
+    .modal-confirm .btn {
+        color: #fff;
+        border-radius: 4px;
+		background: #ef513a;
+		text-decoration: none;
+		transition: all 0.4s;
+        line-height: normal;
+        border: none;
+    }
+	.modal-confirm .btn:hover, .modal-confirm .btn:focus {
+		background: #da2c12;
+		outline: none;
+	}
+	.trigger-btn {
+		display: inline-block;
+		margin: 100px auto;
+	}
+    p{
+        margin: 0%;
+    }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="head">
+            <h4 class="letters">{{data.staff.fname}} {{data.staff.sname}} </h4>
+        </div>
+    </header>
+
+    <div class="staff_details">
+        <p class="staff_subject">{{data.subject.name}} - {{data.subject.subject_code}}</p>
+    </div>
+
+    <!-- Wrapper for the sliding effect -->
+    
+                <!-- First container -->
+                <div class="main_container">
+                    <div class="left_container">
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons, manage the classroom, and collaborate with
+                                students?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="averI'mage">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons, manage the classroom, and collaborate with
+                                students?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="average">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons, manage the classroom, and collaborate with
+                                students?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="average">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons, manage the classroom, and collaborate with
+                                students?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="average">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons, manage the classroom, and collaborate with
+                                students?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="average">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                     
+
+                    </div>
+
+                    <div class="right_container">
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons, manage the classrooms?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="average">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="average">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons, manage the classroom, and collaborate with
+                                students?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="average">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons, manage the classroom, and collaborate with
+                                students?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="average">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="questions">
+                            <p>How well does the teacher plan lessons, manage the classroom, and collaborate with
+                                students?</p>
+                            <div class="option">
+                                <select>
+                                    <option value="">---</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="average">Average</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+
+    <!-- error popup -->
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="icon-box">
+                        <i class="material-icons">&#xE5CD;</i>
+                    </div>				
+                    <h4 class="modal-title">ERROR !</h4>	
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">please fill every option !!!</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <form id="feedbackForm" action="{% url 'mfeed' sid.id data.id count %}" method="POST">
+            {% csrf_token %}
+            <div class="button_column">
+                <input type="hidden" name="staff_name" value="{{data.staff.id}}">
+                <input type="hidden" name="subject_code" value="{{data.subject.subject_code}}">
+                <button type="submit" class="last_butten" >Back</button>
+
+            </div>
+        </form>
+    
+  
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('feedbackForm');            
+            function validateForm() {
+                let isValid = true;
+                for (let i = 0; i <= 9; i++) {
+                    const input = document.querySelector(`input[name="cat_${i}"]`);
+                    if (!input || input.value.trim() === "") {
+                        console.log(`input[name="cat_${i}"]`, input);
+                        isValid = false;
+                        break;
+                    }
+                }
+                return isValid;
+            }
+    
+            // Handle form submission
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); 
+                if (!validateForm()) {
+                    // Trigger the modal if validation fails
+                    $('#myModal').modal('show');
+                } else {
+                    form.submit();
+                }
+            });
+        });
+    </script>
+    <script>
+       const selectElements = document.querySelectorAll('.option select');
+        const formElement = document.querySelector('#feedbackForm');
+        // Add event listeners to all select elements
+        selectElements.forEach((selectElement, index) => {
+            selectElement.addEventListener('change', function () {
+                // Create or update the hidden input for each select element
+                // Check if a hidden input for this select element already exists
+                let hiddenInput = document.querySelector(`input[name="cat_${index}"]`);
+
+                // If it doesn't exist, create it
+                if (!hiddenInput) {
+                    hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = `cat_${index}`;  // unique name for each hidden input
+                    formElement.appendChild(hiddenInput);
+                }
+
+                // Update the value of the hidden input with the selected option value
+                hiddenInput.value = selectElement.value;
+            });
+        });
+    </script>
+</body>
+</html>

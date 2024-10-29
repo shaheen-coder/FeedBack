@@ -1,36 +1,146 @@
-{% extends 'admin/nav.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="report.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Report</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Main container */
+        .main_container {
+            margin: 40px;
+            padding: 30px;
+            background-color: #ffffff;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
 
-{% block content %}
-<div class="card" style="width: 18rem;">
-    <div class="card-body">
-        <h5 class="card-title">KK Mam</h5>
-        <h6 class="card-subtitle mb-2 text-muted">computer science and enginnering</h6>
-        <p class="card-text">CS3351 - data structure</p>
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
+        /* Side container styling */
+        .side_container {
+            border: 1px solid #e0e0e0;
+            background-color: #f9f9f9;
+            padding: 15px;
+            width: 320px;
+           
+            color: #333;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .side_container p {
+            margin: 10px 0;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Table styling */
+        .table_container {
+            margin-top: 20px;
+        }
+        .fl-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .fl-table th, .fl-table td {
+            padding: 14px 20px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .fl-table th {
+            background-color: #eaeaea;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .fl-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+
+        .sub_2 {
+            margin-top: 40px;
+            text-align: right;
+            padding-top: 20px;
+            color: #333;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .sign {
+           
+           padding: 5px;
+           border-bottom: 2px solid black;
+            color: #333;
+            
+            
+            font-weight: 500;
+        }
+
+    </style>
+</head>
+<body>
+    {% if request.method == 'GET' %}
+    <form method="post" action="{% url 'report' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-success">Success</button>
+    </form>
+    {% endif %}
+    <div class="main_container">
+        <div class="sub_1">
+            <!-- Side container with staff details -->
+            <div class="side_container">
+                <p>Name of Staff : {{staff.fname}} {{staff.sname}} {{staff.inital}}</p>
+                <p>Department : {{staff.dept}}</p>
+                <p>Subject Name : {{subject.subject.name}}</p>
+                <p>Subject Code : {{subject.subject.subject_code}}</p>
+            </div>
+            
+            <!-- Table with data -->
+            <div class="table_container">
+                <table class="fl-table">
+                    <thead>
+                        <tr>
+                            <th>sno</th>
+                            <th>catageory</th>
+                            <th>score</th>
+                            <th>grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key,data in datas.items %}
+                        <tr><td>1</td><td>{{key}}</td><td>{{data.0}}</td><td>{{data.1}}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Signature area -->
+        <div class="sub_2">
+            <div class="sign">Signature</div>
+        </div>
     </div>
-</div>
-<br>
-<br>
-<br>
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">catagory</th>
-        <th scope="col">points</th>
-        <th scope="col">score</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for key,value in datas.items %}
-      <tr>
-        <th scope="row">1</th>
-        <td>{{key}}</td>
-        <td>{{ value.0 }}</td>
-        <td>{{ value.1 }}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-{% endblock %}
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% extends 'admin/nav.html' %}
+{% load static %}
+
+{% block header %}
+<title>Student Check</title>
+<link rel="stylesheet" href="{% static 'css/student.css' %}">
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'student' %}" method="post">
+    {% csrf_token %}
+    <div class="filters">
+        <div class="main_features">
+            <div>
+                <select class="features" name="year">
+                <option value="">year</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                </select>
+            </div>
+            <div>
+                <select class="features" name="class">
+                <option value="">Class</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                </select>
+            </div>
+            <div>
+                <select class="features" name="choices">
+                <option value="">Not Filled</option>
+                <option value="">Option 2</option>
+                <option value="">Option 3</option>
+                </select>
+            </div>
+        </div>
+        <div class="search">
+        <button type="submit" class="search_bar"> search </button>
+        </div>
+    </div>
+</form>
+<table>
+    <thead>
+        <tr>
+            <th>Regester no</th>
+            <th>Name</th>
+            <th>semester</th>
+            <th>Class</th>
+            <th>Filled</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students %}
+        <tr>
+            <td>{{student.regno}}</td>
+            <td>{{student.name}}</td>
+            <td>{{student.semester}}</td>
+            <td>{{student.section}}</td>
+            <td><i class="bi bi-check-circle-fill"></i></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

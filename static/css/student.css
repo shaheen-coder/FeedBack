@@ -1,0 +1,131 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Trirong", serif;
+    background-color: rgb(228, 227, 227);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 8px 20px 8px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav_rig {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+.heading {
+    font-size: 1.2em;
+    color: #555;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.but {
+    height: 35px;
+    width: 90px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.but:hover {
+    background-color: #37b6ff;
+}
+.log{
+    background-color: #37b6ff;
+}
+.filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px 8px 30px;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.main_features {
+    display: flex;
+    gap: 30px;
+    padding-left: 40px;
+}
+
+.features {
+    width: 120px;
+    height: 35px;
+    border: 2px solid #37b6ff;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+}
+
+.search_bar {
+    height: 35px;
+    width: 100px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 2px solid  #37b6ff;
+    outline: none;
+}
+
+.search_bar:focus {
+    border-color: #37b6ff;
+}
+
+/* Ensure tables are full width */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color:white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 50px;
+}
+
+th,
+td {
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    color: #555;
+}
+
+tbody tr:hover {
+    background-color: #f9f9f9;
+}

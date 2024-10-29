@@ -259,7 +259,7 @@
                 <img  src="{{profile.proflie_pic.url}}" alt="profile-pic">
                 <div class="card-body pd-1">
                     <h5 class="card-title">{{profile.fname}} {{profile.sname}}</h5>
-                    <p class="card-text">{{profile.dept}}<br>{{profile.subject.name}}- {{profile.subject.subject_code}}</p>
+                    <p class="card-text">{{profile.dept}}<br>{{subject.name}} - {{subject.subject_code}}</p>
                 </div>
             </div>
         </div>
@@ -295,7 +295,7 @@
         
         <div class="box4">
            
-                <div class="card-body" style="">
+                <div class="card-body">
                   <h3 style="text-align: center; margin: 14px;" >graph view</h3>
                   <canvas id="pieChart"></canvas>
                 </div>

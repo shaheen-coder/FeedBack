@@ -28,69 +28,30 @@
                         {{course.subject.name}} - {{course.subject.subject_code}}
 
                     </div>
-                    <div>
+                    <div id="check-{{course.id}}">
                         <i class="re bi bi-check-circle"></i>
                     </div>
                 </div>
             </a>
             {% endfor %}
         </div>
-        <div class="sub_container_2">
-            <a href="">
-                <div class="sub_1">
-                    <div class="inner_sub">
-                        subject-1 sub-code
-                    </div>
-                    <div>
-                        <i class="gr bi bi-check-circle"></i>
-                    </div>
-                </div>
-            </a>
-            <a href="">
-                <div class="sub_1">
-                    <div class="inner_sub">
-                        subject-1 sub-code
-                    </div>
-                    <div>
-                        <i class="re bi bi-check-circle"></i>
-                    </div>
-                </div>
-            </a>
-            <a href="">
-                <div class="sub_1">
-                    <div class="inner_sub">
-                        subject-1 sub-code
-                    </div>
-                    <div>
-                        <i class="gr bi bi-check-circle"></i>
-                    </div>
-                </div>
-            </a>
-            <a href="">
-                <div class="sub_1">
-                    <div class="inner_sub">
-                        subject-1 sub-code
-                    </div>
-                    <div>
-                        <i class="gr bi bi-check-circle"></i>
-                    </div>
-                </div>
-            </a>
-            <a href="">
-                <div class="sub_1">
-                    <div class="inner_sub">
-                        subject-1 sub-code
-                    </div>
-                    <div>
-                        <i class="gr bi bi-check-circle"></i>
-                    </div>
-                </div>
-            </a>
-        </div>
     </div>
     <div class="butten_div">
         <button class="btw">done</button>
     </div>
+    <!-- script code -->
+    <script>
+         const urlParts = window.location.pathname.split('/');
+        const count = parseInt(urlParts[urlParts.length - 2]);
+
+        // Select all i elements within .sub_1
+        const icons = document.querySelectorAll('.sub_1 .re');
+
+        for (let i = 0; i < count && i < icons.length; i++) {
+        icons[i].classList.remove('re');
+        icons[i].classList.add('gr'); 
+    }
+    </script>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </html>
