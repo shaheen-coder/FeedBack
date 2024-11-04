@@ -1,3 +1,4 @@
-Django==5.1.2
-django-jazzmin==3.0.1
-pillow==10.4.0
+Django
+django-jazzmin
+pillow
+weasyprint

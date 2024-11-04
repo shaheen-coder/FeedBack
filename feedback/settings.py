@@ -128,9 +128,10 @@ JAZZMIN_SETTINGS = {
     "site_title": "AVCCE Admin",
     "site_header": "admin login",
     "site_brand": "ACCE Admin",
-    #"site_logo": "assets/avc.jpeg",
-    #"site_logo_classes": "img-circle",
-    #"site_icon": "assests/avc.png",
+    "site_logo": "assets/avcl.jpeg",
+    "site_logo_classes": "img-circle",
+    "site_icon": "assests/avcl.jpeg",
+    "site_icon_classes": "img-circle",
     # Links to put along the top menu
     "topmenu_links": [
 

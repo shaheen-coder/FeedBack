@@ -16,6 +16,6 @@ urlpatterns = [
     path('api/class/status/<int:semester>/<str:section>/',views.ClassStatsView.as_view(),name='cstatus'),
     path('classstaff/subjects/<int:year>/', views.get_subjects, name='get_subjects'),
     # admin urls 
-    path('cadmin/report/',views.ReportView.as_view(),name='report'),
+    path('cadmin/report/<int:staff_id>/<str:subject_code>/',views.ReportView.as_view(),name='report'),
     path('student/',views.StudentCheck.as_view(),name='student'),
 ]

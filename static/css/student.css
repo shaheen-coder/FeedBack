@@ -9,26 +9,7 @@ body {
     background-color: rgb(228, 227, 227);
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    padding: 8px 20px 8px 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
 
-.nav_rig {
-    display: flex;
-    align-items: center;
-    gap: 50px;
-}
-
-.logo {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #333;
-}
 
 .heading {
     font-size: 1.2em;

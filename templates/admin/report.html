@@ -102,7 +102,7 @@
 </head>
 <body>
     {% if request.method == 'GET' %}
-    <form method="post" action="{% url 'report' %}">
+    <form method="post" action="{% url 'report' staff.id subject.subject_code %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-outline-success">Success</button>
     </form>
@@ -113,8 +113,8 @@
             <div class="side_container">
                 <p>Name of Staff : {{staff.fname}} {{staff.sname}} {{staff.inital}}</p>
                 <p>Department : {{staff.dept}}</p>
-                <p>Subject Name : {{subject.subject.name}}</p>
-                <p>Subject Code : {{subject.subject.subject_code}}</p>
+                <p>Subject Name : {{subject.name}}</p>
+                <p>Subject Code : {{subject.subject_code}}</p>
             </div>
             
             <!-- Table with data -->
@@ -124,7 +124,7 @@
                         <tr>
                             <th>sno</th>
                             <th>catageory</th>
-                            <th>score</th>
+                            <t>score</th>
                             <th>grade</th>
                         </tr>
                     </thead>
