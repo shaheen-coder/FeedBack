@@ -37,11 +37,14 @@
         </div>
     </div>
     <div class="butten_div">
-        <button class="btw">done</button>
+        <button onclick="home()" class="btw">done</button>
     </div>
     <!-- script code -->
     <script>
-         const urlParts = window.location.pathname.split('/');
+        function home(){
+            window.location.href = "{% url 'home' %}";
+        }
+        const urlParts = window.location.pathname.split('/');
         const count = parseInt(urlParts[urlParts.length - 2]);
 
         // Select all i elements within .sub_1

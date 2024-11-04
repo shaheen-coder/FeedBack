@@ -69,12 +69,16 @@
         <button onclick="reroute('{{staff.semester}}','{{staff.section}}')" class="data_but">View</button>
         {% else %}
         <button onclick="reroute('{{staff.staff.id}}','{{staff.subject.subject_code}}')" class="data_but">View</button>
+        <button onclick="reroute_report('{{staff.staff.id}}','{{staff.subject.subject_code}}')" class="data_but">Report</button>
         {% endif %}
     </div>
     {% endfor %}
 </div>
 <!-- script code -->
 <script>
+    function reroute_report(staff_id,subject_code){
+        window.location.href = `http://127.0.0.1:8000/cadmin/report/${staff_id}/${subject_code}/`;
+    }
     function reroute(staff_id, subject_code) {
         {% if is_class %}
         window.location.href = `http://127.0.0.1:8000/class/${staff_id}/${subject_code}/`;
