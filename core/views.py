@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 # others
 import json 
-from weasyprint import HTML
+# from weasyprint import HTML
 
 # normal template rendering page views 
 class Home(TemplateView):
