@@ -1,3 +1,4 @@
+#!/usr/bin/env bashc
 # Detect the operating system
 detect_os() {
     if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "darwin"* ]]; then
@@ -22,6 +23,17 @@ setup() {
         .\venv\Scripts\activate
     fi
     echo "Virtual environment created and activated"
+}
+
+# Deactivate virtual environment
+deactivate_env() {
+    echo "Deactivating virtual environment..."
+    if [ "$VIRTUAL_ENV" ]; then
+        deactivate
+        echo "Virtual environment deactivated"
+    else
+        echo "No virtual environment is currently active"
+    fi
 }
 
 # Install packages from requirements.txt
@@ -58,11 +70,15 @@ case "$1" in
     "run")
         run
         ;;
+    "deactivate")
+        deactivate_env
+        ;;
     *)
         echo "FeedBack system Project Manager"
         echo "Usage:"
-        echo "  ./manage.sh setup   - Setup virtual environment"
-        echo "  ./manage.sh install - Install packages from requirements.txt"
-        echo "  ./manage.sh run     - Run development server"
+        echo "  ./run.sh setup       - Setup virtual environment"
+        echo "  ./run.sh install     - Install packages from requirements.txt"
+        echo "  ./run.sh run         - Run development server"
+        echo "  ./run.sh deactivate  - Deactivate virtual environment"
         ;;
 esac

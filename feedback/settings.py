@@ -130,6 +130,7 @@ JAZZMIN_SETTINGS = {
     "site_brand": "ACCE Admin",
     "site_logo": "assets/avcl.jpeg",
     "site_logo_classes": "img-circle",
+    "custom_css" : "css/admin/login.css",
     "site_icon": "assests/avcl.jpeg",
     "site_icon_classes": "img-circle",
     # Links to put along the top menu
