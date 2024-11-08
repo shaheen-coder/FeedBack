@@ -40,6 +40,8 @@
             
         }
 
+       
+
         .col a:hover{
             background-color: #bccfd6;
             color: #1f586e;
@@ -130,9 +132,9 @@
        <div class="container my-5">
         <div class="row d-flex justify-content-around">
           <div class="col-5 p-5 my-3 bg-dark  d-flex flex-column justify-content-center align-items-center rounded-3">
-              <img class="border border-5 rounded-5 mb-3"  src="{{profile.proflie_pic.url}}" alt="profile">
-              <h5 class="text-white  text-center my-3">{{profile.fname}} {{profile.sname}}</h5>
-                    <p class="text-white text-center my-3">{{profile.dept}}<br>{{profile.subject.name}}- {{profile.subject.subject_code}}</p>
+              <img class="border border-5 rounded-5 mb-3" width="100px" height="100px" src="https://img.freepik.com/free-vector/mans-face-flat-style_90220-2877.jpg?t=st=1731072052~exp=1731075652~hmac=293ab751dba49c7685c92236bb6797a9aad5d3834d330f7e57cf7e089ec677a6&w=740" alt="profile">
+              <h5 class="text-white  text-center my-3">PROFILENAME</h5>
+                    <p class="text-white text-center my-3">CSE DEPARTMENT<br>DATA STRUCTURE CS3311</p>
           </div>
           <div class="col-5 p-5 my-3 bg-dark  d-flex flex-column justify-content-center align-items-center rounded-3">
             <h3 class="text-center text-white">Graph View</h3>
@@ -142,7 +144,7 @@
 
         <div class="row d-flex justify-content-around">
           <div class="col-5 p-5 my-3 bg-dark  d-flex flex-column justify-content-center align-items-center rounded-3">
-            <table class="table table-hover text-white">
+            <table class="table table-hover text-white" id="score-table">
               <thead>
                   <tr>
                       <th>categories</th>
@@ -153,15 +155,13 @@
                   </tr>
               </thead>
               <tbody>
-                {% for cat,data in score_count.items %}
                   <tr>
-                      <td>{{cat}}</td>
-                      <td>{{ data.5 }}</td>
-                      <td>{{ data.4 }}</td>
-                      <td>{{ data.3 }}</td>
-                      <td>{{ data.2 }}</td>
+                      <td>cat</td>
+                      <td> data.5 </td>
+                      <td> data.4 </td>
+                      <td> data.3 </td>
+                      <td> data.2 </td>
                   </tr>
-                {% endfor %}
                   <!-- Add more rows as needed -->
               </tbody>
           </table>
@@ -205,10 +205,12 @@
               <div class="progress-bar grey">
                 <span>70%</span>
               </div>
+              
           </div>
+          
           </div>
+          <button type="button" class="btn btn-dark w-50 m-5">Download</button>
         </div>
-
 
         
        </div>
