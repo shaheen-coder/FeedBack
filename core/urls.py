@@ -12,10 +12,13 @@ urlpatterns = [
     path('msubject/<int:sid>/<int:count>/',views.Manitiory.as_view(),name='msubject'),
     path('mcfeed/<int:sid>/<int:csid>/<int:count>/',views.ManitioryForm.as_view(),name='mfeed'),
     #api urls 
-    path('api/status/<int:sid>/<str:subject_code>/',views.StaffStatsView.as_view(),name='status'),
-    path('api/class/status/<int:semester>/<str:section>/',views.ClassStatsView.as_view(),name='cstatus'),
     path('classstaff/subjects/<int:year>/', views.get_subjects, name='get_subjects'),
+    path('api/staff/<int:sid>/<str:subject_code>/',views.StaffData.as_view(),name='staff'),
+    path('api/classdata/<int:semester>/<str:section>/',views.ClassData.as_view(),name='class'),
     # admin urls 
     path('cadmin/report/<int:staff_id>/<str:subject_code>/',views.ReportView.as_view(),name='report'),
     path('student/',views.StudentCheck.as_view(),name='student'),
+    
+    # test views 
+    path('sub/',views.SubjectViews.as_view(),name='sub'),
 ]
