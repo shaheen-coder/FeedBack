@@ -122,7 +122,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+LOGIN_REDIRECT_URL = "admin:login"
 # jazzmin admin settings 
 JAZZMIN_SETTINGS = {
     "site_title": "AVCCE Admin",
@@ -139,7 +139,7 @@ JAZZMIN_SETTINGS = {
         {"name": "Home",  "url": "home", "permissions": ["auth.view_user"]},
         {"name": "student check", "url": "student", "new_window": False},
         {"name": "search", "url": "search", "new_window": False},
-        {"name": "report", "url": "report", "new_window": False},
+
     ],
     "usermenu_links": [
         {"name": "code", "url": "https://github.com/shaheen-coder/FeedBack", "new_window": True},

@@ -14,22 +14,19 @@
     <title>Subject</title>
 </head>
 <style>
-    .sub_container_1 {
-        overflow-y: scroll;
-    }
+
 </style>
 
 <body>
     <header>
         <div class="head">
-            <p class="letters">cse - B</p>
-            <p class="letters">sem - 2</p>
+            <p class="letters">sem - {{semester}}</p>
         </div>
     </header>
 
     <div class="main_container">
         {% if both_side %}
-        <div class="sub_container_1_scroll">
+        <div class="sub_container_1">
             {% for course in course1 %}
             <a href="{% url 'mfeed' student.id course.id 0 %}">
                 <div class="sub_1">
@@ -40,7 +37,7 @@
             </a>
             {% endfor %}
         </div>
-        <div class="sub_container_2_scroll">
+        <div class="sub_container_2">
             {% for course in course2 %}
             <a href="{% url 'mfeed' student.id course.id 0 %}">
                 <div class="sub_1">
@@ -51,8 +48,8 @@
             </a>
             {% endfor %}
         </div>
-        {% endif %}
-        <div class="sub_container_1_scroll">
+       {% else %}
+        <div class="sub_container_1">
             {% for course in courses %}
             <a href="{% url 'mfeed' student.id course.id 0 %}">
                 <div class="sub_1">
@@ -64,9 +61,11 @@
             {% endfor %}
         </div>
     </div>
-    <div class="butten_div">
-        <button onclick="home()" class="btw">done</button>
-    </div>
+    {% endif %}
+</div>
+<div class="butten_div">
+    <button onclick="home()" class="btw">done</button>
+</div>
     <!-- script code -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -77,6 +76,8 @@
             if (mainContainer && subContainer1Scroll && mainContainer.children.length === 1) {
                 mainContainer.style.width = "30%";  // Adjust this width as needed
                 mainContainer.style.padding = "20px";  // Adjust padding as needed
+            }else{
+                mainContainer.style.width = "80%";
             }
         });
 

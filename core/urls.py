@@ -1,4 +1,4 @@
-from django.urls import path 
+from django.urls import path
 from core import views
 urlpatterns = [
     path('',views.Home.as_view(),name='home'),
@@ -19,6 +19,6 @@ urlpatterns = [
     path('cadmin/report/<int:staff_id>/<str:subject_code>/',views.ReportView.as_view(),name='report'),
     path('student/',views.StudentCheck.as_view(),name='student'),
     
-    # test views 
-    path('sub/',views.SubjectViews.as_view(),name='sub'),
+   #auth view 
+    path('auth/logout/',views.CustomLogoutView.as_view(),name='logout'),
 ]

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -128,8 +129,8 @@
     }
 
     .avatar {
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
     }
 
@@ -189,7 +190,7 @@
         <div class="left_container">
             <div class="top_nav">
                 <h3>Dashboard for Staff</h3>
-                <input type="text" placeholder="Search" class="search">
+                
             </div>
             <div class="start-card campin_outer">
                 <h4>credited</h4>
@@ -215,7 +216,7 @@
             <div class="last_campin">
                 <div class="form-container">
                     <div class="form-item">
-                        <label for="name">Name</label>
+                        <label for="name">SEM : {{subject.semester}}</label>
                     </div>
                     <div class="separator"></div>
                     <div class="form-item">
@@ -244,7 +245,11 @@
         <div class="right_container">
             <div class="intro">
                 <div>
+                    {% if is_class %}
+                    <img src="{% static 'assets/class.png' %}" alt="User Avatar" class="avatar">
+                    {% else %}
                     <img src="{{profile.proflie_pic.url}}" alt="User Avatar" class="avatar">
+                    {% endif %}
                 </div>
                 <div class="user-info">
                     {% if is_class %}

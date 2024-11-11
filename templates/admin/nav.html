@@ -11,12 +11,69 @@
     {% endblock %}
 </head>
 <style>
+    nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.nav_rig {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.but {
+    height: 35px;
+    width: 90px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.log_but{
+    height: 35px;
+    width: 90px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    color: #fff;
+    background-color:  #37b6ff;
+}
+
+.but, .log_but :hover {
+    transform: scale(1.05);
+    
+}
+.logo img{
+    width: 60px;
+    height: 60px;
+    
+}
 </style>
 <body>
     <nav>
         <div class="nav_rig">
             <div class="logo">
-                <img class="logo_img" width="100px" height="100px" src="https://github.com/shaheen-coder/FeedBack/blob/main/static/assets/avc.png?raw=true" alt="avc-logo">
+                <img class="logo_img" width="100px" height="100px" src="{% static 'assets/avcl.jpeg' %}" alt="avc-logo">
             </div>
             <div class="logo">
                 AVC Admin
@@ -24,7 +81,7 @@
         </div>
         <div class="buttons">
             <button onclick="admin()" class="but">Home</button>
-            <button class="log_but">Logout</button>
+            <button onclick="logout()" class="log_but">Logout</button>
         </div>
     </nav>
     {% block content %}
@@ -33,6 +90,9 @@
     <script>
         function admin(){
             window.location.href = "{% url 'admin:index' %}";
+        }
+        function logout(){
+            window.location.href = "{% url 'logout' %}";
         }
     </script>
 </body>

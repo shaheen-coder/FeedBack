@@ -32,7 +32,7 @@ class Staff(models.Model):
         (0,'female')
     )
     fname = models.CharField(max_length=20)
-    sname = models.CharField(max_length=20)
+    sname = models.CharField(max_length=20,null=True)
     intial = models.CharField(max_length=1)
     proflie_pic = models.ImageField(upload_to=profile_path,null=True,blank=True)
     dept = models.CharField(max_length=50,choices=DEPARTMENT)

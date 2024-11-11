@@ -6,6 +6,7 @@ from core.models import Staff,Student,ClassStaff,Subject,FeedBack
 from django.http import JsonResponse
 from django.db.models import Q
 from django.db.models import Avg,Count
+from django.contrib.auth.views import LogoutView
 # others
 import json 
 from weasyprint import HTML
@@ -18,7 +19,8 @@ class Team(TemplateView):
     template_name = 'team.html'
 class Error(TemplateView):
     template_name = '404.html'
-
+class CustomLogoutView(LogoutView):
+    http_method_names = ['get', 'post']
 # api views 
 
 def score_count(id,is_class=False,section=None,semester=None):
@@ -166,9 +168,6 @@ def get_subjects(request,year):
 
 # feeback and student views 
 
-class SubjectViews(TemplateView):
-    template_name = 'admin/subject.html'
-
 class StudentLogin(View):
     def __init__(self):
         self.DEPARTMENT = (
@@ -202,14 +201,15 @@ class Manitiory(View):
         is_both = None
         student = Student.objects.get(id=sid)
         course = ClassStaff.objects.filter(semester=student.semester,subject__mcourse=True)
-        print(f'course len : {course.count()}')
+
+        #print(f'course len : {course.count()}')
         if course.count() >= 6 :
             half = len(course) // 2 
             half += 1 if half % 2 != 0 else 0
             course1 = course[0:half]
             course2 = course[half::]
             is_both = True
-            return render(self.request,self.template_name,{'student':student,'course1':course1,'course2':course2,'count':count,'both_side':is_both})
+            return render(self.request,self.template_name,{'student':student,'semester':student.semester,'course1':course1,'course2':course2,'count':count,'both_side':is_both})
         return render(self.request,self.template_name,{'student':student,'courses':course,'count':count,'both_side':is_both})
 class ManitioryForm(View):
     template_name = 'mfeed.html'
@@ -303,29 +303,31 @@ class Search(View):
         is_class = bool(request.POST.get('class_search'))
         #print(f'is_class : {is_class}')
         query = request.POST.get('name')
-        sem1,sem2 = self.year_valid(int(request.POST.get('year')))
-        section = self.handleclass_valid(request.POST.get('class'))
-        print(f'section : {section} req : {request.POST.get('class')}')
+        year = request.POST.get('year')
+        if year != '':  
+            sem1,sem2 = self.year_valid(int(request.POST.get('year')))
+        section = request.POST.get('class')
+        if section != '' : section = self.handleclass_valid(request.POST.get('class'))
         subject_code = request.POST.get('subject_code')
-        gender =  1 if request.POST.get('gender') == '1' else  0
+        print(f"resquest gender : {request.POST.get('gender')}")
+        gender = request.POST.get('gender')
         if is_class:
             staff = ClassStaff.objects.filter(Q(semester=sem1) | Q(semester=sem2))
             if section:
-                print(f'section : {section}')
                 staff = staff.filter(section=section).distinct()
         else :
             staff = ClassStaff.objects.filter(
                 Q(staff__fname__icontains=query) | Q(staff__sname__icontains=query)
             )
-            if sem1:
+            if subject_code:
+                staff = staff.filter(subject__subject_code=subject_code)
+            if year != '':
                 staff = staff.filter(Q(semester=sem1) | Q(semester=sem2))
             if section:
-                print(f'section : {section}')
                 staff = staff.filter(section=section).distinct()
-            if subject_code:
-                staff_ids = ClassStaff.objects.filter(subject__subject_code=subject_code).values_list('staff_id', flat=True)
-                staff = staff.filter(id__in=staff_ids)
             if gender:
+                print(f'gender : {gender}')
+                gender = 1 if gender == '1' else 0
                 staff = staff.filter(staff__gender=gender)
         return render(self.request,self.template_name, {
             'staffs': staff,
