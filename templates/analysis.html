@@ -236,7 +236,7 @@
                     </div>
                     <div class="separator"></div>
                     <div class="form-item">
-                        <label for="section">B</label>
+                        <label for="section">{{dept}}</label>
                     </div>
                 </div>
             </div>
@@ -287,7 +287,7 @@
             .then(data => {
                 const averageData = Object.values(data.avg);
                 const percentageData = Object.values(data.percentage);
-                const labels = Object.keys(data.avg); 
+                const labels = Object.values(data.terms); 
                 const overallCounts = Object.values(data.overall_percentages); 
                 const overallLabels = ['1s', '3s', '5s']; 
                 const overallCountslabel = data.overall_counts;

@@ -59,3 +59,5 @@ class ClassStaff(models.Model):
     subject = models.ForeignKey(Subject,on_delete=models.CASCADE)
     def __str__(self):
         return f'{self.section} - {self.staff.fname}'
+    class Meta:
+        verbose_name = "handling class"

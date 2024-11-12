@@ -47,6 +47,7 @@
     </div>
 </form>
 <div class="data">
+    {% if is_loop %}
     {% for staff in staffs %}
     <div class="user">
         <div class="stafs">
@@ -74,6 +75,22 @@
         {% endif %}
     </div>
     {% endfor %}
+    {% else %}
+    <div class="user">
+        <div class="stafs">
+            <img src="{% static 'assets/class.png' %}" alt="class Image">
+        </div>
+        <div>
+            <p>{{staffs.section}}</p>
+        </div>
+        <div>
+            <p>{{staffs.semester}}</p>
+        </div>
+        {% if is_class %}
+        <button onclick="reroute('{{staffs.semester}}','{{staffs.section}}')" class="data_but">View</button>
+        {% endif %}
+    </div>
+    {% endif %}
 </div>
 <!-- script code -->
 <script>

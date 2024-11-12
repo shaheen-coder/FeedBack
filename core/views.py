@@ -12,6 +12,27 @@ import json
 from weasyprint import HTML
 from collections import defaultdict
 
+
+# gobale  
+terms = [
+    "Aids Utilization",
+    "Clarity",
+    "Confidence",
+    "Pacing",
+    "Discipline",
+    "Engagement",
+    "Accessibility",
+    "Punctuality",
+    "Guidance",
+    "Feedback"
+]
+DEPARTMENT = (
+    ('Computer Science and Engineering','CSE'),
+    ('Tnformation Technology','IT'),
+    ('Instrumentation and Controls Engineering','IT'),
+    ('Electrical and Electronics Engineering','EEE')
+)
+
 # normal template rendering page views 
 class Home(TemplateView):
     template_name = 'landing.html'
@@ -80,6 +101,7 @@ class StaffData(View):
 
         analysis_result = {
             "avg": {},
+            "terms" : terms,
             "percentage": {},
             "percentage_of_5": {},
             "percentage_of_3": {},
@@ -136,6 +158,7 @@ class ClassData(View):
 
         analysis_result = {
             "avg": {},
+            "terms": terms,
             "percentage": {},
             "percentage_of_5": {},
             "percentage_of_3": {},
@@ -301,6 +324,7 @@ class Search(View):
         return render(self.request, self.template_name)
     def post(self, request):
         is_class = bool(request.POST.get('class_search'))
+        is_loop = True
         #print(f'is_class : {is_class}')
         query = request.POST.get('name')
         year = request.POST.get('year')
@@ -313,8 +337,19 @@ class Search(View):
         gender = request.POST.get('gender')
         if is_class:
             staff = ClassStaff.objects.filter(Q(semester=sem1) | Q(semester=sem2))
-            if section:
-                staff = staff.filter(section=section).distinct()
+            if not section:
+                staff1 = staff.filter(section='A').first()
+                staff2 = staff.filter(section='B').first()
+                if staff1 and staff2: staff = [staff1, staff2]
+                elif staff1: 
+                    staff = staff1
+                    is_loop = False 
+                else: 
+                    staff = staff2
+                    is_loop = False
+            else :
+                staff = staff.filter(section=section).first()
+                is_loop = False
         else :
             staff = ClassStaff.objects.filter(
                 Q(staff__fname__icontains=query) | Q(staff__sname__icontains=query)
@@ -331,7 +366,8 @@ class Search(View):
                 staff = staff.filter(staff__gender=gender)
         return render(self.request,self.template_name, {
             'staffs': staff,
-            'is_class' : is_class
+            'is_class' : is_class,
+            'is_loop':is_loop
         })
 
 
@@ -339,10 +375,17 @@ class Search(View):
 
 #   admin views
 class Profile(View):
+    
+    def get_department_code(self,department_name):
+        for dept in DEPARTMENT:
+            if dept[0] == department_name:
+                return dept[1]
+        return None 
     def get(self,request,id,subject):
         staff = Staff.objects.get(id=id)
         subject = Subject.objects.get(subject_code=subject)
-        return render(self.request,'analysis.html',{'is_class':False,'profile':staff,'subject':subject})
+        dept = self.get_department_code(staff.dept)
+        return render(self.request,'analysis.html',{'is_class':False,'dept':dept,'profile':staff,'subject':subject})
 
 class ClassProfile(View):
     template_name = 'analysis.html'
@@ -359,6 +402,8 @@ class StudentCheck(View):
         student = Student.objects.all()
         return render(self.request,self.template_name,{'students':student})
     def post(self,request):
+        if request.POST.get('year') == '':
+            return render(self.request,self.template_name,{'error':'please select the year !! '})
         sem1,sem2  = self.valid_year(request.POST.get('year'))
         section = request.POST.get('class')
         students = Student.objects.filter(Q(semester=sem1) | Q(semester=sem2))
@@ -372,18 +417,7 @@ class ReportView(View):
         elif points >= 3.0 : return 'good'
         else : return 'bad' 
     def get_data(self,staff_id,subject_code):
-        cat_data = {
-            'cat_1' : 0,
-            'cat_2' : 0,
-            'cat_3' : 0,
-            'cat_4' : 0,
-            'cat_5' : 0,
-            'cat_6' : 0,
-            'cat_7' : 0,
-            'cat_8' : 0,
-            'cat_9' : 0,
-            'cat_10' : 0,
-        }
+        cat_data = {f'cat_{i}':0 for i in range(1,11)}
         feeds = FeedBack.objects.filter(staff__id=staff_id,subject__subject_code=subject_code)
         count = feeds.count()
         for feed in feeds:
@@ -392,10 +426,13 @@ class ReportView(View):
         for key,data in cat_data.items():
             cat_data[key] = [(data / count),(self.score((data / count)))]
         return cat_data
+    
     def get(self,request,staff_id,subject_code):
         staff = Staff.objects.get(id=staff_id)
         subject = Subject.objects.get(subject_code=subject_code)
         datas = self.get_data(staff_id,subject_code)
+        datas = [(key,value) for key,value in zip(terms,datas.values())]
+
         return render(self.request,self.template_name,{'staff':staff,'subject':subject,'datas':datas})
     def post(self,request,staff_id,subject_code):
         staff = Staff.objects.get(id=staff_id)

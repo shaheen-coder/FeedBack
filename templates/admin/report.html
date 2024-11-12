@@ -127,8 +127,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for key,data in datas.items %}
-                        <tr><td>{{forloop.counter0}}</td><td>{{key}}</td><td>{{data.0}}</td><td>{{data.1}}</td></tr>
+                        {% for data in datas %}
+                        <tr><td>{{forloop.counter0}}</td><td>{{data.0}}</td><td>{{data.1.0}}</td><td>{{data.1.1}}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
