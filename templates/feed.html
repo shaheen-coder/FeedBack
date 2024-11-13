@@ -16,9 +16,18 @@
     <style>
         html,
         body {
-            height: 690px;
+            height: 100vh;
             margin: 0;
             overflow: hidden;
+        }
+
+        @keyframes flowup {
+            from{
+
+            }
+            to{
+                transform: scale(1.05);
+            }
         }
 
         * {
@@ -41,24 +50,28 @@
 
         .head {
             background-color: white;
-            border-radius: 5px;
+            letter-spacing: 3px;
+            border-radius: 25px;
             padding: 10px 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: alternate flowup 1.5s ease-in-out infinite;
         }
 
         .staff_details {
             display: flex;
+            font-weight: 400;
             justify-content: center;
             margin-top: 20px;
             font-size:larger;
         }
 
         .staff_subject {
+           
             background-color: white;
-            border-radius: 5px;
+            border-radius: 25px;
             padding: 10px 20px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
