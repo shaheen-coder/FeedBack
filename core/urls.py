@@ -9,8 +9,9 @@ urlpatterns = [
     path('login/',views.StudentLogin.as_view(),name='login'),
     path('feed/<int:sid>/<int:catid>/',views.FeedBackView.as_view(),name='feed'),
     path('search/',views.Search.as_view(),name='search'),
-    path('msubject/<int:sid>/<int:count>/',views.Manitiory.as_view(),name='msubject'),
-    path('mcfeed/<int:sid>/<int:csid>/<int:count>/',views.ManitioryForm.as_view(),name='mfeed'),
+    path('msubject/<int:sid>/<int:cid>/',views.Manitiory.as_view(),name='msubject'),
+    path('mcfeed/<int:sid>/<int:csid>/<int:cid>/',views.ManitioryForm.as_view(),name='mfeed'),
+    path('course/<int:sid>/',views.Course.as_view(),name='course'),
     #api urls 
     path('classstaff/subjects/<int:year>/', views.get_subjects, name='get_subjects'),
     path('api/staff/<int:sid>/<str:subject_code>/',views.StaffData.as_view(),name='staff'),

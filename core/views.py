@@ -28,7 +28,7 @@ terms = [
 ]
 DEPARTMENT = (
     ('Computer Science and Engineering','CSE'),
-    ('Tnformation Technology','IT'),
+    ('Information Technology','IT'),
     ('Instrumentation and Controls Engineering','IT'),
     ('Electrical and Electronics Engineering','EEE')
 )
@@ -218,13 +218,21 @@ class StudentLogin(View):
         except Exception as error:
             return render(self.request,'login.html',{'error':error})
 
+class Course(View):
+    template_name = 'coruse.html'
+    def get(self,request,sid):
+        return render(self.request,self.template_name,{'sid':sid})
+
 class Manitiory(View):
     template_name = 'subject.html'
-    def get(self,request,sid,count):
+    def get(self,request,sid,cid):
         is_both = None
         student = Student.objects.get(id=sid)
-        course = ClassStaff.objects.filter(semester=student.semester,subject__mcourse=True)
-
+        manitiory,openelective,elective = False,False,False
+        if cid == 1 : manitiory = True
+        elif cid == 2 : openelective = True 
+        elif cid == 3 : elective = True
+        course = ClassStaff.objects.filter(semester=student.semester,subject__mcourse=manitiory,subject__ecourse=elective,subject__oecourse=openelective)
         #print(f'course len : {course.count()}')
         if course.count() >= 6 :
             half = len(course) // 2 
@@ -232,8 +240,8 @@ class Manitiory(View):
             course1 = course[0:half]
             course2 = course[half::]
             is_both = True
-            return render(self.request,self.template_name,{'student':student,'semester':student.semester,'course1':course1,'course2':course2,'count':count,'both_side':is_both})
-        return render(self.request,self.template_name,{'student':student,'courses':course,'count':count,'both_side':is_both})
+            return render(self.request,self.template_name,{'student':student,'semester':student.semester,'course1':course1,'course2':course2,'cid':cid,'both_side':is_both})
+        return render(self.request,self.template_name,{'student':student,'semester':student.semester,'courses':course,'cid':cid,'both_side':is_both})
 class ManitioryForm(View):
     template_name = 'mfeed.html'
     def score(self,data) :
@@ -247,11 +255,11 @@ class ManitioryForm(View):
             cat = request.POST.get(f'cat_{i}')
             data[f'cat_{i}'] = self.score(cat)
         return data 
-    def get(self,request,sid,csid,count):
+    def get(self,request,sid,csid,cid):
         student = Student.objects.get(id=sid)
         data = ClassStaff.objects.get(id=csid)
-        return render(self.request,self.template_name,{'data':data,'sid':student,'count':count})
-    def post(self,request,sid,csid,count):
+        return render(self.request,self.template_name,{'data':data,'sid':student,'cid':cid})
+    def post(self,request,sid,csid,cid):
         student = Student.objects.get(id=sid)
         staff = int(request.POST.get('staff_name'))
         #print(f'satff id : {staff}')
@@ -265,8 +273,7 @@ class ManitioryForm(View):
             staff=staff,
             categories=categories
         )
-        count += 1
-        return redirect('msubject',sid=sid,count=count)
+        return redirect('msubject',sid=sid,cid=cid)
 
 class FeedBackView(View):
     def score(self,data) :
@@ -284,7 +291,7 @@ class FeedBackView(View):
         student = Student.objects.get(id=sid)
         class_staff = ClassStaff.objects.filter(subject__semester=student.semester,section=student.section,subject__mcourse=False)
         if len(class_staff) == catid: 
-            if(student.semester > 3) : return redirect('msubject',sid=sid,count=0)
+            if(student.semester > 3) : return redirect('course',sid=sid)
             else : return redirect('home')
         return render(self.request,'feed.html',{'data':class_staff[catid],'sid':sid,'catid':catid})
     def post(self,request,sid,catid):

@@ -28,7 +28,7 @@
         {% if both_side %}
         <div class="sub_container_1">
             {% for course in course1 %}
-            <a href="{% url 'mfeed' student.id course.id 0 %}">
+            <a href="{% url 'mfeed' student.id course.id cid %}">
                 <div class="sub_1">
                     <div class="inner_sub">
                         {{course.subject.name}} - {{course.subject.subject_code}}
@@ -39,7 +39,7 @@
         </div>
         <div class="sub_container_2">
             {% for course in course2 %}
-            <a href="{% url 'mfeed' student.id course.id 0 %}">
+            <a href="{% url 'mfeed' student.id course.id cid %}">
                 <div class="sub_1">
                     <div class="inner_sub">
                         {{course.subject.name}} - {{course.subject.subject_code}}
@@ -82,7 +82,7 @@
         });
 
         function home() {
-            window.location.href = "{% url 'home' %}";
+            window.location.href = "{% url 'course' cid %}";
         }
         const urlParts = window.location.pathname.split('/');
         const count = parseInt(urlParts[urlParts.length - 2]);

@@ -408,7 +408,7 @@
             </div>
         </div>
     </div>
-        <form id="feedbackForm" action="{% url 'mfeed' sid.id data.id count %}" method="POST">
+        <form id="feedbackForm" action="{% url 'mfeed' sid.id data.id cid %}" method="POST">
             {% csrf_token %}
             <div class="button_column">
                 <input type="hidden" name="staff_name" value="{{data.staff.id}}">

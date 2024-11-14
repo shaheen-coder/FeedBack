@@ -2,7 +2,7 @@ from django.db import models
 
 DEPARTMENT = (
     ('Computer Science and Engineering','CSE'),
-    ('Tnformation Technology','IT'),
+    ('Information Technology','IT'),
     ('Instrumentation and Controls Engineering','IT'),
     ('Electrical and Electronics Engineering','EEE')
 )
