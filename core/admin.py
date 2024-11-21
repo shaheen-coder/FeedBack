@@ -11,5 +11,9 @@ admin.site.register(Subject)
 class ClassStaffAdmin(admin.ModelAdmin):
     form = ClassStaffForm
     list_display = ('staff','section','subject','semester')
-
+    fieldsets = (
+        ('Class Information', {
+            'fields': ('course_type','semester', 'section', 'staff','subject')
+        }),
+    )
 admin.site.register(ClassStaff, ClassStaffAdmin)

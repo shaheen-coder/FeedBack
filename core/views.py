@@ -184,11 +184,17 @@ class ClassData(View):
 
         return JsonResponse(analysis_result)
 
-def get_subjects(request,year):
-    subjects = Subject.objects.filter(semester=year)
+def get_subjects(request,year,course):
+    print(f'api get_subject : {year} : course : {course}')
+    if course != 0:
+        manitiory,openelective,elective = False,False,False
+        if course == 1 : manitiory = True
+        elif course == 2 : openelective = True 
+        elif course == 3 : elective = True
+        subjects = Subject.objects.filter(semester=year,mcourse=manitiory,ecourse=elective,oecourse=openelective)
+    else : subjects = Subject.objects.filter(semester=year)
     data = [{'id': subject.id, 'name': subject.name,'subject_code':subject.subject_code} for subject in subjects]
     return JsonResponse(data, safe=False)
-
 # feeback and student views 
 
 class StudentLogin(View):
@@ -233,7 +239,7 @@ class Manitiory(View):
         elif cid == 2 : openelective = True 
         elif cid == 3 : elective = True
         course = ClassStaff.objects.filter(semester=student.semester,subject__mcourse=manitiory,subject__ecourse=elective,subject__oecourse=openelective)
-        #print(f'course len : {course.count()}')
+        if course.count() == 0: return render(self.request,self.template_name,{'error':'no courses are available','student':student,'cid':cid})
         if course.count() >= 6 :
             half = len(course) // 2 
             half += 1 if half % 2 != 0 else 0
@@ -332,7 +338,6 @@ class Search(View):
     def post(self, request):
         is_class = bool(request.POST.get('class_search'))
         is_loop = True
-        #print(f'is_class : {is_class}')
         query = request.POST.get('name')
         year = request.POST.get('year')
         if year != '':  
