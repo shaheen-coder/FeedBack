@@ -85,7 +85,7 @@ class StaffData(View):
 
         feedback_count = feedbacks.count()
         if feedback_count == 0:
-            return {}   
+            return JsonResponse({'error' : 'staff has no data '})   
         for feedback in feedbacks:
             for category, score in feedback.categories.items():
                 avg_scores[category] += score
@@ -125,7 +125,7 @@ class StaffData(View):
             analysis_result["percentage_of_3"][category] = (count_of_3[category] / feedback_count) * 100
             analysis_result["percentage_of_1"][category] = (count_of_1[category] / feedback_count) * 100
 
-        return JsonResponse(analysis_result)
+        return JsonResponse(analysis_result,safe=False)
 class ClassData(View):
     def get(self,request,semester,section):
         feedbacks = FeedBack.objects.filter(student__semester=semester,student__section=section)
@@ -246,7 +246,8 @@ class Manitiory(View):
             course1 = course[0:half]
             course2 = course[half::]
             is_both = True
-            return render(self.request,self.template_name,{'student':student,'semester':student.semester,'course1':course1,'course2':course2,'cid':cid,'both_side':is_both})
+            return render(self.request,self.template_name,{'cid':cid,'student':student,'semester':student.semester,'course1':course1,'course2':course2,'both_side':is_both})
+        print(f'cid : {cid}')
         return render(self.request,self.template_name,{'student':student,'semester':student.semester,'courses':course,'cid':cid,'both_side':is_both})
 class ManitioryForm(View):
     template_name = 'mfeed.html'
@@ -295,7 +296,7 @@ class FeedBackView(View):
         return data 
     def get(self,request,sid,catid):
         student = Student.objects.get(id=sid)
-        class_staff = ClassStaff.objects.filter(subject__semester=student.semester,section=student.section,subject__mcourse=False)
+        class_staff = ClassStaff.objects.filter(subject__semester=student.semester,section=student.section,subject__mcourse=False,subject__ecourse=False,subject__oecourse=False)
         if len(class_staff) == catid: 
             if(student.semester > 3) : return redirect('course',sid=sid)
             else : return redirect('home')
@@ -449,8 +450,9 @@ class ReportView(View):
     def post(self,request,staff_id,subject_code):
         staff = Staff.objects.get(id=staff_id)
         subject = Subject.objects.get(subject_code=subject_code)
-        data = self.get_data(staff.id,subject.subject_code)
-        html = render(self.request,self.template_name,{'datas':data,'staff':staff,'subject':subject})
+        datas = self.get_data(staff.id,subject.subject_code)
+        datas = [(key,value) for key,value in zip(terms,datas.values())]
+        html = render(self.request,self.template_name,{'staff':staff,'subject':subject,'datas':datas})
         pdf = HTML(string=html.content).write_pdf()
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{staff.fname}_{subject.subject_code}.pdf"'

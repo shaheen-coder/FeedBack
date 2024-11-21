@@ -13,10 +13,6 @@
     <link rel="stylesheet" href="{% static 'subject.css' %}">
     <title>Subject</title>
 </head>
-<<<<<<< HEAD
-
-=======
->>>>>>> 036f47c1e1c5def72ca39a51a09788b933389782
 <body>
     <header>
         <div class="head">
@@ -57,7 +53,7 @@
        {% if not error %}
         <div class="sub_container_1">
             {% for course in courses %}
-            <a href="{% url 'mfeed' student.id course.id 0 %}">
+            <a href="{% url 'mfeed' student.id course.id cid %}">
                 <div class="sub_1">
                     <div class="inner_sub">
                         {{course.subject.name}} - {{course.subject.subject_code}}
@@ -71,7 +67,7 @@
     {% endif %}
 </div>
 <div class="butten_div">
-    <button onclick="home()" class="btw">done</button>
+    <button onclick="home()" class="btw">back</button>
 </div>
     <!-- script code -->
     <script>
@@ -87,8 +83,6 @@
             if (mainContainer && subContainer1Scroll && mainContainer.children.length === 1) {
                 mainContainer.style.width = "30%";  // Adjust this width as needed
                 mainContainer.style.padding = "20px";  // Adjust padding as needed
-            }else{
-                mainContainer.style.width = "80%";
             }
         });
 
