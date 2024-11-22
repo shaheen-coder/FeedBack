@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.db.models import Avg,Count
 from django.contrib.auth.views import LogoutView
+from django.db import IntegrityError
 # others
 import json 
 from weasyprint import HTML
@@ -219,8 +220,10 @@ class StudentLogin(View):
             regno = request.POST.get('regno')
             password = request.POST.get('info')
             dept,year,section = self.pass_valid(password)
-            student = Student.objects.create(name=name,regno=regno,section=section,dept=dept,semester=year)
+            student,created = Student.objects.get_or_create(name=name,regno=regno,section=section,dept=dept,semester=year)
             return redirect('feed',sid=student.id,catid=0)
+        except IntegrityError:
+            return render(self.request,'login.html',{'error':'register number is already exists with other name'})
         except Exception as error:
             return render(self.request,'login.html',{'error':error})
 
@@ -437,7 +440,7 @@ class ReportView(View):
             for key,data in feed.categories.items():
                 cat_data[key] += data
         for key,data in cat_data.items():
-            cat_data[key] = [(data / count),(self.score((data / count)))]
+            cat_data[key] = [round((data / count),2),(self.score((data / count)))]
         return cat_data
     
     def get(self,request,staff_id,subject_code):
