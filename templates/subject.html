@@ -22,7 +22,7 @@
 
     <div class="main_container">
         {% if error %}
-        <h5 class="error">
+        <h5 class="error" style="margin-left: 0px;">
             {{error}}
         </h5>
         {% endif %}
@@ -75,14 +75,17 @@
             const mainContainer = document.querySelector('.main_container');
             const subContainer1Scroll = document.querySelector('.sub_container_1_scroll');
             const error = document.querySelector('.error');
-            if(error){ 
-                error.style.setProperty('width', '20%', 'important');
+            // if(error){ 
+            //     error.style.setProperty('width', '20%', 'important');
 
-            }
+            // }
             // Check if sub_container_1_scroll is the only child element in main_container
-            if (mainContainer && subContainer1Scroll && mainContainer.children.length === 1) {
-                mainContainer.style.width = "30%";  // Adjust this width as needed
+            if (mainContainer && mainContainer.children.length === 1) {
+                mainContainer.style.width = "25%";  // Adjust this width as needed
                 mainContainer.style.padding = "20px";  // Adjust padding as needed
+            }
+            else{
+                mainContainer.style.width = "25%";
             }
         });
 
