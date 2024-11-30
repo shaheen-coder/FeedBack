@@ -190,7 +190,7 @@
         <div class="left_container">
             <div class="top_nav">
                 <h3>Dashboard for Staff</h3>
-                
+
             </div>
             <div class="start-card campin_outer">
                 <h4>credited</h4>
@@ -257,7 +257,7 @@
                 </div>
                 <div class="user-info">
                     {% if is_class %}
-                    
+
                     <h4>Class {{section}} data</h4>
                     <!--<p></p>-->
                     {% else %}
@@ -279,22 +279,34 @@
             </div>
         </div>
     </div>
-
+    {% csrf_token %}
     <script>
         // Fetch data from the API
+        const csrftoken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
         {% if is_class %}
         fetch("{% url 'class' semester section %}")
         {% else %}
-        fetch("{% url 'staff' profile.id subject.subject_code %}")
+        fetch("{% url 'an'  %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                type: "staff_sub",
+                id: {{staffd.id}}
+            })
+            })
         {% endif %}
             .then(response => response.json())
             .then(data => {
-                const averageData = Object.values(data.avg);
-                const percentageData = Object.values(data.percentage);
-                const labels = Object.values(data.terms); 
-                const overallCounts = Object.values(data.overall_percentages); 
-                const overallLabels = ['1s', '3s', '5s']; 
-                const overallCountslabel = data.overall_counts;
+                console.log(data);
+                const averageData = Object.values(data.category_averages) || {};
+                const percentageData = Object.values(data.category_percentages) || {};
+                const labels = Object.values(data.terms) || {};
+                const overallCounts = Object.values(data.percentages) || {};
+                const overallLabels = ['1s', '3s', '5s'];
+                const overallCountslabel = data.counts || {};
                 document.querySelector('.five_points .big').textContent = overallCountslabel["5"];
                 document.querySelector('.three_points .big').textContent = overallCountslabel["3"];
                 document.querySelector('.one_points .big').textContent = overallCountslabel["1"];
@@ -304,10 +316,10 @@
                 const doughnutChart = new Chart(doughnutCtx, {
                     type: 'doughnut',
                     data: {
-                        labels: labels, 
+                        labels: labels,
                         datasets: [{
                             label: 'Average Ratings',
-                            data: averageData, 
+                            data: averageData,
                             backgroundColor: [
                                 '#f39c12', '#3498db', '#e74c3c', '#2ecc71',
                                 '#9b59b6', '#34495e', '#e67e22', '#1abc9c',
@@ -329,10 +341,10 @@
                 const lineChart = new Chart(lineCtx, {
                     type: 'line',
                     data: {
-                        labels: labels, 
+                        labels: labels,
                         datasets: [{
                             label: 'Percentage Growth',
-                            data: percentageData, 
+                            data: percentageData,
                             borderColor: '#3498db',
                             backgroundColor: 'rgba(52, 152, 219, 0.2)',
                             fill: true,
@@ -357,10 +369,10 @@
                 const barChart = new Chart(barCtx, {
                     type: 'bar',
                     data: {
-                        labels: overallLabels, 
+                        labels: overallLabels,
                         datasets: [{
                             label: 'Overall Counts',
-                            data: overallCounts, 
+                            data: overallCounts,
                             backgroundColor: ['#1abc9c', '#3498db', '#e74c3c'],
                         }]
                     },

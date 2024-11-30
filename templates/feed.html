@@ -249,12 +249,12 @@
 
     <header>
         <div class="head">
-            <h4 class="letters">{{data.staff.fname}} {{data.staff.sname}} </h4>
+            <h4 class="letters">{{data.staff.name}} - {{data.staff.dept}} </h4>
         </div>
     </header>
 
     <div class="staff_details">
-        <p class="staff_subject">{{data.subject.name}} - {{data.subject.subject_code}}</p>
+        <p class="staff_subject">{{data.subject.name}} - {{data.subject.code}}</p>
     </div>
 
     <!-- Wrapper for the sliding effect -->
@@ -415,7 +415,7 @@
             {% csrf_token %}
             <div class="button_column">
                 <input type="hidden" name="staff_name" value="{{data.staff.id}}">
-                <input type="hidden" name="subject_code" value="{{data.subject.subject_code}}">
+                <input type="hidden" name="subject_code" value="{{data.subject.code}}">
                 <!-- <button type="submit" class="last_butten" >Back</button>-->
                 <button type="submit" class="last_butten" >Next</button>
             </div>

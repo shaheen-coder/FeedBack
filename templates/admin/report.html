@@ -100,7 +100,7 @@
 </head>
 <body>
     {% if request.method == 'GET' %}
-    <form method="post" action="{% url 'report' staff.id subject.subject_code %}">
+    <form method="post" action="{% url 'report' staff.id subject.code %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-success float-end mx-5">Download <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg></button>
     
@@ -123,14 +123,13 @@
                         <tr>
                             <th>sno</th>
                             <th>catageory</th>
-                            <th>score</th>
-                            <th>grade</th>
+                            <th>5</th>
+                            <th>3</th>
+                            <th>1</th>
+                            <th>avg</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for data in datas %}
-                        <tr><td>{{forloop.counter0}}</td><td>{{data.0}}</td><td>{{data.1.0}}</td><td>{{data.1.1}}</td></tr>
-                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -141,5 +140,62 @@
             <div class="sign">Signature</div>
         </div>
     </div>
+{% csrf_token %}
 </body>
+<script>
+const csrftoken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+// Fetch data and populate table
+fetch("{% url 'api-report' %}", {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+    },
+    body: JSON.stringify({
+        type: "staff",
+        key : 1 
+    })
+})
+    .then(response => response.json())
+    .then(json => {
+        const tableBody = document.querySelector('.fl-table tbody');
+        const data = json.data; // Extract the 'data' object from the response
+        
+        // Clear existing rows (optional)
+        tableBody.innerHTML = "";
+
+        // Populate rows dynamically
+        let sno = 1;
+        for (const [category, stats] of Object.entries(data)) {
+            const row = document.createElement('tr');
+            if (stats){
+                // Create and append table cells
+                row.innerHTML = `
+                    <td>${sno++}</td>
+                    <td>${category}</td>
+                    <td>${stats.percentage_5s}%</td>
+                    <td>${stats.percentage_3s}%</td>
+                    <td>${stats.percentage_1s}%</td>
+                    <td>${stats.average.toFixed(2)}</td>
+                `;
+
+                tableBody.appendChild(row);
+            }
+        }
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${sno++}</td>
+            <td>overall</td>
+            <td>${data.count['5']}</td>
+            <td>${data.count['3']}</td>
+            <td>${data.count['1']}</td>
+            <td>NULL</td>
+        `;
+        tableBody.appendChild(row);
+    })
+    .catch(error => {
+        console.error("Error fetching data:", error);
+    });
+
+</script>
 </html>

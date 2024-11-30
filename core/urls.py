@@ -12,14 +12,15 @@ urlpatterns = [
     path('msubject/<int:sid>/<int:cid>/',views.Manitiory.as_view(),name='msubject'),
     path('mcfeed/<int:sid>/<int:csid>/<int:cid>/',views.ManitioryForm.as_view(),name='mfeed'),
     path('course/<int:sid>/',views.Course.as_view(),name='course'),
-    #api urls 
-    path('classstaff/subjects/<int:year>/<int:course>/', views.get_subjects, name='get_subjects'),
-    path('api/staff/<int:sid>/<str:subject_code>/',views.StaffData.as_view(),name='staff'),
-    path('api/classdata/<int:semester>/<str:section>/',views.ClassData.as_view(),name='class'),
     # admin urls 
     path('cadmin/report/<int:staff_id>/<str:subject_code>/',views.ReportView.as_view(),name='report'),
     path('student/',views.StudentCheck.as_view(),name='student'),
     
-   #auth view 
+    #auth view 
     path('auth/logout/',views.CustomLogoutView.as_view(),name='logout'),
+    path('add/hod/',views.AddHodUser.as_view(),name='addhod'),
+    # test view
+    path('feed/',views.Feed.as_view(),name='ff'),
+    #path('testlogin/',views.SLogin.as_view(),name='slogin'),
+
 ]

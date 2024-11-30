@@ -1,0 +1,50 @@
+<!-- upload.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload XLSX</title>
+    <script>
+        function validateForm(event) {
+            const fileInput = document.querySelector('input[type="file"]');
+            const file = fileInput.files[0];
+
+            // Check if a file was selected
+            if (!file) {
+                alert('Please select a file to upload.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // Check if the file is an XLSX file
+            const validExtensions = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
+            if (!validExtensions.includes(file.type)) {
+                alert('Please upload a valid XLSX file.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // Check if the file is empty
+            if (file.size === 0) {
+                alert('The selected file is empty. Please upload a non-empty file.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // If all checks pass, allow the form to be submitted
+        }
+    </script>
+</head>
+<body>
+    <h1>Upload Custom Users</h1>
+    <form action="{% url 'addhod' %}" method="post" enctype="multipart/form-data" onsubmit="validateForm(event)">
+        {% csrf_token %}
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+    {% if error %}
+    <h5>{{error}}</h5>
+    {% endif %}
+</body>
+</html>
