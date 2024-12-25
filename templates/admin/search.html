@@ -1,27 +1,21 @@
-
-{% extends 'admin/nav.html' %}
+{% extends 'adminnav.html' %}
 {% load static %}
 
 {% block header %}
 <title>Search</title>
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
 {% endblock %}
 
 {% block content %}
-<form method="post" action="{% url 'search' %}">
+<form  id="filterForm">
     <div class="main_container">
         <div class="search_filters">
+            {% if mode == 'staffsub' or mode == 'sub' %}
             <input class="sear" name="subject_code" type="text" placeholder="SUBJECT CODE">
+            {% elif mode == 'staff' %}
             <input class="sear" name="name" type="text" placeholder="STAFF NAME">
+            {% endif %}
             {% csrf_token %}
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="class_search" onchange="updateCheckboxValue(this)" id="flexCheckIndeterminate">
-                <label class="form-check-label" for="flexCheckIndeterminate">
-                  Class Search
-                </label>
-              </div>
             <div class="filters">
                 <select name="year" class="filter_1">
                     <option value="">year</option>
@@ -30,7 +24,7 @@
                     <option value="3">3</option>
                     <option value="4">4</option>
                 </select>
-                <select name="class" class="filter_1">
+                <select name="section" class="filter_1">
                     <option value="">section</option>
                     <option value="A">A</option>
                     <option value="B">B</option>
@@ -40,73 +34,100 @@
                     <option value="1">male</option>
                     <option value="0">female</option>
                 </select>
+                <select name="dept" class="filter_1">
+                    <option value="">department</option>
+                    <option value="CSE">be-cse</option>
+                    <option value="ICE">be-ice</option>
+                    <option value="MCA">mca</option>
+                </select>
 
-                <button type="submit" class="filter_but">Filter</button>
+                <button type="button" class="filter_but"  onclick="filterData()">Filter</button>
             </div>
         </div>
     </div>
 </form>
-<div class="data">
-    {% if is_loop %}
-    {% for staff in staffs %}
-    <div class="user">
-        <div class="stafs">
-            <img src="{{staff.staff.proflie_pic.url}}" alt="User Image">
-        </div>
-        <div>
-            {% if is_class %}
-            <p>{{staff.section}}</p>
-            {% else %}
-            <p>{{staff.staff.fname}} {{staff.staff.sname}}</p>
-            {% endif %}
-        </div>
-        <div>
-            {% if is_class %}
-            <p>{{staff.semester}}</p>
-            {% else %}
-            <p>{{staff.subject.subject_code}}</p>
-            {% endif %}
-        </div>
-        {% if is_class %}
-        <button onclick="reroute('{{staff.semester}}','{{staff.section}}')" class="data_but">View</button>
-        {% else %}
-        <button onclick="reroute('{{staff.staff.id}}','{{staff.subject.subject_code}}')" class="data_but">View</button>
-        <button onclick="reroute_report('{{staff.staff.id}}','{{staff.subject.subject_code}}')" class="data_but">Report</button>
-        {% endif %}
-    </div>
-    {% endfor %}
-    {% else %}
-    <div class="user">
-        <div class="stafs">
-            <img src="{% static 'assets/class.png' %}" alt="class Image">
-        </div>
-        <div>
-            <p>{{staffs.section}}</p>
-        </div>
-        <div>
-            <p>{{staffs.semester}}</p>
-        </div>
-        {% if is_class %}
-        <button onclick="reroute('{{staffs.semester}}','{{staffs.section}}')" class="data_but">View</button>
-        {% endif %}
-    </div>
-    {% endif %}
+<div class="data" id="dataContainer">
+    <!-- Dynamically added user data will appear here -->
 </div>
-<!-- script code -->
+{% endblock %}
+
+{% block script %}
 <script>
-    function reroute_report(staff_id,subject_code){
-        window.location.href = `http://127.0.0.1:8000/cadmin/report/${staff_id}/${subject_code}/`;
-    }
-    function reroute(staff_id, subject_code) {
-        {% if is_class %}
-        window.location.href = `http://127.0.0.1:8000/class/${staff_id}/${subject_code}/`;
-        {% else %}
-        window.location.href = `http://127.0.0.1:8000/staff/${staff_id}/${subject_code}/`;
-        {% endif %}
-    }
-    function updateCheckboxValue(checkbox) {
-        checkbox.value = checkbox.checked ? "True" : "False";
-        console.log("Checkbox value:", checkbox.value);  
+    
+    function filterData() {
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+
+        // Prepare data for JSON request
+        const requestData = {};
+        const is_analysis = {{is_analysis}};
+        const btn_name = (is_analysis) ? "View" : "Report";
+        requestData['mode'] = "{{mode}}";
+        formData.forEach((value, key) => {
+            requestData[key] = value;
+        });
+
+        // Send API POST request
+        fetch("{% url 'sss' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Clear previous data
+                const dataContainer = document.getElementById('dataContainer');
+                dataContainer.innerHTML = '';
+
+                // Handle response data
+                console.log(data);
+                console.log("\n len : " + Object.keys(data.datas).length);
+                if (data.datas && data.datas.length > 0) {
+                    data.datas.forEach(staff => {
+                        const userDiv = document.createElement('div');
+                        userDiv.className = 'user';
+                        if(requestData.mode == 'staff'){
+                            let url = (!is_analysis) ? `http://127.0.0.1:8000/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` : `http://127.0.0.1:8000/analysis/staff/${staff.id}/${staff.dept}/`;
+                            (!is_analysis) ? console.log('report') : console.log('analysis');
+                            userDiv.innerHTML = `
+                            <div class="stafs">
+                                <img src="${staff.profile_pic}" alt="User Image">
+                            </div>
+                            <div>
+                                <p>${staff.dept}</p>
+                            </div>
+                            <div>
+                                <p>${staff.name} </p>
+                            </div>
+                            <a href="${url}" class="data_but">${btn_name}</a>
+                        `;
+                        dataContainer.appendChild(userDiv);
+                        }else if(requestData.mode == 'staffsub'){
+                            let url = (!is_analysis) ? `http://127.0.0.1:8000/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` :`http://127.0.0.1:8000/analysis/staffsub/${staff.id}/${staff.subject.code}/` ;
+                            userDiv.innerHTML = `
+                            <div class="stafs">
+                                <img src="${staff.staff.profile_pic}" alt="User Image">
+                            </div>
+                            <div>
+                                <p>${staff.staff.name} : ${staff.section} </p>
+                            </div>
+                            <div>
+                                <p>${staff.subject.name} </p>
+                            </div>
+                            <a href="${url}" class="data_but">${btn_name}</a>
+                        `;
+                        dataContainer.appendChild(userDiv);
+                        }
+                       
+                    });
+                } 
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 </script>
 {% endblock %}

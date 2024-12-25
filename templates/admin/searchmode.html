@@ -1,0 +1,65 @@
+{% extends 'adminnav.html' %}
+
+{% block header %}
+<title>Mode</title>
+{% endblock %}
+
+{% block style %}
+<style>
+    .transparent-box {
+
+        background-color: rgba(255, 255, 255, 0.8);
+        /* White with transparency */
+
+        border-radius: 10px;
+
+        padding: 20px;
+
+    }
+
+    .big-img {
+
+        max-width: 100%;
+
+        height: auto;
+
+    }
+
+    .btn-custom {
+
+        background-color: blue;
+
+        color: white;
+
+        margin: 10px 0;
+        /* Space between buttons */
+
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+
+    <div class="row">
+
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="transparent-box">
+                <a href="{% url 'csearch' 'class' 1 %}" class="btn btn-custom w-100">class Analysis</a>
+                <a href="{% url 'search' 'staff' 1 %}" class="btn btn-custom w-100">staff Analysis</a>
+                <a href="{% url 'search' 'staffsub' 1 %}" class="btn btn-custom w-100">subject Analysis</a>
+                <a href="{% url 'search' 'dept' 1 %}" class="btn btn-custom w-100">department</a>
+            </div>
+        </div>
+        <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+            <div class="transparent-box text-center">
+
+                <img src="https://as1.ftcdn.net/v2/jpg/05/33/79/30/1000_F_533793082_5G7mPJBgkVLzJirz51ls1LAr9KgMdpZJ.jpg"
+                    alt="Big Image" class="big-img mb-3">
+                <!-- Replace with your image URL -->
+                <p>Wellcome to report mode page </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

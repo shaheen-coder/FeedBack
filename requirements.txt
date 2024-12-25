@@ -1,7 +1,5 @@
 Django
 django-jazzmin
 pillow
-weasyprint
 django-import-export
-django-simple-captcha
 djangorestframework

@@ -1,50 +1,194 @@
-<!-- upload.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload XLSX</title>
-    <script>
-        function validateForm(event) {
-            const fileInput = document.querySelector('input[type="file"]');
-            const file = fileInput.files[0];
+{% extends 'adminnav.html' %}
 
-            // Check if a file was selected
-            if (!file) {
-                alert('Please select a file to upload.');
-                event.preventDefault(); // Prevent form submission
-                return;
-            }
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'prinicpal' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block header %}
+<title>Add Hod</title>
+{% endblock %}
+{% block style %}
+<style>
+    body {
+        background-color: #f0f8ff;
+        /* Light blue */
+        color: #00274d;
+        /* Dark blue */
+        font-family: Arial, sans-serif;
+    }
 
-            // Check if the file is an XLSX file
-            const validExtensions = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
-            if (!validExtensions.includes(file.type)) {
-                alert('Please upload a valid XLSX file.');
-                event.preventDefault(); // Prevent form submission
-                return;
-            }
+    .upload-container {
+        border: 2px dashed #007bff;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        transition: background-color 0.3s ease;
+        position: relative;
+    }
 
-            // Check if the file is empty
-            if (file.size === 0) {
-                alert('The selected file is empty. Please upload a non-empty file.');
-                event.preventDefault(); // Prevent form submission
-                return;
-            }
+    .upload-container.drag-over {
+        background-color: rgba(0, 123, 255, 0.1);
+    }
 
-            // If all checks pass, allow the form to be submitted
-        }
-    </script>
-</head>
-<body>
-    <h1>Upload Custom Users</h1>
-    <form action="{% url 'addhod' %}" method="post" enctype="multipart/form-data" onsubmit="validateForm(event)">
+    .file-name {
+        margin-top: 20px;
+        font-size: 1rem;
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    .error-container {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: rgba(0, 123, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .error-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #ff0000;
+        /* Red for error */
+    }
+    .success-title{
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: green;
+    }
+    .upload-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .upload-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <form id="file-upload-form" action="{% url 'addhod' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name="file" required>
-        <button type="submit">Upload</button>
+        <div class="row g-4">
+            <!-- Left Side: Upload File Drag and Drop -->
+            <div class="col-md-6">
+                <div id="upload-container" class="upload-container">
+                    <p>Drag and drop your file here</p>
+                    <p>or</p>
+                    <input type="file" name="file" id="file-input" hidden>
+                    <button type="button" class="btn btn-primary"
+                        onclick="document.getElementById('file-input').click()">Choose File</button>
+                    <!-- File name display -->
+                    <div id="file-name" class="file-name"></div>
+                </div>
+            </div>
+            <!-- Right Side: Error Box and Upload Button -->
+            <div class="col-md-6 d-flex flex-column justify-content-between">
+                <div id="error-container" class="error-container">
+                    {% if error %}
+                    <div class="error-title">Error</div>
+                    <p id="error-message">{{error}}.</p>
+                    {% else %}
+                    <div class="success-title">success</div>
+                    <p id="error-message">All the data are upload successfully.</p>
+                    {% endif %}
+                </div>
+                <button type="submit" class="upload-button mt-auto">Upload File</button>
+            </div>
+        </div>
     </form>
-    {% if error %}
-    <h5>{{error}}</h5>
-    {% endif %}
-</body>
-</html>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+
+    const uploadContainer = document.getElementById('upload-container');
+    const fileInput = document.getElementById('file-input');
+    const fileNameDisplay = document.getElementById('file-name');
+    const errorContainer = document.getElementById('error-container');
+    const errorMessage = document.getElementById('error-message');
+
+    // Drag-and-drop events
+    uploadContainer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadContainer.classList.add('drag-over');
+    });
+
+    uploadContainer.addEventListener('dragleave', () => {
+        uploadContainer.classList.remove('drag-over');
+    });
+
+    uploadContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadContainer.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+
+        if (files.length > 0) {
+            const file = files[0];
+            if (validateFile(file)) {
+                fileInput.files = files; // Attach files to input
+                updateFileName(file.name);
+                errorMessage.textContent = 'File ready to upload.';
+                errorContainer.classList.remove('d-none');
+            } else {
+                updateFileName('');
+                errorMessage.textContent = 'Invalid file type. Only .xlsx files are allowed.';
+                errorContainer.classList.remove('d-none');
+            }
+        }
+    });
+
+    // Input change event for file selection
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (file) {
+            if (validateFile(file)) {
+                updateFileName(file.name);
+                errorMessage.textContent = 'File ready to upload.';
+                errorContainer.classList.remove('d-none');
+            } else {
+                updateFileName('');
+                errorMessage.textContent = 'Invalid file type. Only .xlsx files are allowed.';
+                errorContainer.classList.remove('d-none');
+            }
+        }
+    });
+
+    // Form submission validation
+    const form = document.getElementById('file-upload-form');
+    form.addEventListener('submit', (e) => {
+        const file = fileInput.files[0];
+        if (!file) {
+            e.preventDefault();
+            updateFileName('');
+            errorMessage.textContent = 'Please select or drop a file before uploading.';
+            errorContainer.classList.remove('d-none');
+        } else if (!validateFile(file)) {
+            e.preventDefault();
+            updateFileName('');
+            errorMessage.textContent = 'Invalid file type. Only .xlsx files are allowed.';
+            errorContainer.classList.remove('d-none');
+        }
+    });
+
+    // Validate file type
+    function validateFile(file) {
+        return file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    }
+
+    // Update file name display
+    function updateFileName(name) {
+        fileNameDisplay.textContent = name ? `Selected File: ${name}` : '';
+    }
+</script>
+{% endblock %}

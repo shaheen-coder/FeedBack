@@ -1,0 +1,157 @@
+{% extends 'adminnav.html' %}
+{% load static %}
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'prinicpal' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block header %}
+<title>Search</title>
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+<form  id="filterForm">
+    <div class="main_container">
+        <div class="search_filters">
+            {% if mode == 'staffsub' or mode == 'sub' %}
+            <input class="sear" name="subject_code" type="text" placeholder="SUBJECT CODE">
+            {% elif mode == 'staff' %}
+            <input class="sear" name="name" type="text" placeholder="STAFF NAME">
+            {% endif %}
+            {% csrf_token %}
+            <div class="filters">
+                <select name="year" class="filter_1">
+                    <option value="">year</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+                <select name="section" class="filter_1">
+                    <option value="">section</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                </select>
+                <select name="gender" class="filter_1">
+                    <option value="">gender</option>
+                    <option value="1">male</option>
+                    <option value="0">female</option>
+                </select>
+                <select name="dept" class="filter_1">
+                    <option value="">department</option>
+                    <option value="CSE">be-cse</option>
+                    <option value="ICE">be-ice</option>
+                    <option value="MCA">mca</option>
+                </select>
+
+                <button type="button" class="filter_but"  onclick="filterData()">Filter</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="data" id="dataContainer">
+    <!-- Dynamically added user data will appear here -->
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function getDomainName() {
+        // Get the current URL
+        const url = window.location.href;
+      
+        // Extract the hostname from the URL
+        const hostname = new URL(url).hostname;
+      
+        // Extract the domain name from the hostname
+        const domainName = hostname.split('.').slice(-2).join('.');
+      
+        return domainName;
+      }
+    const currentDomain = getDomainName();
+    console.log(currentDomain); 
+    function isHttpOrHttps(url) {
+        try {
+          const parsedUrl = new URL(url);
+          return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+        } catch (error) {
+          return false; // Invalid URL
+        }
+      }       
+    function filterData() {
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+
+        // Prepare data for JSON request
+        const requestData = {};
+        const is_analysis = {{is_analysis}};
+        const btn_name = (is_analysis) ? "View" : "Report";
+        requestData['mode'] = "{{mode}}";
+        formData.forEach((value, key) => {
+            requestData[key] = value;
+        });
+
+        // Send API POST request
+        fetch("{% url 'sss' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Clear previous data
+                const dataContainer = document.getElementById('dataContainer');
+                dataContainer.innerHTML = '';
+
+                // Handle response data
+                console.log(data);
+                console.log("\n len : " + Object.keys(data.datas).length);
+                if (data.datas && data.datas.length > 0) {
+                    data.datas.forEach(staff => {
+                        const userDiv = document.createElement('div');
+                        userDiv.className = 'user';
+                        if(requestData.mode == 'staff'){
+                            let url = (!is_analysis) ? `http://${currentDomain}/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` : `http://${currentDomain}/analysis/staff/${staff.id}/${staff.dept}/`;
+                            (!is_analysis) ? console.log('report') : console.log('analysis');
+                            userDiv.innerHTML = `
+                            <div class="stafs">
+                                <img src="${staff.profile_pic}" alt="User Image">
+                            </div>
+                            <div>
+                                <p>${staff.dept}</p>
+                            </div>
+                            <div>
+                                <p>${staff.name} </p>
+                            </div>
+                            <a href="${url}" class="data_but">${btn_name}</a>
+                        `;
+                        dataContainer.appendChild(userDiv);
+                        }else if(requestData.mode == 'staffsub'){
+                            let url = (!is_analysis) ? `http://${currentDomain}/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` :`http://${currentDomain}/analysis/staffsub/${staff.id}/${staff.subject.code}/` ;
+                            userDiv.innerHTML = `
+                            <div class="stafs">
+                                <img src="${staff.staff.profile_pic}" alt="User Image">
+                            </div>
+                            <div>
+                                <p>${staff.staff.name} : ${staff.section} </p>
+                            </div>
+                            <div>
+                                <p>${staff.subject.name} </p>
+                            </div>
+                            <a href="${url}" class="data_but">${btn_name}</a>
+                        `;
+                        dataContainer.appendChild(userDiv);
+                        }
+                       
+                    });
+                } 
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+{% endblock %}

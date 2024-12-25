@@ -1,0 +1,159 @@
+{% extends 'adminnav.html' %}
+{% load static %}
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'prinicpal' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block header %}
+<title>Search</title>
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+<form  id="filterForm">
+    <div class="main_container">
+        <div class="search_filters">
+            <input class="sear" name="name" type="text" placeholder="STUDENT NAME">
+            {% csrf_token %}
+            <div class="filters">
+                <select name="year" class="filter_1">
+                    <option value="">year</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+                <select name="section" class="filter_1">
+                    <option value="">section</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                </select>
+                <select name="gender" class="filter_1">
+                    <option value="">gender</option>
+                    <option value="1">male</option>
+                    <option value="0">female</option>
+                </select>
+                <select name="dept" class="filter_1">
+                    <option value="">department</option>
+                    <option value="CSE">be-cse</option>
+                    <option value="ICE">be-ice</option>
+                    <option value="MCA">mca</option>
+                </select>
+
+                <button type="button" class="filter_but"  onclick="filterData()">Filter</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="data" id="dataContainer">
+    <!-- Dynamically added user data will appear here -->
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function getDomainName() {
+        // Get the current URL
+        const url = window.location.href;
+      
+        // Extract the hostname from the URL
+        const hostname = new URL(url).hostname;
+      
+        // Extract the domain name from the hostname
+        const domainName = hostname.split('.').slice(-2).join('.');
+      
+        return domainName;
+      }
+    const currentDomain = getDomainName();
+    console.log(currentDomain); 
+    function filterData() {
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+
+        // Prepare data for JSON request
+        const requestData = {};
+        requestData['mode'] = "{{mode}}";
+        formData.forEach((value, key) => {
+            requestData[key] = value;
+        });
+
+        // Send API POST request
+        fetch("{% url 'student-search' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Clear previous data
+                const dataContainer = document.getElementById('dataContainer');
+                dataContainer.innerHTML = '';
+
+                // Handle response data
+                console.log(data);
+                if (data.student && data.student.length > 0) {
+                    data.student.forEach(student => {
+                        if(requestData.mode == 'stu'){
+                            const userDiv = document.createElement('div');
+                            userDiv.className = 'user'; 
+                            let url = `http://${currentDomain}/prinicipal/report/${requestData.mode}/${student.id}/${student.dept}/`;
+                            userDiv.innerHTML = `
+                                <div class="stafs">
+                                    <img src="" alt="User Image">
+                                </div>
+                                <div>
+                                    <p>${student.name}</p>
+                                </div>
+                                <div>
+                                    <p>${student.dept} </p>
+                                </div>
+                                <a href="${url}" class="data_but">Report</a>
+                            `;
+                            dataContainer.appendChild(userDiv);
+                        }else{
+                            const userDiv = document.createElement('div');
+                            userDiv.className = 'user'; 
+                            let url = `http://${currentDomain}/cadmin/comment/${student.id}/`;
+                            userDiv.innerHTML = `
+                                <div class="stafs">
+                                    <img src="" alt="User Image">
+                                </div>
+                                <div>
+                                    <p>${student.name}</p>
+                                </div>
+                                <div>
+                                    <p>${student.dept} </p>
+                                </div>
+                                <a href="${url}" class="data_but">Report</a>
+                            `;
+                            dataContainer.appendChild(userDiv);
+                        }
+                    });
+                } else {
+                    const userDiv = document.createElement('div');
+                        userDiv.className = 'user';
+                        let url = `http://${currentDomain}/prinicipal/report/${requestData.mode}/${data.student.id}/${data.student.dept}/`;
+                        userDiv.innerHTML = `
+                            <div class="stafs">
+                                <img src="" alt="User Image">
+                            </div>
+                            <div>
+                                <p>${data.student.name}</p>
+                            </div>
+                            <div>
+                                <p>${data.student.dept} </p>
+                            </div>
+                            <a href="${url}" class="data_but">Report</a>
+                    `;
+                    dataContainer.appendChild(userDiv);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+{% endblock %}

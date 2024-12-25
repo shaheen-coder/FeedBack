@@ -189,7 +189,7 @@
     <div class="main_container">
         <div class="left_container">
             <div class="top_nav">
-                <h3>Dashboard for Staff</h3>
+                <h3>Analysis Dashboard</h3>
 
             </div>
             <div class="start-card campin_outer">
@@ -220,7 +220,7 @@
                     </div>
                     <div class="separator"></div>
                     <div class="form-item">
-                        {% if is_class %}
+                        {% if mode == 'class' %}
                         <label for="subject">{{semester}}</label>
                         {% else %}
                         <label for="subject">{{subject.name}}</label>
@@ -228,18 +228,18 @@
                     </div>
                     <div class="separator"></div>
                     <div class="form-item">
-                        {% if is_class %}
+                        {% if mode == 'class' %}
                         <label for="subject_code">{{section}}</label>
-                        {% else %}
-                        <label for="subject_code">{{subject.subject_code}}</label>
+                        {% elif mode == 'staff' %}
+                        <label for="subject_code"> </label>
                         {% endif %}
                     </div>
                     <div class="separator"></div>
                     <div class="form-item">
-                        {% if is_class %}
-                        <label for="section">{{dept}}</label>
-                        {% else %}
-                        <label for="section">{{dept}}</label>
+                        {% if mode == 'staff' %}
+                        <label for="section">{{staff.dept}}</label>
+                        {% elif mode == 'staffsub' %}
+                        <label for="section">{{staffd.staff.dept}}</label>
                         {% endif %}
                     </div>
                 </div>
@@ -249,20 +249,26 @@
         <div class="right_container">
             <div class="intro">
                 <div>
-                    {% if is_class %}
+                    {% if mode == 'class' %}
                     <img src="{% static 'assets/class.png' %}" alt="User Avatar" class="avatar">
+                    {% elif mode == 'staff' %}
+                    <img src="{{staff.profile_pic.url}}" alt="User Avatar" class="avatar">
+                    {% elif mode == 'staffsub' %}
+                    <img src="{{staffd.staff.profile_pic.url}}" alt="User Avatar" class="avatar">
                     {% else %}
-                    <img src="{{profile.proflie_pic.url}}" alt="User Avatar" class="avatar">
+                    <img src="{% static 'assets/class.png' %}" alt="User Avatar" class="avatar">
                     {% endif %}
                 </div>
                 <div class="user-info">
-                    {% if is_class %}
+                    {% if mode == 'class' %}
 
                     <h4>Class {{section}} data</h4>
-                    <!--<p></p>-->
+                    {% elif mode == 'staff' %}
+                    <h4>{{staff.name}}</h4>
+                    {% elif mode == 'staffsub' %}
+                    <h4>{{staffd.staff.name}}</h4>
                     {% else %}
-                    <h4>{{profile.fname}} {{profile.sname}}</h4>
-                    <p>{{profile.dept}}</p>
+                    <h4>{{dept}}</h4>
                     {% endif %}
                 </div>
                 <div>
@@ -283,23 +289,47 @@
     <script>
         // Fetch data from the API
         const csrftoken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
-        {% if is_class %}
-        fetch("{% url 'class' semester section %}")
-        {% else %}
+        {% if mode != 'dept' %}
         fetch("{% url 'an'  %}", {
             method: 'POST',
+        {% else %}
+        fetch("{% url 'ana-dept'  %}", {
+            method: 'GET',
+        {% endif %}
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrftoken
             },
+            {% if mode != 'dept' %}
             body: JSON.stringify({
-                type: "staff_sub",
-                id: {{staffd.id}}
+                {% if mode == 'staffsub' %}
+                mode: "staff_sub",
+                key: {{staffd.id}},
+                dept : "{{staffd.staff.dept}}",
+                sem : {{staffd.semester}},
+                {% elif mode == 'class' %}
+                mode : "class",
+                key : {{semester}},
+                sec : "{{section}}",
+                dept : "{{dept}}",
+                sem : null
+                {% elif mode == 'staff' %}
+                mode : 'staff',
+                key : {{staff.id}},
+                dept : "{{staff.dept}}",
+                sem : null
+                {% elif mode == 'dept' %}
+                dept : "{{dept}}"
+                {% endif %}
             })
+            {% endif %}
             })
-        {% endif %}
             .then(response => response.json())
             .then(data => {
+                console.log(data);
+                {% if mode == 'dept' %}
+                data = data['{{dept}}'];
+                {% endif %}
                 console.log(data);
                 const averageData = Object.values(data.category_averages) || {};
                 const percentageData = Object.values(data.category_percentages) || {};

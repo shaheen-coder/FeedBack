@@ -1,191 +1,618 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Feed</title>
+{% load static %}
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="{% static 'assets/avc.png' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <title>Feedback System</title>
+  <style>
+    html,
+    body {
+      height: 690px;
+      margin: 0;
+    }
 
-    <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #e6e9e9;
+    }
+
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #e6ebeb;
+      width: 100%;
+      margin: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 0 0 15px 15px;
+      top: 0;
+      z-index: 1000;
+
+    }
+
+    .head {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 60px;
+      background-color: #d0d4d4;
+      width: 70%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-bottom: 3px solid rgba(197, 197, 197, 0.767);
+      padding: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      color: #333;
+      gap: 12px;
+    }
+
+    /* chat gpt part start*/
+
+    .slider {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      height: 460px;
+    }
+
+    /*chat gpt part end*/
+    /*importent one */
+
+    .main_container {
+      border: 1px solid rgba(197, 197, 197, 0.767);
+      border-radius: 15px;
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      margin-left: 20px;
+      margin-right: 20px;
+
+      background-color: white;
+      justify-content: space-around;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      height: calc(100% - 160px);
+      overflow: auto;
+    }
+
+
+    .left_container {
+      width: 50%;
+    }
+
+    .questions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      background-color: rgba(245, 245, 245, 0.9);
+      border: 1px solid rgba(197, 197, 197, 0.767);
+      padding: 10px;
+      border-radius: 10px;
+      transition: 0.3s ease;
+    }
+
+    .questions:hover {
+      background-color: white;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+
+    }
+
+    .option select {
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(197, 197, 197, 0.767);
+      background-color: #fff;
+      font-size: 16px;
+      width: 130px;
+      transition: border-color 0.3s;
+    }
+
+    .option select:focus {
+      border-color: #1f68d6;
+      outline: none;
+    }
+
+    .button_column {
+      display: flex;
+      justify-content: space-around;
+      margin: 10px 0;
+    }
+
+    .last_butten {
+      width: 160px;
+      height: 45px;
+      border-radius: 25px;
+      border: none;
+      background-color: white;
+      border: 2px solid rgb(212, 212, 212);
+      color: black;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+    .last_butten:hover {
+      background-color: #1f68d6;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    #feedbackForm {
+      margin: 0;
+      padding: 0;
+      height: 40px;
+    }
+
+    hr {
+      margin: 12px 0;
+      color: rgb(141, 141, 141);
+      border: none;
+      border-top: 1px solid rgb(197, 197, 197);
+    }
+
+
+    @media (max-width: 768px) {
+
+      html,
       body {
-        background: linear-gradient(to top, #1f586e, #a6f2f2);
-        font-family: Arial, sans-serif;
+        height: 100%;
+        margin: 0;
+        overflow: auto;
+
       }
 
-      .quiz-container {
-        height: fit-content;
-        background: #ffffff;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .question {
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-bottom: 15px;
-      }
-
-      .options button {
+      .head {
         width: 100%;
-        margin-bottom: 10px;
-        text-align: left;
-        color: rgb(0, 0, 0);
-        border-color: #000000 !important;
       }
 
-      .options button:hover {
-        background-color: #1f586e;
+      .main_container {
+        flex-direction: column;
+        gap: 0px;
+        display: inline-block;
       }
 
-      .options button.selected {
-        background-color: #1f586e !important;
-        color: #fff !important;
-        border-color: #000000 !important;
+      .left_container {
+        width: auto;
       }
 
-      .navigation-buttons {
-        margin-top: 20px;
+      .rigth_container {
+        width: auto;
       }
 
-      #subname .head {
-        background-color: rgba(255, 255, 255, 0.482);
-        border-radius: 7px;
+      #containersWrapper {
+        height: 700px;
+        overflow-y: scroll;
       }
+    }
 
-      #subname .staff_details {
-        background-color: rgba(255, 255, 255, 0.482);
-        border-radius: 7px;
-      }
-    </style>
-  </head>
-  <body>
+    .modal-confirm {
+      color: #636363;
+      width: 325px;
+      margin: 80px auto 0;
+    }
 
-    <div
-        id="subname"
-        class="container d-flex justify-content-center align-items-center mt-2"
-        style="flex-direction: column">
-        <div class="head">
-          <h4 class="display-4 p-3">R . Padmavathi</h4>
-        </div>
+    .modal-confirm .modal-content {
+      padding: 20px;
+      border-radius: 5px;
+      border: none;
+    }
 
-        <div class="staff_details my-1 p-3">
-          <h4 class="">CS3381 data structure</h4>
-        </div>
-      </div>
+    .modal-confirm .modal-header {
+      border-bottom: none;
+      position: relative;
+    }
 
-    <div
-      class="container d-flex justify-content-center  vh-100" 
-    >
-      
+    .modal-confirm h4 {
+      text-align: center;
+      font-size: 26px;
+      margin: 30px 0 -15px;
+    }
 
-      <div class="quiz-container w-100" style="max-width: 600px">
-        <div id="quiz-content"></div>
-        <div
-          class="d-flex justify-content-between align-items-center navigation-buttons"
-        >
-          <button
-            class="btn btn-secondary"
-            id="prev-btn"
-            onclick="prevQuestion()"
-            disabled
-          >
-            Previous
-          </button>
-          <button
-            class="btn btn-primary"
-            id="next-btn"
-            onclick="nextQuestion()"
-          >
-            Next
-          </button>
-          <button
-            class="btn btn-success"
-            id="submit-btn"
-            onclick="submitQuiz()"
-            style="display: none"
-          >
-            Submit
-          </button>
+    .modal-confirm .form-control,
+    .modal-confirm .btn {
+      min-height: 40px;
+      border-radius: 3px;
+    }
+
+    .modal-confirm .close {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+    }
+
+    .modal-confirm .modal-footer {
+      border: none;
+      text-align: center;
+      border-radius: 5px;
+      font-size: 13px;
+    }
+
+    .modal-confirm .icon-box {
+      color: #fff;
+      position: absolute;
+      margin: 0 auto;
+      left: 0;
+      right: 0;
+      top: -70px;
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      z-index: 9;
+      background: #ef513a;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-confirm .icon-box i {
+      font-size: 56px;
+      position: relative;
+      top: 4px;
+    }
+
+    .modal-confirm .btn {
+      color: #fff;
+      border-radius: 4px;
+      background: #ef513a;
+      text-decoration: none;
+      transition: all 0.4s;
+      line-height: normal;
+      border: none;
+    }
+
+    .modal-confirm .btn:hover,
+    .modal-confirm .btn:focus {
+      background: #da2c12;
+      outline: none;
+    }
+
+    .trigger-btn {
+      display: inline-block;
+      margin: 100px auto;
+    }
+
+    p {
+      margin: 0%;
+    }
+
+    .name {
+      margin: 0%;
+    }
+
+    .first_main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #containersWrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+
+    }
+
+    .main_container {
+      height: auto;
+      overflow-y: scroll;
+    }
+
+    input {
+      width: 90%;
+      height: 50px;
+      border-radius: 8px;
+      border: 2px solid rgb(212, 212, 212);
+      ;
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="head">
+      <h4 class="name">name of the staff</h4>
+      <p class="staff_subject">subject code and name of the subject</p>
+    </div>
+  </header>
+
+  {% csrf_token %}
+
+  <!-- Wrapper for the sliding effect -->
+
+  <!-- First container -->
+  <div id="app">
+    <!-- Wrapper for generated containers -->
+    <div id="containersWrapper"></div>
+
+    <!-- error popup -->
+    <div id="myModal" class="modal fade">
+      <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="icon-box">
+              <i class="material-icons">&#xE5CD;</i>
+            </div>
+            <h4 class="modal-title">ERROR !</h4>
+          </div>
+          <div class="modal-body">
+            <p class="text-center">please fill every option !!!</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      const questions = [
-        {
-          id: 1,
-          question: "What is the capital of France?",
-          options: ["London", "Berlin", "Paris", "Rome"],
-        },
-        { id: 2, question: "What is 2 + 2?", options: ["3", "4", "5", "6"] },
-        {
-          id: 3,
-          question: "What is the capital of Japan?",
-          options: ["Seoul", "Beijing", "Tokyo", "Bangkok"],
-        },
-      ];
+    <div class="button_column">
 
-      let currentQuestionIndex = 0;
-      let selectedOptions = {};
+      <button class="last_butten" id="backButton">Back</button>
+      <button class="last_butten" id="nextButton">Next</button>
+    </div>
+  </div>
 
-      function loadQuestion(index) {
-        const quizContent = document.getElementById("quiz-content");
-        const question = questions[index];
-        const selectedOptionIndex = selectedOptions[question.id];
+  <script>
+    let JsonData = {
+      student_id: {{ id }},
+    feed_count: {{fid}},
+    feeds: []
+    };
+    const leftQuestions = [
+      "How well does the teacher plan lessons, manage the classroom, and collaborate with students?",
+      "How well does the teacher manage classroom behavior?",
+      "How well does the teacher engage students in lessons?",
+      "How well does the teacher provide constructive feedback?",
+      "How well does the teacher create a positive classroom environment?"
+    ];
 
-        quizContent.innerHTML = `
-        <div class="question">${question.question}</div>
-        <div class="options">
-          ${question.options
-            .map(
-              (option, i) => `
-            <button class="btn btn-outline-primary ${
-              selectedOptionIndex === i ? "selected" : ""
-            }" 
-              onclick="selectOption(${index}, ${i}, this)">${option}</button>
-          `
-            )
-            .join("")}
+    const rightQuestions = [
+      "How effectively does the teacher use technology in teaching?",
+      "How well does the teacher encourage critical thinking in students?",
+      "How inclusive is the teacher's approach toward different learning needs?",
+      "How clear and structured are the teacher's instructions?",
+      "How well does the teacher promote teamwork among students?"
+    ];
+    const is_manitiory = {{is_manitiory}};
+    let staffData = [];
+    let currentIndex = 0;
+    const containersWrapper = document.getElementById('containersWrapper');
+    const storedData = {};
+
+    // Fetch staff data from API
+    async function fetchStaffData() {
+      try {
+
+        const response = await fetch('{% url 'feed-search' id  cid %}');
+        const data = await response.json();
+        staffData = data.data;
+        console.log(` api data : ${staffData}`);
+        return data.data;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    function updateHeader(currentStaff) {
+      document.querySelector('.name').textContent = currentStaff.staff.name;
+      document.querySelector('.staff_subject').textContent =
+        `${currentStaff.subject.code} - ${currentStaff.subject.name}`;
+    }
+
+    function generateContainer(index) {
+      const currentStaff = staffData[index];
+      updateHeader(currentStaff);
+
+      const first_main_container = document.createElement('div');
+      first_main_container.classList.add("first_main");
+
+      const container = document.createElement('div');
+      container.classList.add('main_container');
+      container.setAttribute('id', `container-${currentStaff.id}`);
+
+      // Left Container
+      const leftContainer = document.createElement('div');
+      leftContainer.classList.add('left_container');
+
+      leftQuestions.forEach((question, idx) => {
+        leftContainer.innerHTML += `
+      <div class="questions">
+        <p>${question}</p>
+        <div class="option">
+          <select id="dropdown-left-${currentStaff.id}-${idx}" required>
+            <option value="">---</option>
+            <option value="excellent">Excellent</option>
+            <option value="good">Good</option>
+            <option value="poor">Poor</option>
+          </select>
         </div>
-      `;
+      </div>
+      <hr>
+    `;
+      });
 
-        document.getElementById("prev-btn").disabled = index === 0;
-        document.getElementById("next-btn").style.display =
-          index === questions.length - 1 ? "none" : "inline-block";
-        document.getElementById("submit-btn").style.display =
-          index === questions.length - 1 ? "inline-block" : "none";
+      // Right Container
+      const rightContainer = document.createElement('div');
+      rightContainer.classList.add('right_container');
+
+      rightQuestions.forEach((question, idx) => {
+        rightContainer.innerHTML += `
+      <div class="questions">
+        <p>${question}</p>
+        <div class="option">
+          <select id="dropdown-right-${currentStaff.id}-${idx}" required>
+            <option value="">---</option>
+            <option value="excellent">Excellent</option>
+            <option value="good">Good</option>
+            <option value="poor">Poor</option>
+          </select>
+        </div>
+      </div>
+      <hr>
+    `;
+      });
+      
+      const user_message = document.createElement('input');
+      user_message.classList.add("user_message");
+      user_message.setAttribute('type', 'text');
+      user_message.setAttribute('id', "user_message");
+      user_message.setAttribute('placeholder', ' click here to leave your comments');
+
+      container.appendChild(leftContainer);
+      container.appendChild(rightContainer);
+      first_main_container.appendChild(user_message);
+
+      containersWrapper.innerHTML = '';
+      containersWrapper.appendChild(container);
+      containersWrapper.appendChild(first_main_container);
+
+      if (storedData[currentStaff.id]) {
+        loadStoredData(currentStaff.id);
       }
+    }
 
-      function nextQuestion() {
-        if (currentQuestionIndex < questions.length - 1) {
-          currentQuestionIndex++;
-          loadQuestion(currentQuestionIndex);
+    function generateJSON(index) {
+      const currentStaff = staffData[index];
+      const dropdowns = document.querySelectorAll(`#container-${currentStaff.id} select`);
+      const valuesMap = {
+        excellent: 5,
+        good: 3,
+        poor: 1
+      };
+
+      const jsonResult = {
+        staff_id: currentStaff.id,
+        feedback: {},
+        message: document.getElementById("user_message").value || ""
+      };
+
+      dropdowns.forEach((dropdown, i) => {
+        const selectedValue = dropdown.value;
+        const category = `cat_${i + 1}`;
+        jsonResult.feedback[category] = valuesMap[selectedValue] || 0;
+      });
+
+      storedData[currentStaff.id] = jsonResult;
+      return jsonResult;
+    }
+
+
+    function loadStoredData(staffId) {
+      const data = storedData[staffId];
+      if (data) {
+        const dropdowns = document.querySelectorAll(`#container-${staffId} select`);
+        const valuesMap = { 5: 'excellent', 3: 'good', 1: 'poor' };
+
+        dropdowns.forEach((dropdown, i) => {
+          const category = `cat_${i + 1}`;
+          const value = data.feedback[category];
+          dropdown.value = valuesMap[value] || "";
+        });
+      }
+    }
+
+    async function submitFeedback(feedbackData) {
+      console.log(`data : ${JSON.stringify(feedbackData)}`)
+      const csrftoken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+      try {
+        const response = await fetch('{% url 'feed-api' %}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+          },
+          body: JSON.stringify(JsonData)
+        });
+        const home = "{% url 'home' %}";
+        const murl = "{% url 'course' id cid %}"
+        if (!response.ok) throw new Error('Failed to submit feedback');
+        if (response.ok ) {
+          if(is_manitiory){
+            window.location.href = murl;
+          }else{
+            window.location.href = home;
+
+          }
         }
+      } catch (error) {
+        console.error('Error:', error);
       }
+    }
+    function validateSelections(currentStaffId) {
+      const dropdowns = document.querySelectorAll(`#container-${currentStaffId} select`);
+      let isValid = true;
 
-      function prevQuestion() {
-        if (currentQuestionIndex > 0) {
-          currentQuestionIndex--;
-          loadQuestion(currentQuestionIndex);
+      dropdowns.forEach((dropdown, idx) => {
+        if (!dropdown.value) {
+          isValid = false;
+          alert(`Please select a value for question ${idx + 1}.`);
         }
+      });
+
+      return isValid;
+    }
+
+    document.getElementById('nextButton').onclick = function () {
+      const feedback = generateJSON(currentIndex);
+      if (!validateSelections(staffData[currentIndex].id)) {
+        return; 
+    }
+      JsonData.feeds.push(feedback);
+      console.log(`json : ${JSON.stringify(JsonData)}`);
+
+      if (currentIndex === staffData.length - 1) {
+        document.getElementById("nextButton").innerHTML = "Submit";
+        submitFeedback(feedback);
       }
 
-      function selectOption(questionIndex, selectedIndex, buttonElement) {
-        const questionId = questions[questionIndex].id;
-
-        selectedOptions[questionId] = selectedIndex;
-
-        const options = buttonElement.parentElement.querySelectorAll("button");
-        options.forEach((button) => button.classList.remove("selected"));
-        buttonElement.classList.add("selected");
+      if (currentIndex < staffData.length - 1) {
+        currentIndex++;
+        generateContainer(currentIndex);
       }
-      loadQuestion(currentQuestionIndex);
-    </script>
-  </body>
+    };
+
+    document.getElementById('backButton').onclick = function () {
+      generateJSON(currentIndex);
+      if (currentIndex > 0) {
+        currentIndex--;
+        generateContainer(currentIndex);
+      }
+      if (currentIndex !== staffData.length - 1) {
+        document.getElementById("nextButton").innerHTML = "Next";
+      }
+    };
+
+    // Initialize
+    async function init() {
+      await fetchStaffData();
+      generateContainer(currentIndex);
+    }
+
+    init();
+  </script>
+</body>
+
 </html>

@@ -1,0 +1,117 @@
+
+{% extends 'adminnav.html' %}
+
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'prinicpal' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block header %}
+<title> Comment </title>
+{% endblock header %}
+
+
+{% block content %}
+<div class="container table-container">
+    <h1>{{student.name}} - {{student.dept}}</h1>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Message</th>
+                    <th>Subject Name</th>
+                    <th>Subject Code</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Rows will be dynamically populated here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+{% csrf_token %}
+{% endblock content %}
+
+{% block style %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .table-container {
+        margin: 50px auto;
+        max-width: 800px;
+        background: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table-container h1 {
+        background-color: #007bff;
+        color: #fff;
+        padding: 20px;
+        margin: 0;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    table {
+        margin: 0;
+    }
+
+    .table thead th {
+        background-color: #007bff;
+        color: #fff;
+        text-align: center;
+    }
+
+    .table tbody td {
+        text-align: center;
+    }
+</style>
+{% endblock style %}
+
+{% block script %}
+<script>
+const csrftoken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+async function fetchData() {
+    try {
+        const response = await fetch('{% url 'comt-api' sid %}',{
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            }
+        }); // Replace with your API URL
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log(`data : ${data}`);
+        // Populate table with API data
+        const tableBody = document.getElementById("table-body");
+        tableBody.innerHTML = '';
+
+        data.forEach((item, index) => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.msg}</td>
+                <td>${item.subject_name}</td>
+                <td>${item.subject_code}</td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        const tableBody = document.getElementById("table-body");
+        tableBody.innerHTML = '<tr><td colspan="4">Failed to load data</td></tr>';
+    }
+}
+
+// Call fetchData on page load
+document.addEventListener('DOMContentLoaded', fetchData);
+</script>
+{% endblock script %}

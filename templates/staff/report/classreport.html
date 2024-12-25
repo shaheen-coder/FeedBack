@@ -1,0 +1,210 @@
+{% extends 'adminnav.html' %}
+{% load static %}
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'staff-dash' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block title %}
+<title>Report</title>
+{% endblock %}
+{% block style %}
+<style>
+    /* General styling */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Main container */
+    .main_container {
+        margin: 40px;
+        padding: 30px;
+        background-color: #ffffff;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+
+    /* Side container styling */
+    .side_container {
+        border: 1px solid #e0e0e0;
+        background-color: #f9f9f9;
+        padding: 15px;
+        width: 320px;
+
+        color: #333;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+
+    .side_container p {
+        margin: 10px 0;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    /* Table styling */
+    .table_container {
+        margin-top: 20px;
+    }
+
+    .fl-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #ffffff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .fl-table th,
+    .fl-table td {
+        padding: 14px 20px;
+        border: 1px solid #e0e0e0;
+        text-align: center;
+        color: #333;
+        font-size: 13px;
+    }
+
+    .fl-table th {
+        background-color: #eaeaea;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .fl-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+
+    .sub_2 {
+        margin-top: 40px;
+        text-align: right;
+        padding-top: 20px;
+        color: #333;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .sign {
+        padding: 5px;
+        /*border-bottom: 2px solid black;*/
+        color: #333;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+{% block content %}
+{% if request.method == 'GET' %}
+<form method="post" action="">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success float-end mx-5">Download <svg xmlns="http://www.w3.org/2000/svg"
+            height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+                d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+        </svg></button>
+
+</form>
+{% endif %}
+<div class="main_container">
+    <div class="sub_1">
+        <!-- Side container with staff details -->
+        <div class="side_container">
+            <p>Department :  {{staff.dept}}</p>
+            <p>semester :   {{staff.subject.semester}}</p>
+            <p>section  :   {{staff.section}}</p>
+        </div>
+
+        <!-- Table with data -->
+        <div class="table_container">
+            <table class="fl-table">
+                <thead>
+                    <tr>
+                        <th>sno</th>
+                        <th>catageory</th>
+                        <th>5</th>
+                        <th>3</th>
+                        <th>1</th>
+                        <th>avg</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Signature area -->
+    <div class="sub_2">
+        <div class="sign">Signature</div>
+    </div>
+</div>
+{% csrf_token %}
+{% endblock %}
+{% block script %}
+<script>
+    const csrftoken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+    // Fetch data and populate table
+    fetch("{% url 'api-report' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            type: "{{mode}}",
+            key : "{{staff.section}}",
+            sem : {{staff.subject.semester}},
+            dept : "{{dept}}"
+        })
+    })
+        .then(response => response.json())
+        .then(json => {
+            const tableBody = document.querySelector('.fl-table tbody');
+            const data = json.data; // Extract the 'data' object from the response
+            console.log(data);
+            // Clear existing rows (optional)
+            tableBody.innerHTML = "";
+
+            // Populate rows dynamically
+            let sno = 1;
+            for (const [category, stats] of Object.entries(data)) {
+                const row = document.createElement('tr');
+                if (stats) {
+                    // Create and append table cells
+                    row.innerHTML = `
+                    <td>${sno++}</td>
+                    <td>${category}</td>
+                    <td>${stats.percentage_5s}%</td>
+                    <td>${stats.percentage_3s}%</td>
+                    <td>${stats.percentage_1s}%</td>
+                    <td>${stats.average.toFixed(2)}</td>
+                `;
+
+                    tableBody.appendChild(row);
+                }
+            }
+            /*
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${sno++}</td>
+            <td>overall</td>
+            <td>${data.overall['percentage_5s']}</td>
+            <td>${data.overall['percentage_3s']}</td>
+            <td>${data.overall['percentage_1s']}</td>
+            <td>${data.overall['average']}</td>
+        `;
+            tableBody.appendChild(row);
+        */
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+        });
+
+</script>
+{% endblock %}

@@ -1,7 +1,7 @@
-{% extends 'test/login.html' %}
+{% extends 'login22.html' %}
 
 {% block captcha %}
 {% load crispy_forms_tags %}
 {{ form|crispy }}
-<button type="submit" class="btn btn-success">Save person</button>
+{% csrf_token %}
 {% endblock %}

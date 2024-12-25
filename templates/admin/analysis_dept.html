@@ -1,0 +1,54 @@
+{% extends 'adminnav.html' %}
+{% load static %}
+
+{% block header %}
+<title>Department</title>
+{% endblock header %}
+{% block style %}
+<style>
+.transparent-box {
+
+    background-color: rgba(255, 255, 255, 0.8);
+    /* White with transparency */
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+}
+
+.big-img {
+
+    max-width: 100%;
+
+    height: auto;
+
+}
+
+.btn-custom {
+
+    background-color: blue;
+
+    color: white;
+
+    margin: 10px 0;
+    /* Space between buttons */
+
+}
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="col-md-6 d-flex align-items-center justify-content-center">
+    <div class="transparent-box">
+        <a href="{% url 'ana-dept' 'CSE' %}" class="btn btn-custom w-100">CSE</a>
+        <a href="{% url 'ana-dept' 'ICE' %}" class="btn btn-custom w-100"> ICE</a>
+        <a href="{% url 'ana-dept' 'EEE' %}" class="btn btn-custom w-100">EEE</a>
+        <a href="{% url 'ana-dept' 'MECH' %}" class="btn btn-custom w-100">MECH</a>
+        <a href="{% url 'ana-dept' 'IT' %}" class="btn btn-custom w-100">IT</a>
+        <a href="{% url 'ana-dept' 'MCA' %}" class="btn btn-custom w-100">MCA</a>
+        <a href="{% url 'ana-dept' 'CLG' %}" class="btn btn-custom w-100">CLG</a>
+    </div>
+</div>
+{% endblock content %}
+

@@ -7,10 +7,12 @@ DEPT = (
     ('ICE','be-ice'),
     ('ECE','be-ece'),
     ('MECH','be-mech'),
+    ('CIVIL','be-civil'),
     ('MCA','mca'),
     ('MBA','mba'),
 )
-
+four_year = ['CSE','ICE','ECE','MECH','IT','CIVIL','EEE']
+two_year = ['MCA','MBA']
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
@@ -49,27 +51,39 @@ class Student(models.Model):
     dept = models.CharField(max_length=10,choices=DEPT)
     section = models.CharField(max_length=1)
     semester = models.SmallIntegerField()
-    status = models.BooleanField(null=True,blank=True)
+    status = models.BooleanField(default=True,null=True,blank=True)
+    feed1_status = models.BooleanField(default=False,null=True,blank=True)
+    feed2_status = models.BooleanField(default=False,null=True,blank=True)
     def save(self,*args,**kwargs):
         self.section = str(self.section).upper()
+        if self.semester == 9 and self.dept in four_year: 
+            self.status = False 
+        if self.semester == 5 and self.dept in two_year: 
+            self.status = False 
         super().save(*args,**kwargs)
     def __str__(self):
-        return f'{self.name[:5]} - {self.dept}'
+        return f'{self.name[:7]} - {self.dept}'
 class Staff(models.Model):
     GENDER = (
         (1,'male'),
         (0,'female')
     )
+    def profile_path(instance,filename):
+        return f'profile/{instance.fname}/{filename}'
     name = models.CharField(max_length=50)
     dept = models.CharField(max_length=20,choices=DEPT)
     gender = models.BooleanField(choices=GENDER)
-    profile_pic = models.ImageField(upload_to='media',null=True,blank=True)
+    profile_pic = models.ImageField(upload_to=profile_path,null=True,blank=True)
+    def save(self, *args, **kwargs):
+        if not self.profile_pic:
+            self.profile_pic = 'male.png' if self.gender == 1 else 'female.png'
+        super().save(*args, **kwargs)
     def __str__(self):
         return f'{self.name[:5]} - {self.dept}'
 
 class Subject(models.Model):
     name = models.CharField(max_length=40)
-    code = models.CharField(max_length=7)
+    code = models.CharField(primary_key=True,max_length=7)
     dept = models.CharField(max_length=10,choices=DEPT)
     semester = models.SmallIntegerField()
     mcourse = models.BooleanField(default=False)
@@ -81,7 +95,10 @@ class ClassStaff(models.Model):
     staff = models.ForeignKey(Staff,on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject,on_delete=models.CASCADE)
     section = models.CharField(max_length=1)
+    semester = models.SmallIntegerField()
     dept = models.CharField(max_length=10,choices=DEPT)
+    class Meta:
+        verbose_name = "class handling"
     def save(self,*args,**kwargs):
         self.section = str(self.section).upper()
         super().save(*args,**kwargs)
@@ -91,4 +108,13 @@ class ClassStaff(models.Model):
 class FeedBack(models.Model):
     staffd = models.ForeignKey(ClassStaff,on_delete=models.CASCADE)
     student = models.ForeignKey(Student,on_delete=models.CASCADE)
-    feed = models.JSONField()
+    feed1 = models.JSONField(null=True,blank=True)
+    feed2 = models.JSONField(null=True,blank=True)
+    msg = models.CharField(max_length=50,null=True,blank=True)
+
+
+class TimeScheduler(models.Model):
+    start_time = models.DateField()
+    end_time = models.DateField()
+    dept = models.CharField(max_length=10,choices=DEPT)
+    

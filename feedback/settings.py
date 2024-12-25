@@ -1,6 +1,6 @@
 import os 
 from pathlib import Path
-
+#from core.views import pauth
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'core',
+    'staff',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -142,8 +143,8 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
 
         {"name": "Home",  "url": "home", "permissions": ["auth.view_user"]},
-        {"name": "student check", "url": "student", "new_window": False},
-        {"name": "search", "url": "search", "new_window": False},
+        {"name": "staff", "url": "staff-dash", "new_window": False},
+        {"name": "prinicipal", "url": "prinicpal", "new_window": False},
 
     ],
     "usermenu_links": [

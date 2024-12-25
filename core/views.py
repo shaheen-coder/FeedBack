@@ -1,19 +1,24 @@
 #django
 from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
+from django.http import JsonResponse
+from django.core.mail import send_mail
+from datetime import date
+# view 
 from django.views import View
 from django.views.generic import TemplateView
-from core.models import Staff,Student,ClassStaff,Subject,FeedBack
+from django.contrib.auth.views import LogoutView
+from django.contrib.auth.mixins import UserPassesTestMixin
+#models 
+from core.models import Staff,Student,ClassStaff,Subject,FeedBack,TimeScheduler
 from core.models import CustomUser as User 
-from django.http import JsonResponse
 from django.db.models import Q
 from django.db.models import Avg,Count
-from django.contrib.auth.views import LogoutView
 from django.db import IntegrityError
+#forms 
 from core.forms import StudentLoginForm
 # others
 from datetime import datetime
 import json 
-from weasyprint import HTML
 from collections import defaultdict
 import pandas as pd
 
@@ -53,184 +58,64 @@ class CustomLogoutView(LogoutView):
 class StudentLogin(View):
     template_name = 'captcha.html'
     def get(self,request):
-        form = StudentLoginForm()
-        return render(self.request,self.template_name,{'form':form})
+        return render(self.request,self.template_name)
     def post(self,request):
-        form = StudentLoginForm(request.POST)
-        if form.is_valid():
-            regno = int(request.POST.get('regno'))
-            dob = request.POST.get('dob')
-            dob = datetime.strptime(dob,'%Y-%m-%d').date()
-            try:
-                student = Student.objects.get(regno=regno,dob=dob)
-                return redirect('feed',sid=student.id,catid=0)
-            except Student.DoesNotExist:
-                return render(self.request,self.template_name,{'error' : 'Student doesnt exists'})
-        else: return render(self.request,self.template_name,{'form':form})
-        
+        regno = int(request.POST.get('regno'))
+        dob = request.POST.get('dob')
+        dob = datetime.strptime(dob,'%Y-%m-%d').date()
+        try:
+            student = Student.objects.get(regno=regno,dob=dob)
+            time_scheduler = TimeScheduler.objects.filter(dept=student.dept).first()
+            if not time_scheduler:
+                return render(self.request,self.template_name,{"error": "No FeedBack found for the department."})
+
+            current_time = date.today()
+            if not (time_scheduler.start_time <= current_time <= time_scheduler.end_time):
+                return render(self.request,self.template_name,{"error": "Feedback time is ended !!."})
+
+            # Check if the student's status is active
+            if not student.status:
+                return render(self.request,self.template_name,{"error": "Student ID isn't updated."})
+
+            # Check feed1_status and feed2_status
+            if student.feed1_status and student.feed2_status:
+                return render(self.request,self.template_name,{"error": "Student has already filled feedback forms."})
+
+            # Determine which feedback is available
+            available_feedback = 0
+            if not student.feed1_status:
+                available_feedback = 1 
+            elif not student.feed2_status:
+                available_feedback = 2 
+            return redirect('feed',sid=student.id,fid=available_feedback)
+        except Student.DoesNotExist:
+            print('error student doesnt exists')
+            return render(self.request,self.template_name,{'error' : 'Student doesnt exists'})
 class Course(View):
     template_name = 'coruse.html'
-    def get(self,request,sid):
-        return render(self.request,self.template_name,{'sid':sid})
+    def get(self,request,sid,fid):
+        return render(self.request,self.template_name,{'sid':sid,'fid':fid})
 
 class Manitiory(View):
     template_name = 'subject.html'
-    def get(self,request,sid,cid):
-        is_both = None
-        student = Student.objects.get(id=sid)
-        manitiory,openelective,elective = False,False,False
-        if cid == 1 : manitiory = True
-        elif cid == 2 : openelective = True 
-        elif cid == 3 : elective = True
-        course = ClassStaff.objects.filter(semester=student.semester,subject__mcourse=manitiory,subject__ecourse=elective,subject__oecourse=openelective)
-        if course.count() == 0: return render(self.request,self.template_name,{'error':'no courses are available','student':student,'cid':cid})
-        if course.count() >= 6 :
-            half = len(course) // 2 
-            half += 1 if half % 2 != 0 else 0
-            course1 = course[0:half]
-            course2 = course[half::]
-            is_both = True
-            return render(self.request,self.template_name,{'cid':cid,'student':student,'semester':student.semester,'course1':course1,'course2':course2,'both_side':is_both})
-        print(f'cid : {cid}')
-        return render(self.request,self.template_name,{'student':student,'semester':student.semester,'courses':course,'cid':cid,'both_side':is_both})
+    def get(self,request,sid,cid,fid):
+        return render(self.request,self.template_name,{'cid':cid,'sid':sid,'fid':fid})
 class ManitioryForm(View):
-    template_name = 'mfeed.html'
-    def score(self,data) :
-        if data == 'excellent': return 5
-        elif data == 'good': return 3
-        elif data == 'average': return 1
-        else : None
-    def convert_json(self,request):
-        data = {}
-        for i in range(0,11):
-            cat = request.POST.get(f'cat_{i}')
-            data[f'cat_{i}'] = self.score(cat)
-        return data 
-    def get(self,request,sid,csid,cid):
-        student = Student.objects.get(id=sid)
-        data = ClassStaff.objects.get(id=csid)
-        return render(self.request,self.template_name,{'data':data,'sid':student,'cid':cid})
-    def post(self,request,sid,csid,cid):
-        student = Student.objects.get(id=sid)
-        staff = int(request.POST.get('staff_name'))
-        #print(f'satff id : {staff}')
-        staff = Staff.objects.get(id=staff)
-        subject_code = request.POST.get('subject_code')
-        subject = Subject.objects.get(subject_code=subject_code)
-        categories = self.convert_json(request) 
-        feedback, created = FeedBack.objects.update_or_create(
-            subject=subject,
-            student=student,
-            staff=staff,
-            categories=categories
-        )
-        return redirect('msubject',sid=sid,cid=cid)
+    template_name = 'feed_sample.html'
+    def get(self,request,sid,cid,fid):
+        return render(self.request,self.template_name,{'id':sid,'cid':cid,'fid':fid,'is_manitiory':1})
+
 
 class FeedBackView(View):
-    def score(self,data) :
-        if data == 'excellent': return 5
-        elif data == 'good': return 3
-        elif data == 'average': return 1
-        else : None
-    def convert_json(self,request):
-        data = {}
-        for i in range(0,10):
-            cat = request.POST.get(f'cat_{i}')
-            data[f'cat_{i+1}'] = self.score(cat)
-        return data 
-    def get(self,request,sid,catid):
+    def get(self,request,sid,fid):
+        manitiory = 0
         student = Student.objects.get(id=sid)
-        class_staff = ClassStaff.objects.filter(dept=student.dept,subject__semester=student.semester,section=student.section,subject__mcourse=False,subject__ecourse=False,subject__oecourse=False)
-        if len(class_staff) == catid: 
-            if(student.semester > 3) : return redirect('course',sid=sid)
-            else : return redirect('home')
-        return render(self.request,'feed_sample.html',{'data':class_staff[catid],'sid':sid,'catid':catid})
-    def post(self,request,sid,catid):
-        student = Student.objects.get(id=sid)
-        staff = request.POST.get('staff_name')
-        staff = Staff.objects.get(id=staff)
-        subject = request.POST.get('subject_code')
-        subject = Subject.objects.get(code=subject)
-        categories = self.convert_json(request) 
-        staffd = ClassStaff.objects.get(staff=staff,subject=subject)
-        feedback, created = FeedBack.objects.update_or_create(
-            staffd=staffd,
-            student=student,
-            feed=categories
-        )
+        if student.semester > 4: manitiory = 1
+        return render(self.request,'feed_sample.html',{'id':sid,'fid':fid,'cid':0,'is_manitiory':manitiory})
+    
 
-        catid += 1
-        return redirect('feed',sid=sid,catid=catid)
+#   admin view
 
-
-class Search(View):
-    template_name = 'admin/search.html'
-    def dept_vaild(self,dept):
-        depts = {
-            'CSE' : 'Computer Science and Engineering',
-            'IT' : 'Information Technology'
-        }
-        return depts[dept] if dept in depts else None
-    def year_valid(self,yr):
-        if yr == 1 : return (1,2)
-        elif yr == 2 : return (3,4)
-        elif yr == 3 : return (5,6)
-        elif yr == 4 : return (7,8)
-    def handleclass_valid(self,hclass):
-        return hclass if hclass != '' else None
-    def get(self, request):
-        return render(self.request, self.template_name)
-    def post(self, request):
-        is_class = bool(request.POST.get('class_search'))
-        is_loop = True
-        query = request.POST.get('name')
-        year = request.POST.get('year')
-        if year != '':  
-            sem1,sem2 = self.year_valid(int(request.POST.get('year')))
-        section = request.POST.get('class')
-        if section != '' : section = self.handleclass_valid(request.POST.get('class'))
-        subject_code = request.POST.get('subject_code')
-        print(f"resquest gender : {request.POST.get('gender')}")
-        gender = request.POST.get('gender')
-        if is_class:
-            staff = ClassStaff.objects.filter(Q(semester=sem1) | Q(semester=sem2))
-            if not section:
-                staff1 = staff.filter(section='A').first()
-                staff2 = staff.filter(section='B').first()
-                if staff1 and staff2: staff = [staff1, staff2]
-                elif staff1: 
-                    staff = staff1
-                    is_loop = False 
-                else: 
-                    staff = staff2
-                    is_loop = False
-            else :
-                staff = staff.filter(section=section).first()
-                is_loop = False
-        else :
-            staff = ClassStaff.objects.filter(
-                Q(staff__fname__icontains=query) | Q(staff__sname__icontains=query)
-            )
-            if subject_code:
-                staff = staff.filter(subject__subject_code=subject_code)
-            if year != '':
-                staff = staff.filter(Q(semester=sem1) | Q(semester=sem2))
-            if section:
-                staff = staff.filter(section=section).distinct()
-            if gender:
-                print(f'gender : {gender}')
-                gender = 1 if gender == '1' else 0
-                staff = staff.filter(staff__gender=gender)
-        return render(self.request,self.template_name, {
-            'staffs': staff,
-            'is_class' : is_class,
-            'is_loop':is_loop
-        })
-
-
-
-
-#   admin views
 class Profile(View):
     
     def get_department_code(self,department_name):
@@ -243,72 +128,50 @@ class Profile(View):
         subject = Subject.objects.get(code=subject)
         staffd = ClassStaff.objects.get(staff=staff,subject=subject)
         #dept = self.get_department_code(staff.dept)
-        return render(self.request,'analysis.html',{'is_class':False,'profile':staff,'subject':subject,'staffd':staffd})
-
+        return render(self.request,'analysis.html',{'mode':'staffsub','profile':staff,'subject':subject,'staffd':staffd})
+class StaffProfile(View):
+    template_name = 'analysis.html'
+    def get(self,request,id,dept):
+        staff = Staff.objects.get(id=id)
+        return render(self.request,self.template_name,{'mode':'staff','staff':staff})
+class DeptProfile(View):
+    template_name = 'analysis.html'
+    def get(self,request,dept):
+        return render(self.request,self.template_name,{'mode':'dept','dept':dept})
 class ClassProfile(View):
     template_name = 'analysis.html'
-    def get(self,request,semester,section):
-        return render(self.request,self.template_name,{'is_class':True,'semester':semester,'section':section})
-class StudentCheck(View):
-    template_name = 'admin/student.html'
-    def valid_year(self,year):
-        if year == '1' : return (1,2)
-        elif year == '2' : return (3,4)
-        elif year == '3' : return (5,6)
-        elif year == '4' : return (7,8)
+    def get(self,request,semester,section,dept):
+        return render(self.request,self.template_name,{'mode':'class','semester':semester,'section':section,'dept':dept})
+'''.
+principal views 
+'''
+# report search view 
+class IsPrincipal(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_princpl
+    def handle_no_permission(self):
+        return render(self.request,'403.html',)
+        return render(self.request,'403.html', status=403)
+class Search(IsPrincipal,View):
+    template_name = 'prinicipal/analysis/search.html'
+    template_name2 = 'prinicipal/analysis/ssearch.html'
+    template_name3 = 'prinicipal/analysis/dept.html'
+    template_name4 = 'prinicipal/analysis/analysis_dept.html'
+    def get(self,request,mode,ana):
+        if mode == 'stu' : return render(self.request,self.template_name2,{'mode':mode,'is_analysis':ana})
+        if mode == 'stucomt' : return render(self.request,self.template_name2,{'mode':mode,'is_analysis':ana})
+        if ana and mode == 'dept' : return render(self.request,self.template_name4,{'mode':'dept'})
+        if mode == 'dept' : return render(self.request,self.template_name3,{'mode':mode,'is_analysis':ana})
+        return render(self.request,self.template_name,{'mode':mode,'is_analysis':ana})
+class ClassSearch(View):
+    template_name = 'prinicipal/analysis/csearch.html'
+    def get(self,request,mode,ana):
+        return render(self.request,self.template_name,{'mode':mode,'is_analysis':ana})
+class PrinicpalDash(IsPrincipal,View):
+    template_name = 'prinicipal/home.html'
     def get(self,request):
-        student = Student.objects.all()
-        return render(self.request,self.template_name,{'students':student})
-    def post(self,request):
-        if request.POST.get('year') == '':
-            return render(self.request,self.template_name,{'error':'please select the year !! '})
-        sem1,sem2  = self.valid_year(request.POST.get('year'))
-        section = request.POST.get('class')
-        students = Student.objects.filter(Q(semester=sem1) | Q(semester=sem2))
-        if section:
-            students = students.filter(section=section)
-        return render(self.request,self.template_name,{'students':students})
-class ReportView(View):
-    template_name = 'admin/report.html'
-    def score(self,points):
-        if points >= 4.0 : return 'excelent'
-        elif points >= 3.0 : return 'good'
-        else : return 'bad' 
-    def get_data(self,staff_id,subject_code):
-        cat_data = {f'cat_{i}':0 for i in range(1,11)}
-        feeds = FeedBack.objects.filter(staff__id=staff_id,subject__subject_code=subject_code)
-        count = feeds.count()
-        for feed in feeds:
-            for key,data in feed.categories.items():
-                cat_data[key] += data
-        for key,data in cat_data.items():
-            cat_data[key] = [round((data / count),2),(self.score((data / count)))]
-        return cat_data
-    
-    def get(self,request,staff_id,subject_code):
-        staff = Staff.objects.get(id=staff_id)
-        subject = Subject.objects.get(code=subject_code)
-        #datas = self.get_data(staff_id,subject_code)
-        #datas = [(key,value) for key,value in zip(terms,datas.values())]
+        return render(self.request,self.template_name)
 
-        return render(self.request,self.template_name,{'staff':staff,'subject':subject})
-    def post(self,request,staff_id,subject_code):
-        staff = Staff.objects.get(id=staff_id)
-        subject = Subject.objects.get(subject_code=subject_code)
-        datas = self.get_data(staff.id,subject.subject_code)
-        datas = [(key,value) for key,value in zip(terms,datas.values())]
-        html = render(self.request,self.template_name,{'staff':staff,'subject':subject,'datas':datas})
-        pdf = HTML(string=html.content).write_pdf()
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{staff.fname}_{subject.subject_code}.pdf"'
-        response.write(pdf)
-        return response
-
-
-
-
-
-# admin view 
 class AddHodUser(View):
     template_name = 'prinicipal/add_hod.html'
     def get(self,request):
@@ -316,22 +179,78 @@ class AddHodUser(View):
     def post(self,request):
         file = request.FILES['file']
         xl = pd.read_excel(file)
-        for index, row in xl.iterrows():
-            username = row['username']
-            email = row['email']
-            password = row['password']
-            dept = row['department']
-            if not User.objects.filter(email=email).exists():
-                user = User(username=username, email=email,dept=dept,is_staff=True,is_superuser=True,is_hod=True)
-                user.set_password(password) 
-                user.save()
-            else : return render(request,self.template_name,{'error':f'the email {email} already exists !!'})
-        return render(request,self.template_name,{'error':'user added !!'})      
+        try :
+            for index, row in xl.iterrows():
+                username = row['username']
+                email = row['email']
+                password = row['password']
+                dept = row['department']
+                if not User.objects.filter(email=email).exists():
+                    user = User(username=username, email=email,dept=dept,is_staff=True,is_superuser=True,is_hod=True)
+                    user.set_password(password) 
+                    user.save()
+                else : return render(request,self.template_name,{'error':f'the email {email} already exists !!'})
+        except Exception as error:
+            return render(request,self.template_name,{'error':f'field {error} not found'})
+        return render(request,self.template_name,{'success':'user added !!'})      
+
+class AnalysisMode(TemplateView):
+    template_name = 'prinicipal/analysis/searchmode.html'
+class ReportMode(TemplateView):
+    template_name = 'prinicipal/report/reportmode.html'
+class PReport(View):
+    template_name = 'prinicipal/report.html'
+    def get(self,request,mode,key,dept):
+        if mode == 'class':
+            return render(self.request,self.class_template_name,{'mode':mode,'dept':dept,'section':key})
+        elif mode == 'staffsub':
+            staffd = ClassStaff.objects.get(id=int(key))
+            file_name = f'{staffd.staff.name}-{staffd.section}-report'
+            return render(self.request,self.template_name,{'file_name':file_name,'mode':mode,'staffd':staffd,'key':key,'dept':dept})
+        elif mode == 'stu':
+            student = Student.objects.get(id=int(key))
+            file_name = f'{student.name}-{student.section}-report'
+            return render(self.request,self.template_name,{'file_name':file_name,'mode':mode,'student':student,'dept':student.dept})
+        staff = Staff.objects.get(id=key)
+        file_name = f'{staff.name}-report'
+        return render(self.request,self.template_name,{'file_name':file_name,'staff':staff,'mode':mode,'id':staff.id,'dept':dept})
 
 
+class ClassReport(View):
+    template_name = 'prinicipal/report.html'
+    def get(self,request,mode,sec,sem,dept):
+        return render(self.request,self.template_name,{'mode':mode,'dept':dept,'section':sec,'sem':sem})
+class DeptReport(View):
+    template_name = 'prinicipal/dept_report.html'
+    def get(self,request,dept):
+        file_name = f'{dept}-report'
+        if dept == 'CLG':
+            return render(self.request,self.template_name,{'file_name':file_name,'mode':'CLG','api':'ins'})
+
+        return render(self.request,self.template_name,{'file_name':file_name,'mode':'dept','key':dept,'dept':dept})
 
 
-# test 
+class StudentPromote(View):
+    template_name = 'prinicipal/promoson.html'
+    def get(self,request):
+        return render(self.request,self.template_name)
+    def post(self, request):
+        try:
+            dept = request.POST.get('CSE', None)
+            if dept is not None:  # Ensure dept is provided
+                dept = int(dept)  # Convert to integer
+                print(f'sem: {dept}')
+                # Update only if valid dept is provided
+                Student.objects.filter(dept='CSE', semester=dept).update(semester=dept + 1,status=False)
+                
+                return render(self.request, self.template_name, {'error': 'Students year is updated!'})
+            else:
+                return render(self.request, self.template_name, {'error': 'Invalid semester value provided!'})
+        except Exception as ex:
+            return render(self.request, self.template_name, {'error': f'Error: {ex}'})
 
-class Feed(TemplateView):
-    template_name = 'feed_sample.html'
+class CommentView(View):
+    template_name = 'comment.html'
+    def get(self,request,sid):
+        student = Student.objects.get(id=sid)
+        return render(self.request,self.template_name,{'student':student,'sid':sid})

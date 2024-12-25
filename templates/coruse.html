@@ -39,9 +39,9 @@
         <h1 class="mb-4">Select Course</h1>
         
         <!-- List of course buttons -->
-        <a href="{% url 'msubject' sid 1 %}" class="btn btn-outline-primary btn-list">mandatory </a>
-        <a href="{% url 'msubject' sid 2 %}" class="btn btn-outline-primary btn-list">open elective</a>
-        <a href="{% url 'msubject' sid 3 %}" class="btn btn-outline-primary btn-list">elective</a>
+        <a href="{% url 'msubject' sid 1 fid %}" class="btn btn-outline-primary btn-list">mandatory </a>
+        <a href="{% url 'msubject' sid 2 fid %}" class="btn btn-outline-primary btn-list">open elective</a>
+        <a href="{% url 'msubject' sid 3 fid %}" class="btn btn-outline-primary btn-list">elective</a>
         
         <!-- Done button -->
         <a href="{% url 'home' %}" class="btn btn-primary btn-done">Done</a>

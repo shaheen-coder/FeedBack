@@ -1,0 +1,70 @@
+{% extends 'adminnav.html' %}
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'staff-dash' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block header %}
+<title>Mode</title>
+{% endblock %}
+
+{% block style %}
+<style>
+    .transparent-box {
+
+        background-color: rgba(255, 255, 255, 0.8);
+        /* White with transparency */
+
+        border-radius: 10px;
+
+        padding: 20px;
+
+    }
+
+    .big-img {
+
+        max-width: 100%;
+
+        height: auto;
+
+    }
+
+    .btn-custom {
+
+        background-color: blue;
+
+        color: white;
+
+        margin: 10px 0;
+        /* Space between buttons */
+
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+
+    <div class="row">
+
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="transparent-box">
+                <a href="{% url 'staff-csearch' 'class' 0 %}" class="btn btn-custom w-100">class report </a>
+                <a href="{% url 'staff-search' 'staff' 0 %}" class="btn btn-custom w-100">staff report</a>
+                <a href="{% url 'staff-search' 'staffsub' 0 %}" class="btn btn-custom w-100">subject report</a>
+                <a href="{% url 'staff-search' 'stu' 0 %}" class="btn btn-custom w-100">student report</a>
+                <a href="{% url 'staff-search' 'stucomt' 0 %}" class="btn btn-custom w-100">student comment report</a>
+                <a href="{% url 'd-report' request.user.dept %}" class="btn btn-custom w-100">dept report </a>
+            </div>
+        </div>
+        <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
+
+            <div class="transparent-box text-center">
+
+                <img src="https://as1.ftcdn.net/v2/jpg/05/33/79/30/1000_F_533793082_5G7mPJBgkVLzJirz51ls1LAr9KgMdpZJ.jpg"
+                    alt="Big Image" class="big-img mb-3">
+                <!-- Replace with your image URL -->
+                <p>Wellcome to report mode page </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

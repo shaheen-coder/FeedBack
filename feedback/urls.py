@@ -7,5 +7,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('core.urls')),
     path('api/',include('api.urls')),
+    path('staff/',include('staff.urls')),
     path('captcha/', include('captcha.urls')),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

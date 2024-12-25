@@ -1,0 +1,104 @@
+{% extends 'admin/nav.html' %}
+{% load static %}
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'staff-dash' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block header %}
+<title>Student Check</title>
+<link rel="stylesheet" href="{% static 'css/student.css' %}">
+{% if error %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'staff-check' %}" method="post">
+    {% csrf_token %}
+    <div class="filters">
+        <div class="main_features">
+           <div>
+            <input type="text" class="features" name="name" placeholder="name">
+           </div>
+            <div>
+                <select class="features" name="dept">
+                    <option value="">dept</option>
+                    <option value="CSE">be-cse</option>
+                    <option value="IT">be-it</option>
+                    <option value="ICE">be-ice</option>
+                </select>
+            </div>
+            <div>
+                <select name="gender" class="features">
+                    <option value="">gender</option>
+                    <option value="1">male</option>
+                    <option value="0">female</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="search">
+            <button type="submit" class="search_bar"> search </button>
+        </div>
+    </div>
+</form>
+<table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Name</th>
+            <th>department</th>
+            <th>gender</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for staff in staffs %}
+        <tr>
+            <td>{{staff.id}}</td>
+            <td>{{staff.name}}</td>
+            <td>{{staff.dept}}</td>
+            {% if staff.gender %}
+            <td>Male</td>
+            {% else %}
+            <td>Female</td>
+            {% endif %}
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if error %}
+<!-- error popup -->
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box">
+                    <i class="material-icons">&#xE5CD;</i>
+                </div>
+                <h4 class="modal-title">ERROR !</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">error : {{error}}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // Wait for the document to fully load
+    document.addEventListener('DOMContentLoaded', function () {
+        // Trigger the modal to open programmatically
+        $('#myModal').modal('show');
+    });
+</script>
+{% endif %}
+{% endblock %}
