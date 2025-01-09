@@ -15,7 +15,6 @@ from django.db.models import Q
 from django.db.models import Avg,Count
 from django.db import IntegrityError
 #forms 
-from core.forms import StudentLoginForm
 # others
 from datetime import datetime
 import json 
@@ -56,7 +55,7 @@ class CustomLogoutView(LogoutView):
 # feeback and student views 
 
 class StudentLogin(View):
-    template_name = 'captcha.html'
+    template_name = 'login22.html'
     def get(self,request):
         return render(self.request,self.template_name)
     def post(self,request):
@@ -72,7 +71,8 @@ class StudentLogin(View):
             current_time = date.today()
             if not (time_scheduler.start_time <= current_time <= time_scheduler.end_time):
                 return render(self.request,self.template_name,{"error": "Feedback time is ended !!."})
-
+            if (time_scheduler.feed == 1 and student.feed1_status) or (time_scheduler.feed == 2 and student.feed2_status):
+                return render(self.request,self.template_name,{'error':"you have already sumited feedback"})
             # Check if the student's status is active
             if not student.status:
                 return render(self.request,self.template_name,{"error": "Student ID isn't updated."})
@@ -102,8 +102,8 @@ class Manitiory(View):
         return render(self.request,self.template_name,{'cid':cid,'sid':sid,'fid':fid})
 class ManitioryForm(View):
     template_name = 'feed_sample.html'
-    def get(self,request,sid,cid,fid):
-        return render(self.request,self.template_name,{'id':sid,'cid':cid,'fid':fid,'is_manitiory':1})
+    def get(self,request,sid,cid,fid,subid):
+        return render(self.request,self.template_name,{'id':sid,'cid':cid,'fid':fid,'subid':subid,'is_manitiory':1})
 
 
 class FeedBackView(View):
@@ -111,7 +111,7 @@ class FeedBackView(View):
         manitiory = 0
         student = Student.objects.get(id=sid)
         if student.semester > 4: manitiory = 1
-        return render(self.request,'feed_sample.html',{'id':sid,'fid':fid,'cid':0,'is_manitiory':manitiory})
+        return render(self.request,'feed_sample.html',{'id':sid,'fid':fid,'cid':0,'subid':'null','is_manitiory':manitiory})
     
 
 #   admin view
@@ -248,7 +248,10 @@ class StudentPromote(View):
                 return render(self.request, self.template_name, {'error': 'Invalid semester value provided!'})
         except Exception as ex:
             return render(self.request, self.template_name, {'error': f'Error: {ex}'})
-
+class CommentSearch(View):
+    template_name = 'prinicipal/comment.html'
+    def get(self,request):
+        return render(self.request,self.template_name,{'mode':'stu','is_analysis':0})
 class CommentView(View):
     template_name = 'comment.html'
     def get(self,request,sid):

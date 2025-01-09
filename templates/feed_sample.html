@@ -378,7 +378,7 @@
   <script>
     let JsonData = {
       student_id: {{ id }},
-    feed_count: {{fid}},
+    feed_count: {{ fid }},
     feeds: []
     };
     const leftQuestions = [
@@ -396,7 +396,7 @@
       "How clear and structured are the teacher's instructions?",
       "How well does the teacher promote teamwork among students?"
     ];
-    const is_manitiory = {{is_manitiory}};
+    const is_manitiory = {{ is_manitiory }};
     let staffData = [];
     let currentIndex = 0;
     const containersWrapper = document.getElementById('containersWrapper');
@@ -405,25 +405,34 @@
     // Fetch staff data from API
     async function fetchStaffData() {
       try {
-
-        const response = await fetch('{% url 'feed-search' id  cid %}');
+        const url = (is_manitiory) ? '{% url 'feed-search' id cid subid %}' : '{% url 'feed-search' id cid "null" %}';
+        const response = await fetch(url);
         const data = await response.json();
-        staffData = data.data;
-        console.log(` api data : ${staffData}`);
-        return data.data;
+
+        // Normalize staffData to always be an array
+        staffData = Array.isArray(data.data) ? data.data : [data.data];
+
+        console.log(`Normalized api data: ${JSON.stringify(staffData, null, 2)}`);
+        return staffData;
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching staff data:', error);
       }
     }
-
     function updateHeader(currentStaff) {
       document.querySelector('.name').textContent = currentStaff.staff.name;
       document.querySelector('.staff_subject').textContent =
         `${currentStaff.subject.code} - ${currentStaff.subject.name}`;
     }
-
+    // Generate container
     function generateContainer(index) {
+      if (!staffData[index]) {
+        console.error(`No staff data found at index: ${index}`);
+        return;
+      }
+
       const currentStaff = staffData[index];
+      console.log(`current staff: ${JSON.stringify(currentStaff, null, 2)} \n index: ${index}`);
+
       updateHeader(currentStaff);
 
       const first_main_container = document.createElement('div');
@@ -474,12 +483,12 @@
       <hr>
     `;
       });
-      
+
       const user_message = document.createElement('input');
       user_message.classList.add("user_message");
       user_message.setAttribute('type', 'text');
       user_message.setAttribute('id', "user_message");
-      user_message.setAttribute('placeholder', ' click here to leave your comments');
+      user_message.setAttribute('placeholder', 'Click here to leave your comments');
 
       container.appendChild(leftContainer);
       container.appendChild(rightContainer);
@@ -493,7 +502,6 @@
         loadStoredData(currentStaff.id);
       }
     }
-
     function generateJSON(index) {
       const currentStaff = staffData[index];
       const dropdowns = document.querySelectorAll(`#container-${currentStaff.id} select`);
@@ -533,7 +541,6 @@
         });
       }
     }
-
     async function submitFeedback(feedbackData) {
       console.log(`data : ${JSON.stringify(feedbackData)}`)
       const csrftoken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
@@ -574,14 +581,16 @@
 
       return isValid;
     }
-
+    // Update the "Next" button logic to handle single or multiple data
     document.getElementById('nextButton').onclick = function () {
       const feedback = generateJSON(currentIndex);
+
       if (!validateSelections(staffData[currentIndex].id)) {
-        return; 
-    }
+        return;
+      }
+
       JsonData.feeds.push(feedback);
-      console.log(`json : ${JSON.stringify(JsonData)}`);
+      console.log(`json: ${JSON.stringify(JsonData)}`);
 
       if (currentIndex === staffData.length - 1) {
         document.getElementById("nextButton").innerHTML = "Submit";
@@ -594,24 +603,14 @@
       }
     };
 
-    document.getElementById('backButton').onclick = function () {
-      generateJSON(currentIndex);
-      if (currentIndex > 0) {
-        currentIndex--;
-        generateContainer(currentIndex);
-      }
-      if (currentIndex !== staffData.length - 1) {
-        document.getElementById("nextButton").innerHTML = "Next";
-      }
-    };
-
-    // Initialize
+    // Initialize the app
     async function init() {
       await fetchStaffData();
       generateContainer(currentIndex);
     }
 
     init();
+
   </script>
 </body>
 

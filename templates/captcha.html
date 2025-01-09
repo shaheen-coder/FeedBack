@@ -1,7 +1,4 @@
 {% extends 'login22.html' %}
 
-{% block captcha %}
-{% load crispy_forms_tags %}
-{{ form|crispy }}
 {% csrf_token %}
 {% endblock %}

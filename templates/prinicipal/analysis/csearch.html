@@ -43,20 +43,15 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block script %}
 <script>
     
-    function getDomainName() {
-        // Get the current URL
-        const url = window.location.href;
-      
-        // Extract the hostname from the URL
-        const hostname = new URL(url).hostname;
-      
-        // Extract the domain name from the hostname
-        const domainName = hostname.split('.').slice(-2).join('.');
-      
-        return domainName;
+    function getDomainName(key) {
+        if(key == 'local'){
+            return '127.0.0.1:8000';
+        }else{
+            return 'shaheenavc.pythonanywhere';
+        }
       }
-    const currentDomain = getDomainName();
-    console.log(currentDomain); 
+    const currentDomain = getDomainName('local');
+    console.log('domain name : ' + currentDomain); 
     function filterData() {
         const form = document.getElementById('filterForm');
         const formData = new FormData(form);

@@ -117,4 +117,11 @@ class TimeScheduler(models.Model):
     start_time = models.DateField()
     end_time = models.DateField()
     dept = models.CharField(max_length=10,choices=DEPT)
-    
+    feed = models.IntegerField()
+    def clean(self):
+        super().clean()
+        if self.feed > 2 :
+            raise ValidationError("feed only 2 times")
+    def save(self, *args, **kwargs):
+        self.clean() 
+        super().save(*args, **kwargs)

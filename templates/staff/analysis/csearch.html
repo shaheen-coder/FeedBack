@@ -37,19 +37,17 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block script %}
 <script>
     function getDomainName() {
-        // Get the current URL
         const url = window.location.href;
       
-        // Extract the hostname from the URL
         const hostname = new URL(url).hostname;
       
-        // Extract the domain name from the hostname
+
         const domainName = hostname.split('.').slice(-2).join('.');
       
         return domainName;
       }
     const currentDomain = getDomainName();
-    console.log(currentDomain); 
+    console.log(`domain : ${currentDomain}`); 
     function filterData() {
         const form = document.getElementById('filterForm');
         const formData = new FormData(form);

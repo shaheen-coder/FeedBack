@@ -16,12 +16,16 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
             <input class="sear" name="name" type="text" placeholder="STUDENT NAME">
             {% csrf_token %}
             <div class="filters">
-                <select name="year" class="filter_1">
-                    <option value="">year</option>
+                <select name="sem" class="filter_1">
+                    <option value="">sem</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="4">6</option>
+                    <option value="4">7</option>
+                    <option value="4">8</option>
                 </select>
                 <select name="section" class="filter_1">
                     <option value="">section</option>
@@ -53,16 +57,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block script %}
 <script>
     function getDomainName() {
-        // Get the current URL
-        const url = window.location.href;
-      
-        // Extract the hostname from the URL
-        const hostname = new URL(url).hostname;
-      
-        // Extract the domain name from the hostname
-        const domainName = hostname.split('.').slice(-2).join('.');
-      
-        return domainName;
+        return '127.0.0.1:8000';
       }
     const currentDomain = getDomainName();
     console.log(currentDomain); 
@@ -76,7 +71,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
         formData.forEach((value, key) => {
             requestData[key] = value;
         });
-
+        console.log(requestData);
         // Send API POST request
         fetch("{% url 'student-search' %}", {
             method: 'POST',

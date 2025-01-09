@@ -14,7 +14,7 @@ urlpatterns = [
     path('cadmin/search/<str:mode>/<int:ana>/',views.Search.as_view(),name='search'),
     path('cadmin/csearch/<str:mode>/<int:ana>/',views.ClassSearch.as_view(),name='csearch'),
     path('msubject/<int:sid>/<int:cid>/<int:fid>/',views.Manitiory.as_view(),name='msubject'),
-    path('mcfeed/<int:sid>/<int:cid>/<int:fid>/',views.ManitioryForm.as_view(),name='mfeed'),
+    path('mcfeed/<int:sid>/<int:cid>/<int:fid>/<str:subid>/',views.ManitioryForm.as_view(),name='mfeed'),
     path('course/<int:sid>/<int:fid>/',views.Course.as_view(),name='course'),
 
     #prinicipal urls 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('prinicipal/reportmode/',views.ReportMode.as_view(),name='reportmode'),
     path("prinicipal/searchmode/",views.AnalysisMode.as_view(), name="anamode"),
     path('prinicipal/promote/',views.StudentPromote.as_view(),name='stu-pro'),
+    path("prinicipal/comment/search/", views.CommentSearch.as_view(), name="comt-search"),
     path("cadmin/comment/<int:sid>/", views.CommentView.as_view(), name="comt-view"),
     #auth view 
     path('auth/logout/',views.CustomLogoutView.as_view(),name='logout'),

@@ -10,7 +10,7 @@ urlpatterns = [
     path('instru/',views.Instruction.as_view(),name='ins'),
     path('search/',views.UniversalSearchAPIView.as_view(),name='sss'),
     path('class/search/',views.ClassSerchApi.as_view(),name='class-search'),
-    path('feed/search/<int:id>/<int:cid>/',views.FeedSearch.as_view(),name='feed-search'),
+    path('feed/search/<int:id>/<int:cid>/<str:subid>/',views.FeedSearch.as_view(),name='feed-search'),
     path("feed/", views.FeedBackApi.as_view(), name="feed-api"),
     path("comment/<int:sid>/", views.CommentApi.as_view(), name="comt-api"),
 

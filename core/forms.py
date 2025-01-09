@@ -2,7 +2,6 @@
 from django.forms import ModelForm
 from core.models import ClassStaff
 from django import forms
-from captcha.fields import CaptchaField
 from core.models import CustomUser
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.contrib.auth.admin import UserAdmin
@@ -50,7 +49,3 @@ class ClassStaffForm(ModelForm):
     class Media:
         js = ('js/subject_filter.js',)
 
-
-class StudentLoginForm(forms.Form):
-    
-    captcha = CaptchaField()

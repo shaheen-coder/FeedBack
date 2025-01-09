@@ -641,8 +641,8 @@ class StudentSearch(APIView):
         sem = request.data.get('sem',None)
         students = Student.objects.filter(dept=dept,status=True)
         if not dept: return Response({'error':'department field is must !! '},status=status.HTTP_400_BAD_REQUEST)
-        if sec: students = students.filter(section=sec)
         if sem: students = students.filter(semester=sem)
+        if sec: students = students.filter(section=sec)
         if name : students = students.filter(name__icontains=name)
         datas = {}
         datas['student'] = StudentSerializer(students,many=True).data
@@ -665,20 +665,21 @@ class ClassSerchApi(APIView):
 
 
 class FeedSearch(APIView):
-    def get(self,request,id,cid):
+    def get(self,request,id,cid,subid):
         student = Student.objects.get(id=id)
-        print(f'student : {student}')
-        mcourse = True if cid == 1 else False 
-        ecourse =  True if cid == 2 else False 
-        oecourse =  True if cid == 3 else False 
-        staffs = ClassStaff.objects.filter(dept=student.dept,semester=student.semester,section=student.section)
-        print(f'datas : {staffs}')
-        if mcourse : staffs = staffs.filter(subject__mcourse=mcourse)
-        if ecourse : staffs = staffs.filter(subject__ecourse=ecourse)
-        if oecourse : staffs = staffs.filter(subject__oecourse=oecourse)
-        print(f'datas : {staffs}')
-        datas = ClassStaffSerializer(staffs,many=True).data
-        return Response({'data':datas})
+        if subid != 'null':
+            datas = ClassStaff.objects.get(dept=student.dept,subject=subid,section=student.section,semester=student.semester)
+            datas = ClassStaffSerializer(datas).data
+            return Response({'data':datas})
+        else :
+            print(f'student : {student} and course id : {cid}')
+            mcourse = True if cid == 1 else False 
+            ecourse =  True if cid == 2 else False 
+            oecourse =  True if cid == 3 else False 
+            staffs = ClassStaff.objects.filter(dept=student.dept,semester=student.semester,section=student.section,subject__mcourse=mcourse,subject__ecourse=ecourse,subject__oecourse=oecourse)
+            print(f'datas : {staffs}')
+            datas = ClassStaffSerializer(staffs,many=True).data
+            return Response({'data':datas})
 
 
 class FeedBackApi(APIView):

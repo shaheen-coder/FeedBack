@@ -1,77 +1,112 @@
 {% load static %}
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="{% static 'assets/avc.png' %}"> 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <title>Home</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="Untree.co">
+	<link rel="shortcut icon" href="favicon.png">
 
-  <style>
-    * {
-  margin: 0;
-  padding: 0;
-  font-family: "Inter", sans-serif;
-  }
+	<meta name="description" content="avcce"/>
+	<meta name="keywords" content="avc college of enginnering" />
 
-    body{
-    margin: 0; /* Remove default margin */
-    width: 100%;
-    height: 100vh; /* Make sure it spans the viewport */
-    background: linear-gradient(to top, #1f586e, #a6f2f2); /* Your gradient */
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Fix the gradient while scrolling */
-    }
-  </style>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
+	<link rel="stylesheet" href="{% static 'home/fonts/icomoon/style.css' %}">
+	<link rel="stylesheet" href="{% static 'home/fonts/flaticon/font/flaticon.css' %}">
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+	<link rel="stylesheet" href="{% static 'home/css/tiny-slider.css' %} ">
+	<link rel="stylesheet" href="{% static 'home/css/aos.css' %}">
+	<link rel="stylesheet" href="{% static 'home/css/glightbox.min.css'%}">
+	<link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+	<link rel="stylesheet" href="{% static 'css/flatpickr.min.css' %}">
 
 
+	<title>AVC</title>
 </head>
 <body>
-  <header>
-    <nav class="navbar navbar-expand-lg bg-body-dark mb-5">
-      <div class="container-fluid">
-        <img src="{% static 'assets/avc.png' %}" width="35" height="35">
-        <a class="navbar-brand ms-2" href="#">AVCCE COLLEGE</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-            <li class="nav-item mx-4">
-              <a class="nav-link active" aria-current="page" href="{% url 'team' %}">Team</a>
-            </li>
-            <li class="nav-item mx-4">
-              <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-            </li>
-            
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
-  <div class="container">
-    <div class="row d-flex justify-content-around">
-      <div class="col-11 col-md-5 mx-2 mt-5 w3-animate-left"><img class="img-fluid" src="https://plus.unsplash.com/premium_vector-1682309126273-b75f58d8f39b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmVlZGJhY2t8ZW58MHx8MHx8fDA%3D" alt=""></div>
-      <div class="col-11 col-md-5 mx-2 my-1 w3-animate-right"><h1 class="display-5" style="font-weight: 600;" >Welcome to <span style="color: white;">FEEDBACK SYSTEM</span> <br> let's get started</h1> <br> <p class="fs-5" style="font-weight: 400;">The feedback system developed by <a style="color: white; text-decoration: none;" target="_blank" href="">@shaheen.vsa</a>, <a style="color: white; text-decoration: none;" target="_blank" href="">@nitheesh_dev</a> and <a style="color: white; text-decoration: none;" target="_blank" href="">@Karthikrishna</a> from Coders Club</p>
-      <br>
-      <div class="container justify-content-betwen mb-5">
-        <button class="btn btn-outline-light btn-lg w3-animate-bottom" onclick="dev()">DEVELOPERS</button>
-        <button class="btn btn-outline-light btn-lg active w3-animate-bottom" onclick="login()">LOGIN</button>
-      </div>
-      </div>
+
+	<div class="site-mobile-menu site-navbar-target">
+		<div class="site-mobile-menu-header">
+			<div class="site-mobile-menu-close">
+				<span class="icofont-close js-menu-toggle"></span>
+			</div>
+		</div>
+		<div class="site-mobile-menu-body"></div>
+	</div>
+
+	<nav class="site-nav">
+		<div class="container">
+			<div class="menu-bg-wrap">
+				<div class="site-navigation">
+					<div class="row g-0 align-items-center">
+						<div class="col-2">
+							<a href="index.html" class="logo m-0 float-start">AVC College<span class="text-primary">.</span></a>
+						</div>
+						<div class="col-8 text-center ">
+							<ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
+								<li class="active"><a href="index.html">Home</a></li>
+								<li><a href="{% url 'admin:index' %}">Admin Login</a></li>
+								<li><a href="{% url 'team' %}">About Team</a></li>
+							</ul>
+						</div>
+						<div class="col-2 text-end">
+							<a href="#" class="burger ms-auto float-end site-menu-toggle js-menu-toggle d-inline-block d-lg-none light">
+								<span></span>
+							</a>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<div class="hero overlay">
+		<img src="" alt=""  class="img-fluid blob">
+		<div class="container">
+			<div class="row align-items-center justify-content-between pt-5">
+				<div class="col-lg-6 text-center text-lg-start pe-lg-5">
+					<h1 class="heading text-white mb-3" data-aos="fade-up">AVC College of enginnering</h1>
+					<p class="text-white mb-5" data-aos="fade-up" data-aos-delay="100">Give your feedback for our staffs</p>
+					<div class="align-items-center mb-5 mm" data-aos="fade-up" data-aos-delay="200">
+						<a href="{% url 'login' %}" class="btn btn-outline-white-reverse me-4">Login</a>
+						<a href="{% url 'team' %}" class="text-white glightbox">About Devloper</a>
+					</div>
+				</div>
+				<div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+					<div class="img-wrap">
+						<img src="{% static 'assets/feedback.png' %}" alt="Image" class="img-fluid rounded">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <!-- Preloader -->
+    <div id="overlayer"></div>
+    <div class="loader">
+    	<div class="spinner-border text-primary" role="status">
+    		<span class="visually-hidden">Loading...</span>
+    	</div>
     </div>
-  </div>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script>
-  function dev(){
-    window.location.href = "{% url 'team' %}";
-  }
-  function login(){
-    window.location.href = "{% url 'login' %}";
-  }
-</script>
-</html>
+
+
+    <script src="{% static 'home/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'home/js/tiny-slider.js' %}"></script>
+
+    <script src="{% static 'home/js/flatpickr.min.js' %}"></script>
+
+
+    <script src="{% static 'home/js/aos.js' %}"></script>
+    <script src="{% static 'home/js/glightbox.min.js' %}"></script>
+    <script src="{% static 'home/js/navbar.js' %}"></script>
+    <script src="{% static 'js/counter.js' %}"></script>
+    <script src="{% static 'home/js/custom.js' %}"></script>
+  </body>
+  </html>
