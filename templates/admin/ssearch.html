@@ -83,7 +83,7 @@
                         if(requestData.mode == 'stu' ){
                             const userDiv = document.createElement('div');
                             userDiv.className = 'user'; 
-                            let url = `http://127.0.0.1:8000/prinicipal/report/${requestData.mode}/${student.id}/${student.dept}/`;
+                            let url = `https://shaheenavc.pythonanywhere.com//prinicipal/report/${requestData.mode}/${student.id}/${student.dept}/`;
                             userDiv.innerHTML = `
                                 <div class="stafs">
                                     <img src="" alt="User Image">
@@ -100,7 +100,7 @@
                         }else{
                             const userDiv = document.createElement('div');
                             userDiv.className = 'user'; 
-                            let url = `http://127.0.0.1:8000/api/comment/${student.id}/`;
+                            let url = `https://shaheenavc.pythonanywhere.com//api/comment/${student.id}/`;
                             userDiv.innerHTML = `
                                 <div class="stafs">
                                     <img src="" alt="User Image">
@@ -119,7 +119,7 @@
                 } else {
                     const userDiv = document.createElement('div');
                         userDiv.className = 'user';
-                        let url = `http://127.0.0.1:8000/prinicipal/report/${requestData.mode}/${data.student.id}/${data.student.dept}/`;
+                        let url = `https://shaheenavc.pythonanywhere.com//prinicipal/report/${requestData.mode}/${data.student.id}/${data.student.dept}/`;
                         userDiv.innerHTML = `
                             <div class="stafs">
                                 <img src="" alt="User Image">

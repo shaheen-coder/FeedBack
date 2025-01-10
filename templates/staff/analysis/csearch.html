@@ -37,14 +37,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block script %}
 <script>
     function getDomainName() {
-        const url = window.location.href;
-      
-        const hostname = new URL(url).hostname;
-      
-
-        const domainName = hostname.split('.').slice(-2).join('.');
-      
-        return domainName;
+        return 'https://shaheenavc.pythonanywhere.com/';
       }
     const currentDomain = getDomainName();
     console.log(`domain : ${currentDomain}`); 

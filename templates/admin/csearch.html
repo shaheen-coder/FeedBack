@@ -40,16 +40,7 @@
 {% block script %}
 <script>
     function getDomainName() {
-        // Get the current URL
-        const url = window.location.href;
-      
-        // Extract the hostname from the URL
-        const hostname = new URL(url).hostname;
-      
-        // Extract the domain name from the hostname
-        const domainName = hostname.split('.').slice(-2).join('.');
-      
-        return domainName;
+        return 'https://shaheenavc.pythonanywhere.com/'
       }
       
       // Example usage:
@@ -107,7 +98,7 @@
                 if(data.B){
                     const userDiv = document.createElement('div');
                     userDiv.className = 'user';
-                    let url = (!is_analysis) ? `http://${currentDomain}/creport/${requestData.mode}/B/${data.sem}/${data.dept}/` : `http://127.0.0.1:8000/analysis/class/${data.sem}/B/${data.dept}`;
+                    let url = (!is_analysis) ? `http://${currentDomain}/creport/${requestData.mode}/B/${data.sem}/${data.dept}/` : `https://shaheenavc.pythonanywhere.com/analysis/class/${data.sem}/B/${data.dept}`;
                     userDiv.innerHTML = `
                     <div class="stafs">
                         <img src="{% static 'assets/letter-b.png' %}" alt="User Image">

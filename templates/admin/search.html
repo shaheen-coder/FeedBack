@@ -90,7 +90,7 @@
                         const userDiv = document.createElement('div');
                         userDiv.className = 'user';
                         if(requestData.mode == 'staff'){
-                            let url = (!is_analysis) ? `http://127.0.0.1:8000/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` : `http://127.0.0.1:8000/analysis/staff/${staff.id}/${staff.dept}/`;
+                            let url = (!is_analysis) ? `https://shaheenavc.pythonanywhere.com//prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` : `https://shaheenavc.pythonanywhere.com//analysis/staff/${staff.id}/${staff.dept}/`;
                             (!is_analysis) ? console.log('report') : console.log('analysis');
                             userDiv.innerHTML = `
                             <div class="stafs">
@@ -106,7 +106,7 @@
                         `;
                         dataContainer.appendChild(userDiv);
                         }else if(requestData.mode == 'staffsub'){
-                            let url = (!is_analysis) ? `http://127.0.0.1:8000/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` :`http://127.0.0.1:8000/analysis/staffsub/${staff.id}/${staff.subject.code}/` ;
+                            let url = (!is_analysis) ? `https://shaheenavc.pythonanywhere.com//prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` :`https://shaheenavc.pythonanywhere.com//analysis/staffsub/${staff.id}/${staff.subject.code}/` ;
                             userDiv.innerHTML = `
                             <div class="stafs">
                                 <img src="${staff.staff.profile_pic}" alt="User Image">
