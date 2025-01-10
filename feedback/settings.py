@@ -1,4 +1,4 @@
-import os 
+import os
 from pathlib import Path
 #from core.views import pauth
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)&fnocvu=1f@8h*@42vkb+##1ceau4m)&-*kkg70ot1^8i%2!_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['shaheenavc.pythonanywhere.com','https://shaheenavc.pythonanywhere.com/']
 
 
 # Application definition
@@ -115,8 +115,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# media files 
-MEDIA_URL = '/media/' 
+# media files
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
@@ -126,7 +126,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "admin:login"
-# jazzmin admin settings 
+# jazzmin admin settings
 JAZZMIN_SETTINGS = {
     "site_title": "AVCCE Admin",
     "site_header": "admin login",
@@ -150,10 +150,10 @@ JAZZMIN_SETTINGS = {
 
     "welcome_sign": "Welcome to the AVCCE Admin",
     "copyright": "VSA tech Ltd",
-    
+
 
 }
 
 
-# custom user 
+# custom user
 AUTH_USER_MODEL = 'core.CustomUser'
