@@ -51,7 +51,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block script %}
 <script>
     function getDomainName() {
-       return 'https://shaheenavc.pythonanywhere.com/';
+       return 'shaheenavc.pythonanywhere.com/';
       }
     const currentDomain = getDomainName();
     console.log(currentDomain); 
@@ -92,7 +92,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                         const userDiv = document.createElement('div');
                         userDiv.className = 'user';
                         if(requestData.mode == 'staff'){
-                            let url = (!is_analysis) ? `http://${currentDomain}/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` : `http://${currentDomain}/analysis/staff/${staff.id}/${staff.dept}/`;
+                            let url = (!is_analysis) ? `https://${currentDomain}/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` : `https://${currentDomain}/analysis/staff/${staff.id}/${staff.dept}/`;
                             (!is_analysis) ? console.log('report') : console.log('analysis');
                             userDiv.innerHTML = `
                             <div class="stafs">

@@ -37,7 +37,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block script %}
 <script>
     function getDomainName() {
-        return 'https://shaheenavc.pythonanywhere.com/';
+        return 'shaheenavc.pythonanywhere.com/';
       }
     const currentDomain = getDomainName();
     console.log(`domain : ${currentDomain}`); 
@@ -75,7 +75,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                     if(data.A){
                         const userDiv = document.createElement('div');
                         userDiv.className = 'user';
-                        let url = (!is_analysis) ? `http://${currentDomain}/prinicipal/creport/${requestData.mode}/A/${data.sem}/${data.dept}/` : `http://${currentDomain}/analysis/class/${data.sem}/A/${data.dept}/`;
+                        let url = (!is_analysis) ? `https://${currentDomain}/prinicipal/creport/${requestData.mode}/A/${data.sem}/${data.dept}/` : `https://${currentDomain}/analysis/class/${data.sem}/A/${data.dept}/`;
                         userDiv.innerHTML = `
                         <div class="stafs">
                             <img src="{% static 'assets/a-letter.svg' %}" alt="User Image">
@@ -93,7 +93,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                 if(data.B){
                     const userDiv = document.createElement('div');
                     userDiv.className = 'user';
-                    let url = (!is_analysis) ? `http://${currentDomain}/prinicipal/creport/${requestData.mode}/B/${data.sem}/${data.dept}/` : `http://${currentDomain}/analysis/class/${data.sem}/B/${data.dept}`;
+                    let url = (!is_analysis) ? `https://${currentDomain}/prinicipal/creport/${requestData.mode}/B/${data.sem}/${data.dept}/` : `https://${currentDomain}/analysis/class/${data.sem}/B/${data.dept}`;
                     userDiv.innerHTML = `
                     <div class="stafs">
                         <img src="{% static 'assets/letter-b.png' %}" alt="User Image">

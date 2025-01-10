@@ -57,7 +57,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block script %}
 <script>
     function getDomainName() {
-        return 'https://shaheenavc.pythonanywhere.com/';
+        return 'shaheenavc.pythonanywhere.com/';
       }
     const currentDomain = getDomainName();
     console.log(` domain : ${currentDomain} `); 
@@ -121,7 +121,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                         `;
                         dataContainer.appendChild(userDiv);
                         }else if(requestData.mode == 'staffsub'){
-                            let url = (!is_analysis) ? `http://${currentDomain}/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` :`http://${currentDomain}/analysis/staffsub/${staff.id}/${staff.subject.code}/` ;
+                            let url = (!is_analysis) ? `https://${currentDomain}/prinicipal/report/${requestData.mode}/${staff.id}/${staff.dept}/` :`https://${currentDomain}/analysis/staffsub/${staff.id}/${staff.subject.code}/` ;
                             userDiv.innerHTML = `
                             <div class="stafs">
                                 <img src="${staff.staff.profile_pic}" alt="User Image">

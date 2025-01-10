@@ -4,8 +4,16 @@ from core.models import  CustomUser
 from core.forms import ClassStaffForm
 from import_export.admin import ImportExportModelAdmin
 from core.resources import SubjectResource
-admin.site.register(CustomUser)
 
+@admin.register(CustomUser)
+class CustomUserAdmin(admin.ModelAdmin):
+    def has_view_permission(self, request, obj=None):
+        if hasattr(request.user, 'is_princpl') and request.user.is_princpl:
+            print(f'permission granted for CUser model !!')
+            return False
+        else:
+            print(f'permission wasnt granted for CUser model !!')
+            return True 
 @admin.register(Student)
 class StudentAdmin(ImportExportModelAdmin):
     def get_queryset(self,request):

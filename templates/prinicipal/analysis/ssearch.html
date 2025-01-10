@@ -57,7 +57,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block script %}
 <script>
     function getDomainName() {
-        return 'https://shaheenavc.pythonanywhere.com/';
+        return 'haheenavc.pythonanywhere.com/';
       }
     const currentDomain = getDomainName();
     console.log(currentDomain); 
@@ -94,7 +94,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                         if(requestData.mode == 'stu'){
                             const userDiv = document.createElement('div');
                             userDiv.className = 'user'; 
-                            let url = `http://${currentDomain}/prinicipal/report/${requestData.mode}/${student.id}/${student.dept}/`;
+                            let url = `https://${currentDomain}/prinicipal/report/${requestData.mode}/${student.id}/${student.dept}/`;
                             userDiv.innerHTML = `
                                 <div class="stafs">
                                     <img src="" alt="User Image">
@@ -111,7 +111,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                         }else{
                             const userDiv = document.createElement('div');
                             userDiv.className = 'user'; 
-                            let url = `http://${currentDomain}/cadmin/comment/${student.id}/`;
+                            let url = `https://${currentDomain}/cadmin/comment/${student.id}/`;
                             userDiv.innerHTML = `
                                 <div class="stafs">
                                     <img src="" alt="User Image">
@@ -130,7 +130,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                 } else {
                     const userDiv = document.createElement('div');
                         userDiv.className = 'user';
-                        let url = `http://${currentDomain}/prinicipal/report/${requestData.mode}/${data.student.id}/${data.student.dept}/`;
+                        let url = `https://${currentDomain}/prinicipal/report/${requestData.mode}/${data.student.id}/${data.student.dept}/`;
                         userDiv.innerHTML = `
                             <div class="stafs">
                                 <img src="" alt="User Image">
