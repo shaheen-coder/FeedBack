@@ -200,7 +200,8 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
         .then(response => response.json())
         .then(json => {
             const tableBody = document.querySelector('.fl-table tbody');
-            const data = json.data; // Extract the 'data' object from the response
+            const data = json.data; 
+            const terms = json.terms;
             console.log(data);
             // Clear existing rows (optional)
             tableBody.innerHTML = "";
@@ -213,7 +214,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                     // Create and append table cells
                     row.innerHTML = `
                     <td>${sno++}</td>
-                    <td>${category}</td>
+                    <td>${terms[sno-1]}</td>
                     <td>${stats.percentage_5s}%</td>
                     <td>${stats.percentage_3s}%</td>
                     <td>${stats.percentage_1s}%</td>

@@ -35,7 +35,7 @@ class SubjectAdmin(ImportExportModelAdmin):
         if request.user.is_princpl : return qs 
         else : return qs.filter(dept=request.user.dept)
 
-#admin.site.register(FeedBack)
+admin.site.register(FeedBack)
 
 @admin.register(ClassStaff)
 class ClassStaffAdmin(ImportExportModelAdmin):

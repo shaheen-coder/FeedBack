@@ -32,7 +32,7 @@ terms = [
     "Accessibility",
     "Punctuality",
     "Guidance",
-    "Feedback"
+    "Teaching"
 ]
 DEPARTMENT = (
     ('Computer Science and Engineering','CSE'),
@@ -234,20 +234,26 @@ class StudentPromote(View):
     template_name = 'prinicipal/promoson.html'
     def get(self,request):
         return render(self.request,self.template_name)
-    def post(self, request):
+    def post(self,request):
+        dept = request.POST.get('dept',None)
+        sem = request.POST.get('sem',None) 
+        sem = int(sem) if sem else None
+        if not dept and not sem: return render(self.request,self.template_name,{'error':'department and semester invalid !!'})
         try:
-            dept = request.POST.get('CSE', None)
-            if dept is not None:  # Ensure dept is provided
-                dept = int(dept)  # Convert to integer
-                print(f'sem: {dept}')
-                # Update only if valid dept is provided
-                Student.objects.filter(dept='CSE', semester=dept).update(semester=dept + 1,status=False)
-                
-                return render(self.request, self.template_name, {'error': 'Students year is updated!'})
-            else:
-                return render(self.request, self.template_name, {'error': 'Invalid semester value provided!'})
+            print(f'debug : data -> {dept} and {sem} : type : {type(sem)}')
+            student =  Student.objects.filter(dept=dept,semester=sem,status=True)
+            feedbacks = FeedBack.objects.filter(student__dept=dept,student__semester=sem,student__status=True)
+            if not student.exists():
+                return render(self.request, self.template_name, {'error': 'No matching student records found!'})
+            if not feedbacks.exists():
+                return render(self.request,self.template_name,{'error':'No matching feedback records found !'})
+            student.update(status=False)
+            feedbacks.update(status=False)
+            print(f'status is updated !!')  
+            return render(self.request,self.template_name,{'error':'data updated !!'})
         except Exception as ex:
-            return render(self.request, self.template_name, {'error': f'Error: {ex}'})
+            print(f'error : {ex}')
+            return render(self.request,self.template_name,{'error':ex})
 class CommentSearch(View):
     template_name = 'prinicipal/comment.html'
     def get(self,request):

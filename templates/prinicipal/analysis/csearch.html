@@ -43,12 +43,8 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block script %}
 <script>
     
-    function getDomainName(key) {
-        if(key == 'local'){
-            return '127.0.0.1:8000';
-        }else{
-            return 'shaheenavc.pythonanywhere';
-        }
+    function getDomainName() {
+        return 'shaheenavc.pythonanywhere.com';
       }
     const currentDomain = getDomainName('deploy');
     console.log('domain name : ' + currentDomain); 

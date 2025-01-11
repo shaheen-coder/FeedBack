@@ -12,144 +12,59 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% block style %}
 <style>
     body {
-        background-color: #f8f9fa;
+        background-color: #f0f8ff; /* Light blue background */
+        font-family: 'Roboto', sans-serif;
     }
-    .box-container {
-        max-width: 600px;
-        margin: 50px auto;
+    .container {
+        margin-top: 5%;
+        max-width: 500px;
+        background-color: #ffffff; /* White background */
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         padding: 20px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .popup-container {
-        display: none;
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1050;
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 15px;
-        border: 1px solid #f5c6cb;
+    .form-label {
+        font-weight: 500;
+        color: #0056b3; /* Blue color for labels */
+    }
+    .btn-update {
+        background-color: #0056b3; /* Blue button */
+        color: white;
         border-radius: 5px;
+        font-weight: 500;
+    }
+    .btn-update:hover {
+        background-color: #004494; /* Darker blue on hover */
     }
 </style>
 {% endblock style %}
 
 
 {% block content %}
-
-<div class="box-container">
-    <form action="{% url 'stu-pro' %}" method="POST">
+<div class="container">
+    <h4 class="text-center mb-4" style="color: #0056b3;">Update Semester & Department</h4>
+    <form target="{% url 'stu-pro' %}" method="POST">
         {% csrf_token %}
-        <div class="row mb-4">
-            <!-- First Grid -->
-            <div class="col-md-6 mb-3">
-                <select class="form-select mb-2" name="CSE"  >
-                    <option value="">Semester</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                </select>
-                <select class="form-select mb-2" name="IT"  >
-                    <option value="">be-it</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                </select>
-                <select class="form-select mb-2" name="ICE"  >
-                    <option value="">be-ice</option>
-                    <option value="">Semester</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                </select>
-                <select class="form-select mb-2" name="option4"  >
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
-                <select class="form-select mb-2" name="option5"  >
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
-            </div>
-
-            <!-- Second Grid -->
-            <div class="col-md-6 mb-3">
-                <select class="form-select mb-2" name="option6"  >
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
-                <select class="form-select mb-2" name="option7"  >
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
-                <select class="form-select mb-2" name="option8"  >
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
-                <select class="form-select mb-2" name="option9"  >
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
-                <select class="form-select mb-2" name="option10"  >
-                    <option value="">Select an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
-            </div>
+        <div class="mb-3">
+            <label for="semester" class="form-label">Semester</label>
+            <input type="text" class="form-control" id="semester" name="sem" placeholder="Enter Semester" required>
         </div>
-
-        <!-- Submit Button -->
+        <div class="mb-3">
+            <label for="department" class="form-label">Department</label>
+            <select class="form-select" id="department" name="dept" required>
+                <option value="" disabled selected>Select Department</option>
+                <option value="CSE">Computer Science</option>
+                <option value="EEE">Electrical Engineering</option>
+                <option value="MACH">Mechanical Engineering</option>
+                <option value="ICE">insturment control</option>
+            </select>
+        </div>
         <div class="text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-update">Update</button>
         </div>
     </form>
 </div>
+
 
 {% if error %}
 <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">

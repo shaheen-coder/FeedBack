@@ -19,6 +19,14 @@ from collections import defaultdict
 from django.db.models import Q
 import pandas as pd 
 
+
+
+FEEDBACK_TERMS = [
+        "Aids Utilization", "Clarity", "Confidence", "Pacing", 
+        "Discipline", "Engagement", "Accessibility", "Punctuality", 
+        "Guidance", "Teaching"
+    ]
+
 '''
 api view for analysis staff class subject
 '''
@@ -102,16 +110,16 @@ class Analysis(APIView):
     FEEDBACK_TERMS = [
         "Aids Utilization", "Clarity", "Confidence", "Pacing", 
         "Discipline", "Engagement", "Accessibility", "Punctuality", 
-        "Guidance", "Feedback"
+        "Guidance", "Teaching"
     ]
 
     def post(self, request):
         data = request.data
         
         filter_conditions = {
-            'class': Q(student__semester=data['key'], student__dept=data['dept']),
-            'staff_sub': Q(staffd=data['key']),
-            'staff': Q(staffd__staff=data['key'])
+            'class': Q(student__semester=data['key'], student__dept=data['dept'],status=True),
+            'staff_sub': Q(staffd=data['key'],status=True),
+            'staff': Q(staffd__staff=data['key'],status=True)
         }
         
         if data['mode'] not in filter_conditions:
@@ -317,12 +325,12 @@ class Report(APIView):
         filter_conditions = {
             'class': Q(staffd__subject__semester=data['sem'], 
                       staffd__section=key, 
-                      staffd__dept=data['dept']),
+                      staffd__dept=data['dept'],status=True),
             'staff': Q(staffd__staff_id=key, 
-                      staffd__dept=data['dept']),
-            'staffsub': Q(staffd_id=key),
+                      staffd__dept=data['dept'],status=True),
+            'staffsub': Q(staffd_id=key,status=True),
             'stu': Q(student_id=key, 
-                    staffd__dept=data['dept'])
+                    staffd__dept=data['dept'],status=True)
         }
 
         # Validate report type
@@ -370,7 +378,7 @@ class Report(APIView):
         all_values = [val for values in category_data.values() for val in values]
         percentages["overall"] = self._compute_metrics(all_values)
 
-        return Response({"data": percentages})
+        return Response({"data": percentages,'terms':FEEDBACK_TERMS})
 
 
 class FeedbackMetricsCalculator:
@@ -412,7 +420,7 @@ class FeedbackMetricsCalculator:
 class StudentReport(APIView):
     def post(self, request):
         data = request.data
-        feedbacks = FeedBack.objects.filter(student_id=data['id'])
+        feedbacks = FeedBack.objects.filter(student_id=data['id'],status=True)
         
         if not feedbacks.exists():
             return Response(
@@ -455,7 +463,7 @@ class StudentReport(APIView):
 class Department(APIView):
     def post(self, request):
         data = request.data
-        feedbacks = FeedBack.objects.filter(staffd__dept=data['dept'])
+        feedbacks = FeedBack.objects.filter(staffd__dept=data['dept'],status=True)
         
         if not feedbacks.exists():
             return Response(

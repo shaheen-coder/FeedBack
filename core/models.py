@@ -111,8 +111,7 @@ class FeedBack(models.Model):
     feed1 = models.JSONField(null=True,blank=True)
     feed2 = models.JSONField(null=True,blank=True)
     msg = models.CharField(max_length=50,null=True,blank=True)
-
-
+    status = models.BooleanField(default=True)
 class TimeScheduler(models.Model):
     start_time = models.DateField()
     end_time = models.DateField()
