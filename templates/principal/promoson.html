@@ -1,0 +1,102 @@
+{% extends 'adminnav.html' %}
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'prinicpal' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block header %}
+<title>Promotion</title>
+{% endblock header %}
+
+
+
+{% block style %}
+<style>
+    body {
+        background-color: #f0f8ff; /* Light blue background */
+        font-family: 'Roboto', sans-serif;
+    }
+    .container {
+        margin-top: 2%;
+        max-width: 500px;
+        background-color: #ffffff; /* White background */
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+    .form-label {
+        font-weight: 500;
+        color: #0056b3; /* Blue color for labels */
+    }
+    .btn-update {
+        background-color: #0056b3; /* Blue button */
+        color: white;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+    .btn-update:hover {
+        background-color: #004494; /* Darker blue on hover */
+    }
+</style>
+{% endblock style %}
+
+
+{% block content %}
+<div class="container">
+    <h4 class="text-center mb-4" style="color: #0056b3;">Update Semester & Department</h4>
+    <form target="{% url 'stu-pro' %}" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="semester" class="form-label">Semester</label>
+            <input type="text" class="form-control" id="semester" name="sem" placeholder="Enter Semester" required>
+        </div>
+        <div class="mb-3">
+            <label for="department" class="form-label">Department</label>
+            <select class="form-select" id="department" name="dept" required>
+                <option value="" disabled selected>Select Department</option>
+                <option value="CSE">Computer Science</option>
+                <option value="EEE">Electrical Engineering</option>
+                <option value="MACH">Mechanical Engineering</option>
+                <option value="ICE">insturment control</option>
+            </select>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-update">Update</button>
+        </div>
+    </form>
+</div>
+
+
+{% if error %}
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalToggleLabel">alert</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {{error}}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary"  data-bs-toggle="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endblock content %}
+
+
+{% block script %}
+
+<script>
+    const firstModal = new bootstrap.Modal(document.getElementById('exampleModalToggle'));
+    // Show the first modal
+    {% if error %}
+    firstModal.show();
+    {% endif %}
+</script>
+
+{% endblock script %}
+
+

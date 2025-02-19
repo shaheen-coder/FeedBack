@@ -1,6 +1,9 @@
 {% extends 'adminnav.html' %}
 {% load static %}
-
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'prinicpal' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
 {% block header %}
 <title>Search</title>
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
@@ -38,16 +41,13 @@
 {% endblock %}
 
 {% block script %}
+<script src="{% static 'js/search.js' %}"></script>
+<script src="{% static 'js/env.js' %}"></script>
 <script>
-    function getDomainName(local) {
-        return (local) ? '127.0.0.1:8000'  :  'shaheenavc.pythonanywhere.com/'; 
-    }
-      let local = true;
-
-      // Example usage:
-      const currentDomain = getDomainName(local);
-      console.log(currentDomain);  
-      
+    // env js 
+    const local = DEBUG_MODE;
+    const currentDomain = (local) ? LOACAL_DNAME : PROD_DNAME;
+    
     function filterData() {
         const form = document.getElementById('filterForm');
         const formData = new FormData(form);
@@ -81,7 +81,7 @@
                     if(data.A){
                         const userDiv = document.createElement('div');
                         userDiv.className = 'user';
-                        let url = (!is_analysis) ? `https:/${currentDomain}/prinicipal/creport/${requestData.mode}/A/${data.sem}/${data.dept}/` : `https://${currentDomain}/analysis/class/${data.sem}/A/${data.dept}/`;
+                        let url = (!is_analysis) ? `${currentDomain}/prinicipal/creport/${requestData.mode}/A/${data.sem}/${data.dept}/` : `${currentDomain}/analysis/class/${data.sem}/A/${data.dept}/`;
                         userDiv.innerHTML = `
                         <div class="stafs">
                             <img src="{% static 'assets/a-letter.svg' %}" alt="User Image">
@@ -99,7 +99,7 @@
                 if(data.B){
                     const userDiv = document.createElement('div');
                     userDiv.className = 'user';
-                    let url = (!is_analysis) ? `https://${currentDomain}/creport/${requestData.mode}/B/${data.sem}/${data.dept}/` : `https://shaheenavc.pythonanywhere.com/analysis/class/${data.sem}/B/${data.dept}`;
+                    let url = (!is_analysis) ? `${currentDomain}/prinicipal/creport/${requestData.mode}/B/${data.sem}/${data.dept}/` : `${currentDomain}/analysis/class/${data.sem}/B/${data.dept}`;
                     userDiv.innerHTML = `
                     <div class="stafs">
                         <img src="{% static 'assets/letter-b.png' %}" alt="User Image">

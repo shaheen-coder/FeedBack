@@ -18,9 +18,9 @@ class StudentCheck(View):
         return render(self.request,self.template_name,{'students':students})
 
 class Search(View):
-    template_name = 'staff/analysis/search.html'
-    template_name2 = 'staff/analysis/ssearch.html'
-    template_name3 = 'staff/analysis/dept.html'
+    template_name = 'admin/search/search.html'
+    template_name2 = 'admin/search/ssearch.html'
+    template_name3 = 'stff/analysis/dept.html'
     template_name4 = 'staff/analysis_dept.html'
     def get(self,request,mode,ana):
         if mode == 'stu': return render(self.request,self.template_name2,{'mode':"stu",'is_analysis':ana})

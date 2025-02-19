@@ -1,0 +1,76 @@
+{% extends 'adminnav.html' %}
+{% load static %}
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'prinicpal' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block header %}
+<title>Department</title>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.8/daisyui.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+{% endblock header %}
+
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-base-200">
+    <div class="card bg-base-100 shadow-xl rounded-lg p-8 w-full max-w-4xl mb-3">
+      <div class="grid grid-cols-2 gap-6">
+        <!-- CSE Button -->
+        <a href="{% url 'd-report' 'CSE' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <!-- Right: Text -->
+            <div class="text-right font-semibold">
+              CSE
+            </div>
+          </div>
+        </a>
+  
+        <!-- ICE Button -->
+        <a href="{% url 'd-report' 'ICE' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              ICE
+            </div>
+          </div>
+        </a>
+  
+        <!-- EEE Button -->
+        <a href="{% url 'd-report' 'EEE' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              EEE
+            </div>
+          </div>
+        </a>
+  
+        <!-- MECH Button -->
+        <a href="{% url 'd-report' 'MECH' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              MECH
+            </div>
+          </div>
+        </a>
+  
+        <!-- IT Button -->
+        <a href="{% url 'd-report' 'IT' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              IT
+            </div>
+          </div>
+        </a>
+  
+        <!-- CLG Button -->
+        <a href="{% url 'd-report' 'CLG' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              CLG
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>   
+{% endblock content %}
+

@@ -1,0 +1,145 @@
+{% extends 'adminnav.html' %}
+
+{% block url %}
+<a class="btn btn-ghost normal-case text-xl" href="{% url 'prinicpal' %}">Home</a>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.8/daisyui.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+{% endblock url %}
+
+{% block header %}
+<title>Add Hod</title>
+{% endblock %}
+
+{% block style %}
+<style>
+  /* Custom style for drag-over effect */
+  .drag-over {
+    background-color: #d0ebff !important;
+  }
+  /* Override daisyUI alert styles for better visibility */
+  .alert.alert-success {
+    background-color: #d1fae5 !important;
+    color: #065f46 !important;
+    border: 1px solid #6ee7b7 !important;
+  }
+  .alert.alert-error {
+    background-color: #fee2e2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fca5a5 !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+  <form id="file-upload-form" action="{% url 'addhod' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Left Side: Drag and Drop / File Select -->
+      <div>
+        <div id="upload-container" class="border-2 border-dashed border-primary rounded-lg p-6 text-center transition-colors">
+          <p class="text-lg font-semibold">Drag and drop your file here</p>
+          <p class="my-2">or</p>
+          <input type="file" name="file" id="file-input" class="hidden">
+          <button type="button" class="btn btn-outline btn-info" onclick="document.getElementById('file-input').click()">Select File</button>
+          <!-- Display selected file name -->
+          <div id="file-name" class="mt-4 text-lg font-bold text-primary"></div>
+        </div>
+      </div>
+      <!-- Right Side: Message Alert and Upload Button -->
+      <div class="flex flex-col justify-between">
+        <div id="message-container" class="alert hidden">
+          <span id="message-text">SELECT THE FILE </span>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Upload File</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+  const uploadContainer = document.getElementById('upload-container');
+  const fileInput = document.getElementById('file-input');
+  const fileNameDisplay = document.getElementById('file-name');
+  const messageContainer = document.getElementById('message-container');
+  const messageText = document.getElementById('message-text');
+
+  // Utility function to show messages with custom colors
+  function showMessage(message, type) {
+    messageContainer.classList.remove('hidden', 'alert-error', 'alert-success');
+    if (type === 'error') {
+      messageContainer.classList.add('alert-error');
+    } else if (type === 'success') {
+      messageContainer.classList.add('alert-success');
+    }
+    messageText.textContent = message;
+  }
+
+  // Clear message (hide container)
+  function clearMessage() {
+    messageContainer.classList.add('hidden');
+    messageText.textContent = '';
+  }
+
+  // Drag-and-drop events
+  uploadContainer.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    uploadContainer.classList.add('drag-over');
+  });
+
+  uploadContainer.addEventListener('dragleave', () => {
+    uploadContainer.classList.remove('drag-over');
+  });
+
+  uploadContainer.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    uploadContainer.classList.remove('drag-over');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFile(files[0]);
+    }
+  });
+
+  // File input change event
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      handleFile(fileInput.files[0]);
+    }
+  });
+
+  // Handle file selection and validation
+  function handleFile(file) {
+    if (validateFile(file)) {
+      fileNameDisplay.textContent = `Selected File: ${file.name}`;
+      showMessage('File ready to upload.', 'success');
+    } else {
+      fileNameDisplay.textContent = '';
+      showMessage('Invalid file type. Only .xlsx files are allowed.', 'error');
+      // Reset the file input so the user can try again
+      fileInput.value = '';
+    }
+  }
+
+  // Validate file type (.xlsx only)
+  function validateFile(file) {
+    return file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  }
+
+  // Form submission validation
+  const form = document.getElementById('file-upload-form');
+  form.addEventListener('submit', (e) => {
+    if (!fileInput.files.length) {
+      e.preventDefault();
+      showMessage('Please select or drop a file before uploading.', 'error');
+    } else if (!validateFile(fileInput.files[0])) {
+      e.preventDefault();
+      showMessage('Invalid file type. Only .xlsx files are allowed.', 'error');
+    }
+  });
+</script>
+{% endblock %}

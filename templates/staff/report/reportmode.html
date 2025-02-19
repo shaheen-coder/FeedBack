@@ -1,70 +1,76 @@
 {% extends 'adminnav.html' %}
+{% load static %}
 {% block url %}
 <a class="nav-link active" aria-current="page" href="{% url 'staff-dash' %}"
 style="font-size: 18px; padding: 10px 15px;">Home</a>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.8/daisyui.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
 {% endblock url %}
 {% block header %}
 <title>Mode</title>
 {% endblock %}
 
 {% block style %}
-<style>
-    .transparent-box {
-
-        background-color: rgba(255, 255, 255, 0.8);
-        /* White with transparency */
-
-        border-radius: 10px;
-
-        padding: 20px;
-
-    }
-
-    .big-img {
-
-        max-width: 100%;
-
-        height: auto;
-
-    }
-
-    .btn-custom {
-
-        background-color: blue;
-
-        color: white;
-
-        margin: 10px 0;
-        /* Space between buttons */
-
-    }
 </style>
 {% endblock %}
 {% block content %}
-<div class="container mt-5">
 
-    <div class="row">
+<!-- taiwindcss -->
 
-        <div class="col-md-6 d-flex align-items-center justify-content-center">
-            <div class="transparent-box">
-                <a href="{% url 'staff-csearch' 'class' 0 %}" class="btn btn-custom w-100">class report </a>
-                <a href="{% url 'staff-search' 'staff' 0 %}" class="btn btn-custom w-100">staff report</a>
-                <a href="{% url 'staff-search' 'staffsub' 0 %}" class="btn btn-custom w-100">subject report</a>
-                <a href="{% url 'staff-search' 'stu' 0 %}" class="btn btn-custom w-100">student report</a>
-                <a href="{% url 'staff-search' 'stucomt' 0 %}" class="btn btn-custom w-100">student comment report</a>
-                <a href="{% url 'd-report' request.user.dept %}" class="btn btn-custom w-100">dept report </a>
-            </div>
+<div class="container mx-auto p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <!-- Left Section: Navigation Buttons -->
+      <div class="flex items-center justify-center">
+        <div class="flex flex-col gap-4 w-full max-w-md">
+          <a
+            href="{% url 'staff-search' 'staff' 0 %}"
+            class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
+          >
+            staff report
+          </a>
+          <a
+            href="{% url 'staff-search' 'staffsub' 0 %}"
+            class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
+          >
+            subject report
+          </a>
+          <a
+            href="{% url 'staff-search' 'stu' 0 %}"
+            class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
+          >
+            Student report 
+          </a>
+          <a
+            href="{% url 'staff-search' 'stucomt' 0 %}"
+            class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
+          >
+            student comment
+          </a>
+          <a
+            href="{% url 'd-report' request.user.dept %}"
+            class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
+          >
+            Department report 
+          </a>
         </div>
-        <div class="col-md-6 d-flex flex-column align-items-center justify-content-center">
-
-            <div class="transparent-box text-center">
-
-                <img src="https://as1.ftcdn.net/v2/jpg/05/33/79/30/1000_F_533793082_5G7mPJBgkVLzJirz51ls1LAr9KgMdpZJ.jpg"
-                    alt="Big Image" class="big-img mb-3">
-                <!-- Replace with your image URL -->
-                <p>Wellcome to report mode page </p>
-            </div>
+      </div>
+  
+      <!-- Right Section: Image & Message -->
+      <div class="flex items-center justify-center">
+        <div class="card w-full max-w-md bg-base-100 shadow-xl">
+          <figure>
+            <img
+              src="{% static 'assets/report.jpg' %}"
+              alt="Analysis Image"
+              class="rounded-t-lg"
+            />
+          </figure>
+          <div class="card-body text-center">
+            <p class="text-lg">Welcome to report mode page</p>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}

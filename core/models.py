@@ -7,12 +7,9 @@ DEPT = (
     ('ICE','be-ice'),
     ('ECE','be-ece'),
     ('MECH','be-mech'),
-    ('CIVIL','be-civil'),
-    ('MCA','mca'),
-    ('MBA','mba'),
+    ('CIVIL','be-civil')
 )
 four_year = ['CSE','ICE','ECE','MECH','IT','CIVIL','EEE']
-two_year = ['MCA','MBA']
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
@@ -33,7 +30,6 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
         if extra_fields.get('is_staff') is not True:
             raise ValueError("Superuser must have is_staff=True.")
-
         return self.create_user(username, email, password, **extra_fields)
 
 class CustomUser(AbstractUser):
@@ -41,6 +37,8 @@ class CustomUser(AbstractUser):
     is_princpl = models.BooleanField(default=False)  
     dept = models.CharField(max_length=100,choices=DEPT,null=False, blank=False)
     objects = CustomUserManager()
+    class Meta:
+        verbose_name = 'hod'
     def __str__(self):
         return self.username
 

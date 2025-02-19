@@ -119,7 +119,8 @@ class Analysis(APIView):
         filter_conditions = {
             'class': Q(student__semester=data['key'], student__dept=data['dept'],status=True),
             'staff_sub': Q(staffd=data['key'],status=True),
-            'staff': Q(staffd__staff=data['key'],status=True)
+            'staff': Q(staffd__staff=data['key'],status=True),
+            'status' : True,
         }
         
         if data['mode'] not in filter_conditions:
@@ -330,7 +331,8 @@ class Report(APIView):
                       staffd__dept=data['dept'],status=True),
             'staffsub': Q(staffd_id=key,status=True),
             'stu': Q(student_id=key, 
-                    staffd__dept=data['dept'],status=True)
+                    staffd__dept=data['dept'],status=True),
+            'status' : True,
         }
 
         # Validate report type
@@ -575,17 +577,12 @@ class UniversalSearchAPIView(APIView):
         dept = data.get('dept', None)
         gender = data.get('gender', None)
         subject_code = data.get('subject_code', None)
-        year = data.get('year', False)
         section = data.get('section', None)
         semester = data.get('semester', None)
         course_type = data.get('course_type', None)
         mode = data.get('mode', None)
 
         # Determine semesters for the given year
-        sem1, sem2 = None, None
-        if year:
-            sem1, sem2 = self.get_year(int(year))
-
         # Results dictionary
         results = {}
 
@@ -609,7 +606,7 @@ class UniversalSearchAPIView(APIView):
             if dept:
                 subject_queryset = subject_queryset.filter(dept=dept)
             if semester:
-                subject_queryset = subject_queryset.filter(Q(semester=sem1) | Q(semester=sem2))
+                subject_queryset = subject_queryset.filter(semester=semester)
             if course_type:
                 course_type_filters = {
                     "mcourse": Q(mcourse=True),
@@ -627,11 +624,10 @@ class UniversalSearchAPIView(APIView):
                 class_staff_queryset = class_staff_queryset.filter(section__iexact=section)
             if dept:
                 class_staff_queryset = class_staff_queryset.filter(dept=dept)
-            if year:
-                class_staff_queryset = class_staff_queryset.filter(Q(semester=sem1) | Q(semester=sem2))
+            if semester:
+                class_staff_queryset = class_staff_queryset.filter(semester=semester)
             if subject_code:
                 class_staff_queryset = class_staff_queryset.filter(subject__code__icontains=subject_code)
-            print(f'debugger : {class_staff_queryset}')
             results['datas'] = ClassStaffSerializer(class_staff_queryset, many=True).data
 
         else:

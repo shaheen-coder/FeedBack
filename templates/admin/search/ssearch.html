@@ -1,0 +1,95 @@
+{% extends 'adminnav.html' %}
+{% load static %}
+{% block url %}
+<a class="nav-link active" aria-current="page" href="{% url 'prinicpal' %}"
+style="font-size: 18px; padding: 10px 15px;">Home</a>
+{% endblock url %}
+{% block header %}
+<title>Search</title>
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+<form  id="filterForm">
+    <div class="main_container">
+        <div class="search_filters">
+            <input class="sear" name="name" type="text" placeholder="STUDENT NAME">
+            {% csrf_token %}
+            <div class="filters">
+                <select name="sem" class="filter_1">
+                    <option value="">sem</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="4">6</option>
+                    <option value="4">7</option>
+                    <option value="4">8</option>
+                </select>
+                <select name="section" class="filter_1">
+                    <option value="">section</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                </select>
+                <select name="gender" class="filter_1">
+                    <option value="">gender</option>
+                    <option value="1">male</option>
+                    <option value="0">female</option>
+                </select>
+                <select name="dept" class="filter_1">
+                    <option value="">department</option>
+                    <option value="CSE">be-cse</option>
+                    <option value="ICE">be-ice</option>
+                    <option value="MCA">mca</option>
+                </select>
+
+                <button type="button" class="filter_but"  onclick="filterData()">Filter</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="data" id="dataContainer">
+    <!-- Dynamically added user data will appear here -->
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/search.js' %}"></script>
+<script src="{% static 'js/env.js' %}"></script>
+<script>
+     // env js 
+     const local = DEBUG_MODE;
+     const currentDomain = (local) ? LOACAL_DNAME : PROD_DNAME;
+
+    function filterData() {
+        const form = document.getElementById('filterForm');
+        const formData = new FormData(form);
+
+        // Prepare data for JSON request
+        const requestData = {};
+        requestData['mode'] = "{{mode}}";
+        formData.forEach((value, key) => {
+            requestData[key] = value;
+        });
+        console.log(requestData);
+        // Send API POST request
+        fetch("{% url 'student-search' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(`data : ${JSON.stringify(data)}`);
+                FB.update_student_search(data,requestData.mode);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+{% endblock %}

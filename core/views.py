@@ -1,7 +1,6 @@
 #django
 from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
 from django.http import JsonResponse
-from django.core.mail import send_mail
 from datetime import date
 # view 
 from django.views import View
@@ -14,6 +13,7 @@ from core.models import CustomUser as User
 from django.db.models import Q
 from django.db.models import Avg,Count
 from django.db import IntegrityError
+from core.models import DEPT
 #forms 
 # others
 from datetime import datetime
@@ -97,7 +97,7 @@ class Course(View):
         return render(self.request,self.template_name,{'sid':sid,'fid':fid})
 
 class Manitiory(View):
-    template_name = 'subject.html'
+    template_name = 'subject2.html'
     def get(self,request,sid,cid,fid):
         return render(self.request,self.template_name,{'cid':cid,'sid':sid,'fid':fid})
 class ManitioryForm(View):
@@ -137,6 +137,10 @@ class StaffProfile(View):
 class DeptProfile(View):
     template_name = 'analysis.html'
     def get(self,request,dept):
+        for sdept,ldept in DEPT:
+            if ldept == dept:
+                dept = sdept
+                break 
         return render(self.request,self.template_name,{'mode':'dept','dept':dept})
 class ClassProfile(View):
     template_name = 'analysis.html'
@@ -153,10 +157,10 @@ class IsPrincipal(UserPassesTestMixin):
         return render(self.request,'403.html',)
         return render(self.request,'403.html', status=403)
 class Search(IsPrincipal,View):
-    template_name = 'prinicipal/analysis/search.html'
-    template_name2 = 'prinicipal/analysis/ssearch.html'
-    template_name3 = 'prinicipal/analysis/dept.html'
-    template_name4 = 'prinicipal/analysis/analysis_dept.html'
+    template_name = 'admin/search/search.html'
+    template_name2 = 'admin/search/ssearch.html'
+    template_name3 = 'principal/analysis/dept.html'
+    template_name4 = 'principal/analysis/analysis_dept.html'
     def get(self,request,mode,ana):
         if mode == 'stu' : return render(self.request,self.template_name2,{'mode':mode,'is_analysis':ana})
         if mode == 'stucomt' : return render(self.request,self.template_name2,{'mode':mode,'is_analysis':ana})
@@ -164,16 +168,16 @@ class Search(IsPrincipal,View):
         if mode == 'dept' : return render(self.request,self.template_name3,{'mode':mode,'is_analysis':ana})
         return render(self.request,self.template_name,{'mode':mode,'is_analysis':ana})
 class ClassSearch(View):
-    template_name = 'prinicipal/analysis/csearch.html'
+    template_name = 'admin/search/csearch.html'
     def get(self,request,mode,ana):
         return render(self.request,self.template_name,{'mode':mode,'is_analysis':ana})
 class PrinicpalDash(IsPrincipal,View):
-    template_name = 'prinicipal/home.html'
+    template_name = 'principal/home.html'
     def get(self,request):
         return render(self.request,self.template_name)
 
 class AddHodUser(View):
-    template_name = 'prinicipal/add_hod.html'
+    template_name = 'principal/add_hod.html'
     def get(self,request):
         return render(request,self.template_name)
     def post(self,request):
@@ -195,11 +199,11 @@ class AddHodUser(View):
         return render(request,self.template_name,{'success':'user added !!'})      
 
 class AnalysisMode(TemplateView):
-    template_name = 'prinicipal/analysis/searchmode.html'
+    template_name = 'principal/analysis/searchmode.html'
 class ReportMode(TemplateView):
-    template_name = 'prinicipal/report/reportmode.html'
+    template_name = 'principal/report/reportmode.html'
 class PReport(View):
-    template_name = 'prinicipal/report.html'
+    template_name = 'principal/report.html'
     def get(self,request,mode,key,dept):
         if mode == 'class':
             return render(self.request,self.class_template_name,{'mode':mode,'dept':dept,'section':key})
@@ -217,11 +221,11 @@ class PReport(View):
 
 
 class ClassReport(View):
-    template_name = 'prinicipal/report.html'
+    template_name = 'principal/report.html'
     def get(self,request,mode,sec,sem,dept):
         return render(self.request,self.template_name,{'mode':mode,'dept':dept,'section':sec,'sem':sem})
 class DeptReport(View):
-    template_name = 'prinicipal/dept_report.html'
+    template_name = 'principal/dept_report.html'
     def get(self,request,dept):
         file_name = f'{dept}-report'
         if dept == 'CLG':
@@ -231,7 +235,7 @@ class DeptReport(View):
 
 
 class StudentPromote(View):
-    template_name = 'prinicipal/promoson.html'
+    template_name = 'principal/promoson.html'
     def get(self,request):
         return render(self.request,self.template_name)
     def post(self,request):
@@ -243,19 +247,20 @@ class StudentPromote(View):
             print(f'debug : data -> {dept} and {sem} : type : {type(sem)}')
             student =  Student.objects.filter(dept=dept,semester=sem,status=True)
             feedbacks = FeedBack.objects.filter(student__dept=dept,student__semester=sem,student__status=True)
+            print(f'feeds : {feedbacks}')
             if not student.exists():
                 return render(self.request, self.template_name, {'error': 'No matching student records found!'})
             if not feedbacks.exists():
                 return render(self.request,self.template_name,{'error':'No matching feedback records found !'})
-            student.update(status=False)
             feedbacks.update(status=False)
+            student.update(status=False)
             print(f'status is updated !!')  
             return render(self.request,self.template_name,{'error':'data updated !!'})
         except Exception as ex:
             print(f'error : {ex}')
             return render(self.request,self.template_name,{'error':ex})
 class CommentSearch(View):
-    template_name = 'prinicipal/comment.html'
+    template_name = 'principal/comment.html'
     def get(self,request):
         return render(self.request,self.template_name,{'mode':'stu','is_analysis':0})
 class CommentView(View):

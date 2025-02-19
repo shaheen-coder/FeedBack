@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.8/daisyui.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>course</title>
+</head>
+
+<body class="bg-blue-700 h-screen">
+    <h1 class="text-3xl font-bold tracking-tight text-white text-center sm:text-4xl">
+        choose your course
+    </h1>
+    <div class="flex justify-center items-center mt-3">
+        <div class="card bg-white w-96 mt-3">
+            <div class="card-body items-center text-center" id="course_list">
+
+            </div>
+        </div>
+    </div>
+    <div class="w-fit mx-auto mt-6">
+        <button class="btn bg-white hover:bg-blue-700 hover:text-white" onclick="goHome()">back</button>
+    </div>
+    {% csrf_token %}
+</body>
+<script src="{% static 'js/env.js' %}"></script>
+<script src="{% static 'js/search.js' %}"></script>
+<script>
+    const student_id = {{ sid }};
+    const feed_count = {{ fid }};
+    const mcourse = {{ cid }};
+
+    const csrftoken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('{% url 'feed-search' sid cid "null" %}', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                FB.update_subject(data);
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+        function goHome() {
+            window.location.href = "{% url 'course' sid fid %}";
+        }
+    });
+</script>
+
+</html>

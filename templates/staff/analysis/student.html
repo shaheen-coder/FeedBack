@@ -1,101 +1,79 @@
-{% extends 'admin/nav.html' %}
+{% extends 'adminnav.html' %}
 {% load static %}
 {% block url %}
-<a class="nav-link active" aria-current="page" href="{% url 'staff-dash' %}"
-style="font-size: 18px; padding: 10px 15px;">Home</a>
+<a class="btn btn-ghost normal-case text-xl" href="{% url 'staff-dash' %}">Home</a>
 {% endblock url %}
+
 {% block header %}
 <title>Student Check</title>
-<link rel="stylesheet" href="{% static 'css/student.css' %}">
-{% if error %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-{% endif %}
-{% endblock %}
+<!-- Tailwind CSS and DaisyUI (via CDN, or use your build process) -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css" rel="stylesheet">
+{% endblock header %}
 
 {% block content %}
-<form action="{% url 'stu-check' %}" method="post">
+<div data-theme="light" class="container mx-auto p-6 h-screen">
+  <!-- Search Form -->
+  <form action="{% url 'stu-check' %}" method="post" class="mb-6">
     {% csrf_token %}
-    <div class="filters">
-        <div class="main_features">
-            <div>
-                <select class="features" name="sem">
-                    <option value="">semester</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="4">5</option>
-                    <option value="4">6</option>
-                    <option value="4">7</option>
-                    <option value="4">8</option>
-                </select>
-            </div>
-            <div>
-                <select class="features" name="class">
-                    <option value="">Class</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                </select>
-            </div>
-
-        </div>
-        <div class="search">
-            <button type="submit" class="search_bar"> search </button>
-        </div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex flex-col sm:flex-row gap-4">
+        <select name="sem" class="select select-bordered w-full sm:w-auto">
+          <option value="" disabled selected>Semester</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+        </select>
+        <select name="class" class="select select-bordered w-full sm:w-auto">
+          <option value="" disabled selected>Class</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
     </div>
-</form>
-<table>
-    <thead>
-        <tr>
-            <th>Regester no</th>
-            <th>Name</th>
-            <th>semester</th>
-            <th>Class</th>
+  </form>
 
+  <!-- Data Table -->
+  <div class="overflow-x-auto">
+    <table class="table table-zebra w-full">
+      <thead>
+        <tr>
+          <th>Register No</th>
+          <th>Name</th>
+          <th>1st Feedback Status</th>
+          <th>2nd Feedback Status</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for student in students %}
         <tr>
-            <td>{{student.regno}}</td>
-            <td>{{student.name}}</td>
-            <td>{{student.semester}}</td>
-            <td>{{student.section}}</td>
-
+          <td>{{ student.regno }}</td>
+          <td>{{ student.name }}</td>
+          <td>{{ student.feed1_status }}</td>
+          <td>{{ student.feed2_status }}</td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
-{% if error %}
-<!-- error popup -->
-<div id="myModal" class="modal fade">
-    <div class="modal-dialog modal-confirm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="icon-box">
-                    <i class="material-icons">&#xE5CD;</i>
-                </div>
-                <h4 class="modal-title">ERROR !</h4>
-            </div>
-            <div class="modal-body">
-                <p class="text-center">error : {{error}}</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger btn-block" data-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
+      </tbody>
+    </table>
+  </div>
 </div>
-<script>
-    // Wait for the document to fully load
-    document.addEventListener('DOMContentLoaded', function () {
-        // Trigger the modal to open programmatically
-        $('#myModal').modal('show');
-    });
-</script>
+
+{% if error %}
+<!-- DaisyUI Modal for Error (Light Theme) -->
+<input type="checkbox" id="error-modal" class="modal-toggle" checked>
+<div class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg text-error">ERROR!</h3>
+    <p class="py-4">Error: {{ error }}</p>
+    <div class="modal-action">
+      <label for="error-modal" class="btn btn-error">OK</label>
+    </div>
+  </div>
+</div>
 {% endif %}
 {% endblock %}

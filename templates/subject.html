@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,6 +42,8 @@
         <button onclick="goHome()" class="btn btn-secondary">Back</button>
     </div>
     {% csrf_token %}
+    <script src="{% static 'js/env.js' %}"></script>
+    <script src="{% static 'js/search.js' %}"></script>
     <script>
         const student_id = {{sid}};
         const feed_count = {{fid}};
@@ -62,32 +65,8 @@
                     return response.json();
                 })
                 .then(data => {
-                    apiResponse = data;
-                    console.log(`data  response : ${data}`);
-                    const gridContainer = document.getElementById('grid-container');
-                    const errorMessage = document.getElementById('error-message');
-
-                    // Check if API response contains data
-                    if (apiResponse.data && apiResponse.data.length > 0) {
-                        apiResponse.data.forEach((item) => {
-                            const btn = document.createElement('a');
-                            btn.href = `/mcfeed/${student_id}/${mcourse}/${feed_count}/${item.subject.code}/`;
-                            btn.className = 'btn btn-primary btn-grid';
-                            btn.textContent = `${item.subject.name} - ${item.subject.code}`;
-                            gridContainer.appendChild(btn);
-                        });
-                    } else {
-                        // Display error message if no data
-                        errorMessage.textContent = "No data available.";
-                        errorMessage.classList.remove('d-none');
-                    }
-
-                    // Adjust alignment if not enough items for a grid
-                    if (apiResponse.data.length < 6) {
-                        gridContainer.style.display = 'flex';
-                        gridContainer.style.flexDirection = 'column';
-                        gridContainer.style.alignItems = 'center';
-                    }
+                    FB.update_course(data);
+                   
                 })    
             .catch(error => {
                 console.error('There has been a problem with your fetch operation:', error);

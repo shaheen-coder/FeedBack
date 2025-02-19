@@ -1,51 +1,57 @@
 {% extends 'adminnav.html' %}
 {% load static %}
 {% block url %}
-<a class="nav-link active" aria-current="page" href="{% url 'staff-dash' %}"
+<a class="nav-link active" aria-current="page" href="{% url 'prinicpal' %}"
 style="font-size: 18px; padding: 10px 15px;">Home</a>
 <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.8/daisyui.css" rel="stylesheet" type="text/css" />
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 {% endblock url %}
+
 {% block header %}
 <title>Mode</title>
 {% endblock %}
 
 {% block style %}
 <style>
-    
+  
 </style>
 {% endblock %}
 {% block content %}
 
-<!-- tailwindcss -->
 <div class="container mx-auto p-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <!-- Left Section: Navigation Buttons -->
       <div class="flex items-center justify-center">
         <div class="flex flex-col gap-4 w-full max-w-md">
           <a
-            href="{% url 'staff-csearch' 'class' 1 %}"
+            href="{% url 'search' 'staff' 0 %}"
             class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
           >
-            Class Analysis
+            staff report
           </a>
           <a
-            href="{% url 'staff-search' 'staff' 1 %}"
+            href="{% url 'search' 'staffsub' 0 %}"
             class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
           >
-            Staff Analysis
+            subject report
           </a>
           <a
-            href="{% url 'staff-search' 'staffsub' 1 %}"
+            href="{% url 'search' 'stu' 0 %}"
             class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
           >
-            Subject Analysis
+            Student report 
           </a>
           <a
-            href="{% url 'ana-dept' request.user.dept %}"
+            href="{% url 'search' 'stucomt' 0 %}"
             class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
           >
-            Department
+            student comment
+          </a>
+          <a
+            href="{% url 'search' 'dept' 0 %}"
+            class="btn btn-primary btn-lg w-full transition-transform hover:scale-105"
+          >
+            Department report 
           </a>
         </div>
       </div>
@@ -55,7 +61,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
         <div class="card w-full max-w-md bg-base-100 shadow-xl">
           <figure>
             <img
-              src="{% static 'assets/analysis.jpg' %}"
+              src="{% static 'assets/report.jpg' %}"
               alt="Analysis Image"
               class="rounded-t-lg"
             />
@@ -67,8 +73,4 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
       </div>
     </div>
   </div>
-  
-
-
-
 {% endblock %}
