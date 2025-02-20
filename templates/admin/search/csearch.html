@@ -15,12 +15,16 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
         <div class="search_filters">
             {% csrf_token %}
             <div class="filters">
-                <select name="year" class="filter_1">
+                <select name="sem" class="filter_1">
                     <option value="">year</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
                 </select>
                 
                 <select name="dept" class="filter_1">
@@ -78,16 +82,16 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 
                 // Handle response data
                 console.log(data);
-                    if(data.A){
-                        const userDiv = document.createElement('div');
+                data.sections.forEach((sec) => {
+                    const userDiv = document.createElement('div');
                         userDiv.className = 'user';
-                        let url = (!is_analysis) ? `${currentDomain}/prinicipal/creport/${requestData.mode}/A/${data.sem}/${data.dept}/` : `${currentDomain}/analysis/class/${data.sem}/A/${data.dept}/`;
+                        let url = (!is_analysis) ? `${currentDomain}/prinicipal/creport/${requestData.mode}/${sec}/${data.sem}/${data.dept}/` : `${currentDomain}/analysis/class/${data.sem}/${sec}/${data.dept}/`;
                         userDiv.innerHTML = `
                         <div class="stafs">
                             <img src="{% static 'assets/a-letter.svg' %}" alt="User Image">
                         </div>
                         <div>
-                            <p> A</p>
+                            <p> ${data.sem} : ${sec}</p>
                         </div>
                         <div>
                             <p>${data.dept}</p>
@@ -95,25 +99,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                         <a href="${url}" class="data_but">${btn_name}</a>
                     `;
                     dataContainer.appendChild(userDiv);
-                }
-                if(data.B){
-                    const userDiv = document.createElement('div');
-                    userDiv.className = 'user';
-                    let url = (!is_analysis) ? `${currentDomain}/prinicipal/creport/${requestData.mode}/B/${data.sem}/${data.dept}/` : `${currentDomain}/analysis/class/${data.sem}/B/${data.dept}`;
-                    userDiv.innerHTML = `
-                    <div class="stafs">
-                        <img src="{% static 'assets/letter-b.png' %}" alt="User Image">
-                    </div>
-                    <div>
-                        <p> B </p>
-                    </div>
-                    <div>
-                        <p>${data.dept} </p>
-                    </div>
-                    <a href="${url}" class="data_but">${btn_name}</a>
-                    `;
-                    dataContainer.appendChild(userDiv);
-                }
+                })
                        
             })
             .catch(error => {

@@ -18,16 +18,14 @@
     {% csrf_token %}
     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="flex flex-col sm:flex-row gap-4">
-        <select name="dept" class="select select-bordered w-full sm:w-auto">
-          <option value="" disabled selected>dept</option>
-          <option value="CSE">be-cse</option>
-          <option value="IT">be-it</option>
-          <option value="ICE">be-ice</option>
-        </select>
+        <input  name="name" type="text" placeholder="staff name" class="input input-bordered w-full max-w-md" />
         <select name="gender" class="select select-bordered w-full sm:w-auto">
           <option value="" disabled selected>gender</option>
           <option value="1">male</option>          
           <option value="0">female</option>
+        </select>
+        <select name="dept" class="hidden">
+          <option value="{{request.user.dept}}" selected>CSE</option>
         </select>
       </div>
       <button type="submit" class="btn btn-primary">Search</button>

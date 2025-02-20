@@ -24,7 +24,7 @@ import pandas as pd
 FEEDBACK_TERMS = [
         "Aids Utilization", "Clarity", "Confidence", "Pacing", 
         "Discipline", "Engagement", "Accessibility", "Punctuality", 
-        "Guidance", "Teaching"
+        "Guidance", "Teaching","Overall"
     ]
 
 '''
@@ -655,17 +655,13 @@ class StudentSearch(APIView):
 class ClassSerchApi(APIView):
     def post(self,request):
         dept = request.data.get('dept',None)
-        section = request.data.get('sec',None)
-        sem = request.data.get('sem',None)
+        sem = int(request.data.get('sem',None))
         if not dept : return Response({'error':'department field missing'},status=status.HTTP_400_BAD_REQUEST)
         queryset = ClassStaff.objects.filter(dept=dept)
         if sem:
             queryset = queryset.filter(semester=sem)
-        else :
-            sem = queryset[0].semester
-        a = True if queryset.filter(section='A').exists() else False
-        b = True if queryset.filter(section='B').exists() else False
-        return Response({'dept':dept,'sem':sem,'A':a,'B':b})
+        queryset = queryset.values_list('section',flat=True).distinct()
+        return Response({'dept':dept,'sem':sem,'sections':list(queryset)})
 
 
 class FeedSearch(APIView):

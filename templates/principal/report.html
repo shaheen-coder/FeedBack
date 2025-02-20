@@ -200,12 +200,12 @@
             const tableBody = document.querySelector('.fl-table tbody');
             const data = json.data; 
             const terms = json.terms;
-            console.log(data);
+            console.log(`data : ${JSON.stringify(data)}`);
             // Clear existing rows (optional)
             tableBody.innerHTML = "";
 
             // Populate rows dynamically
-            let sno = 1;
+            let sno = 0;
             for (const [category, stats] of Object.entries(data)) {
                 const row = document.createElement('tr');
                 if (stats) {
@@ -222,16 +222,6 @@
                     tableBody.appendChild(row);
                 }
             }
-            const row = document.createElement('tr');
-            row.innerHTML = `
-            <td>${sno++}</td>
-            <td>overall</td>
-            <td>${data.count['5']}</td>
-            <td>${data.count['3']}</td>
-            <td>${data.count['1']}</td>
-            <td>NULL</td>
-        `;
-            tableBody.appendChild(row);
         })
         .catch(error => {
             console.error("Error fetching data:", error);

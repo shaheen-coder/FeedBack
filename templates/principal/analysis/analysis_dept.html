@@ -6,52 +6,70 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
 {% endblock url %}
 {% block header %}
 <title>Department</title>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.8/daisyui.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 {% endblock header %}
-{% block style %}
-<style>
-.transparent-box {
 
-    background-color: rgba(255, 255, 255, 0.8);
-    /* White with transparency */
-
-    border-radius: 10px;
-
-    padding: 20px;
-
-}
-
-.big-img {
-
-    max-width: 100%;
-
-    height: auto;
-
-}
-
-.btn-custom {
-
-    background-color: blue;
-
-    color: white;
-
-    margin: 10px 0;
-    /* Space between buttons */
-
-}
-</style>
-{% endblock style %}
 
 {% block content %}
-<div class="col-md-6 d-flex align-items-center justify-content-center">
-    <div class="transparent-box">
-        <a href="{% url 'ana-dept' 'CSE' %}" class="btn btn-custom w-100">CSE</a>
-        <a href="{% url 'ana-dept' 'ICE' %}" class="btn btn-custom w-100"> ICE</a>
-        <a href="{% url 'ana-dept' 'EEE' %}" class="btn btn-custom w-100">EEE</a>
-        <a href="{% url 'ana-dept' 'MECH' %}" class="btn btn-custom w-100">MECH</a>
-        <a href="{% url 'ana-dept' 'IT' %}" class="btn btn-custom w-100">IT</a>
-        <a href="{% url 'ana-dept' 'MCA' %}" class="btn btn-custom w-100">MCA</a>
-        <a href="{% url 'ana-dept' 'CLG' %}" class="btn btn-custom w-100">CLG</a>
+<div class="min-h-screen flex items-center justify-center bg-base-200">
+    <div class="card bg-base-100 shadow-xl rounded-lg p-8 w-full max-w-4xl mb-3">
+      <div class="grid grid-cols-2 gap-6">
+        <!-- CSE Button -->
+        <a href="{% url 'ana-dept' 'CSE' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <!-- Right: Text -->
+            <div class="text-right font-semibold">
+              CSE
+            </div>
+          </div>
+        </a>
+  
+        <!-- ICE Button -->
+        <a href="{% url 'ana-dept' 'ICE' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              ICE
+            </div>
+          </div>
+        </a>
+  
+        <!-- EEE Button -->
+        <a href="{% url 'ana-dept' 'EEE' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              EEE
+            </div>
+          </div>
+        </a>
+  
+        <!-- MECH Button -->
+        <a href="{% url 'ana-dept' 'MECH' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              MECH
+            </div>
+          </div>
+        </a>
+  
+        <!-- IT Button -->
+        <a href="{% url 'ana-dept' 'IT' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              IT
+            </div>
+          </div>
+        </a>
+  
+        <!-- CLG Button -->
+        <a href="{% url 'ana-dept' 'CLG' %}" class="btn btn-primary btn-lg w-full hover:shadow-lg transition duration-300">
+          <div class="grid grid-cols-2 items-center w-full">
+            <div class="text-right font-semibold">
+              CLG
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
-</div>
+  </div>   
 {% endblock content %}
-

@@ -41,13 +41,19 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                     <option value="1">male</option>
                     <option value="0">female</option>
                 </select>
+                {% if not request.user.is_hod %}
                 <select name="dept" class="filter_1">
                     <option value="">department</option>
                     <option value="CSE">be-cse</option>
+                    <option value="IT">be-it</option>
                     <option value="ICE">be-ice</option>
-                    <option value="MCA">mca</option>
+                    <option value="EEE">be-eee</option>
+                    <option value="ECE">be-ece</option>
+                    <option value="MECH">be-mech</option>
+                    <option value="CIVIL">be-civil</option>
+                    
                 </select>
-
+                {% endif %}
                 <button type="button" class="filter_but"  onclick="filterData()">Filter</button>
             </div>
         </div>
@@ -81,7 +87,9 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
         formData.forEach((value, key) => {
             requestData[key] = value;
         });
-
+        {% if request.user.is_hod %}
+        requestData['dept'] = "{{request.user.dept}}";
+        {% endif %}
         // Send API POST request
         fetch("{% url 'sss' %}", {
             method: 'POST',
