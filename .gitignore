@@ -1,6 +1,7 @@
 *.pyc
 *.pyo
 *.pyd
+test*.py
 __pycache__/
 core/__pycache__/
 feedback/__pycache__/
