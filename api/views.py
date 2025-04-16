@@ -672,12 +672,10 @@ class FeedSearch(APIView):
             datas = ClassStaffSerializer(datas).data
             return Response({'data':datas})
         else :
-            print(f'student : {student} and course id : {cid}')
             mcourse = True if cid == 1 else False 
             ecourse =  True if cid == 2 else False 
             oecourse =  True if cid == 3 else False 
             staffs = ClassStaff.objects.filter(dept=student.dept,semester=student.semester,section=student.section,subject__mcourse=mcourse,subject__ecourse=ecourse,subject__oecourse=oecourse)
-            print(f'datas : {staffs}')
             datas = ClassStaffSerializer(staffs,many=True).data
             return Response({'data':datas})
 

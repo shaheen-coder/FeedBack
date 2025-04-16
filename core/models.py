@@ -9,7 +9,6 @@ DEPT = (
     ('MECH','be-mech'),
     ('CIVIL','be-civil')
 )
-four_year = ['CSE','ICE','ECE','MECH','IT','CIVIL','EEE']
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not email:
@@ -48,16 +47,14 @@ class Student(models.Model):
     dob = models.DateField()
     dept = models.CharField(max_length=10,choices=DEPT)
     section = models.CharField(max_length=1)
-    semester = models.SmallIntegerField()
+    semester = models.SmallIntegerField() 
     status = models.BooleanField(default=True,null=True,blank=True)
     feed1_status = models.BooleanField(default=False,null=True,blank=True)
     feed2_status = models.BooleanField(default=False,null=True,blank=True)
     def save(self,*args,**kwargs):
         self.section = str(self.section).upper()
-        if self.semester == 9 and self.dept in four_year: 
-            self.status = False 
-        if self.semester == 5 and self.dept in two_year: 
-            self.status = False 
+        if self.semester == 9: 
+            self.status = False
         super().save(*args,**kwargs)
     def __str__(self):
         return f'{self.name[:7]} - {self.dept}'

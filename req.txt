@@ -1,6 +1,0 @@
-Django
-django-jazzmin
-django-import-export
-djangorestframework
-pandas
-

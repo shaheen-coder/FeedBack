@@ -16,7 +16,7 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
             {% csrf_token %}
             <div class="filters">
                 <select name="sem" class="filter_1">
-                    <option value="">year</option>
+                    <option value="">sem</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -30,8 +30,12 @@ style="font-size: 18px; padding: 10px 15px;">Home</a>
                 <select name="dept" class="filter_1">
                     <option value="">department</option>
                     <option value="CSE">be-cse</option>
+                    <option value="IT">be-it</option>
                     <option value="ICE">be-ice</option>
-                    <option value="MCA">mca</option>
+                    <option value="EEE">be-eee</option>
+                    <option value="ECE">be-ece</option>
+                    <option value="MECH">be-mech</option>
+                    <option value="CIVIL">be-civil</option>
                 </select>
 
                 <button type="button" class="filter_but"  onclick="filterData()">Filter</button>
