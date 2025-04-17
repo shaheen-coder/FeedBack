@@ -10,15 +10,11 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 #models 
 from core.models import Staff,Student,ClassStaff,Subject,FeedBack,TimeScheduler
 from core.models import CustomUser as User 
-from django.db.models import Q
-from django.db.models import Avg,Count
-from django.db import IntegrityError
+
 from core.models import DEPT
 #forms 
 # others
 from datetime import datetime
-import json 
-from collections import defaultdict
 import pandas as pd
 
 # gobale  
@@ -203,7 +199,7 @@ class AnalysisMode(TemplateView):
 class ReportMode(TemplateView):
     template_name = 'principal/report/reportmode.html'
 class PReport(View):
-    template_name = 'principal/report.html'
+    template_name = 'principal/report2.html'
     def get(self,request,mode,key,dept):
         if mode == 'class':
             return render(self.request,self.class_template_name,{'mode':mode,'dept':dept,'section':key})
@@ -221,7 +217,7 @@ class PReport(View):
 
 
 class ClassReport(View):
-    template_name = 'principal/report.html'
+    template_name = 'principal/report2.htmll'
     def get(self,request,mode,sec,sem,dept):
         return render(self.request,self.template_name,{'mode':mode,'dept':dept,'section':sec,'sem':sem})
 class DeptReport(View):
@@ -268,3 +264,6 @@ class CommentView(View):
     def get(self,request,sid):
         student = Student.objects.get(id=sid)
         return render(self.request,self.template_name,{'student':student,'sid':sid})
+    
+class ReportTest(TemplateView):
+    template_name = 'report2.html' 

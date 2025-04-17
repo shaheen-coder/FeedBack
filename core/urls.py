@@ -30,4 +30,7 @@ urlpatterns = [
     path("cadmin/comment/<int:sid>/", views.CommentView.as_view(), name="comt-view"),
     #auth view 
     path('auth/logout/',views.CustomLogoutView.as_view(),name='logout'),
+
+    #test 
+    path('test/report/',views.ReportTest.as_view(),name="test-report"),
 ]

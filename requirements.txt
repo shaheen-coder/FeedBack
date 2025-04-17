@@ -3,3 +3,4 @@ django-jazzmin
 pillow
 django-import-export
 djangorestframework
+pandas

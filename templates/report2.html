@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="csrf-token" content="{{ csrf_token }}">
+
+  <style>
+    .chart-box {
+      height: 200px;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+  <div class="max-w-7xl mx-auto p-6 space-y-6">
+
+    <!-- Info Box -->
+    <div class="bg-white rounded-xl shadow p-4 text-center text-lg font-semibold">
+      Name: <span class="font-bold">John Doe</span> |
+      Department: <span class="font-bold">CSE</span> |
+      Subject: <span class="font-bold">Data Structures</span>
+    </div>
+
+    <!-- 5x2 Grid of Bar Charts -->
+    <!-- 5x2 Grid of Bar Charts -->
+    <div class="grid grid-cols-5 gap-4">
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart1"></canvas></div>
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart2"></canvas></div>
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart3"></canvas></div>
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart4"></canvas></div>
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart5"></canvas></div>
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart6"></canvas></div>
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart7"></canvas></div>
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart8"></canvas></div>
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart9"></canvas></div>
+      <div class="bg-white p-2 rounded shadow h-[15vh] m-1 w-[15vw]"><canvas id="chart10"></canvas></div>
+    </div>
+
+
+    <!-- Table -->
+    <div class="overflow-auto bg-white rounded-xl shadow mt-6">
+      <table class="min-w-full table-auto border-collapse border border-gray-300 text-center">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="border border-gray-300 p-2">Cat</th>
+            <th class="border border-gray-300 p-2">5</th>
+            <th class="border border-gray-300 p-2">3</th>
+            <th class="border border-gray-300 p-2">1</th>
+            <th class="border border-gray-300 p-2">Avg</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+<script>
+  // helper to get a meta tag
+  function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const payload = { mode: 'staff', key: 1, dept: 'CSE', sem: null };
+    const csrftoken = getCSRFToken();
+
+    fetch('http://127.0.0.1:8000/api/report/', {
+      method: 'POST',
+      credentials: 'include',               // include session cookie
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,           // Django’s default header name
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(json => {
+        const { data, terms } = json;  // matches your Python response
+
+        // ▶︎ 3. Render Charts
+        for (let i = 1; i <= 10; i++) {
+          const stats = data[`cat_${i}`];
+          const ctx = document.getElementById(`chart${i}`).getContext('2d');
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['5s', '3s', '1s'],
+              datasets: [{
+                label: terms[i - 1],
+                data: [
+                  stats.percentage_5s,
+                  stats.percentage_3s,
+                  stats.percentage_1s
+                ],
+                backgroundColor: ['#3b82f6', '#10b981', '#ef4444']
+              }]
+            },
+            options: {
+              plugins: { legend: { display: false } },
+              scales: { y: { beginAtZero: true }, x: { display: false } },
+              responsive: true, maintainAspectRatio: false
+            }
+          });
+        }
+
+        // ▶︎ 4. Build Table Body
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = '';
+
+        Object.keys(data)
+          .filter(k => k.startsWith('cat_'))
+          .forEach((catKey, idx) => {
+            const stats = data[catKey];
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+          <td class="border p-2">${terms[idx]}</td>
+          <td class="border p-2">${stats.percentage_1s.toFixed(2)}%</td>
+          <td class="border p-2">${stats.percentage_3s.toFixed(2)}%</td>
+          <td class="border p-2">${stats.percentage_5s.toFixed(2)}%</td>
+          <td class="border p-2">${stats.average.toFixed(2)}</td>
+        `;
+            tbody.appendChild(tr);
+          });
+      })
+      .catch(err => console.error('Dashboard error:', err));
+  });
+</script>
+
+</html>

@@ -1,12 +1,6 @@
 from django.shortcuts import render
-from django.views.generic import View
-from django.http import JsonResponse
 from core.models import FeedBack,Staff,Subject,ClassStaff,Student
-from django.db.models import Count, FloatField, Value
-from django.db.models.functions import Coalesce, Cast
-from django.db.models.expressions import ExpressionWrapper
-from django.db.models import Prefetch
-from django.db.models import Sum
+
 #rest 
 from rest_framework.views import APIView
 from rest_framework.response import Response

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="csrf-token" content="{{ csrf_token }}">
+
+  <style>
+    .chart-box {
+      height: 200px;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+  <div class="max-w-7xl mx-auto p-6 space-y-6">
+
+    <!-- Info Box -->
+    <div class="bg-white rounded-xl shadow p-4 text-center text-lg font-semibold">
+      {% if mode == 'staff' %}
+      Name: <span class="font-bold">{{staff.name}}</span> 
+      Department: <span class="font-bold">{{staff.dept}}</span>
+      {% elif mode == 'staffsub' %}
+      Name: <span class="font-bold">{{staffd.staff.name}}</span> |
+      Department: <span class="font-bold">{{staffd.staff.dept}}</span> 
+      Subject Name : <span class="font-bold">{{staffd.subject.name}}</span>
+      Subject Code : <span class="font-bold">{{staffd.subject.code}}</span>
+      {% elif mode == 'class' %}
+      Department: <span class="font-bold">{{dept}}</span> |
+      semester: <span class="font-bold">{{sem}}</span> |
+      section : <span class="font-bold">{{section}}</span>
+      {% elif mode == 'staff' %}
+      Name: <span class="font-bold">{{student.name}}</span> |
+      Department: <span class="font-bold">{{student.dept}}</span>
+      semester : <span class="font-bold">{{student.semester}}</span>
+      section : <span class="font-bold">{{student.section}}</span> |
+      {% endif %}
+    </div>
+    <!-- 5x2 Grid of Bar Charts -->
+    <!-- 5x2 Grid of Bar Charts -->
+    <div class="grid grid-cols-5 gap-4 mb-10">
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart1"></canvas>
+        <h3 class="my-2">Communication</h3>
+      </div>
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart2"></canvas>
+        <h3 class="my-2">Clarity</h3>
+      </div>
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart3"></canvas>
+        <h3 class="my-2">Explanation</h3>
+      </div>
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart4"></canvas>
+        <h3 class="my-2">Audibility & Legibility</h3>
+      </div>
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart5"></canvas>
+        <h3 class="my-2">Innovation</h3>
+      </div>
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart6"></canvas>
+        <h3 class="my-2">Responsiveness</h3>
+      </div>
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart7"></canvas>
+        <h3 class="my-2">Approachability</h3>
+      </div>
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart8"></canvas>
+        <h3 class="my-2">Exam Preparation</h3>
+      </div>
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart9"></canvas>
+        <h3 class="my-2">Rapport</h3>
+      </div>
+      <div class="bg-white rounded shadow h-[15vh] m-1 w-[15vw] text-center p-2"><canvas id="chart10"></canvas>
+        <h3 class="my-2">Expertise</h3>
+      </div>
+    </div>
+
+    <div class="h-1 w-screen"></div>
+
+    <!-- Table -->
+    <div class="overflow-auto bg-white rounded-xl shadow">
+      <table class="min-w-full table-auto border-collapse border border-gray-300 text-center">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="border border-gray-300 p-2">Cat</th>
+            <th class="border border-gray-300 p-2">5</th>
+            <th class="border border-gray-300 p-2">3</th>
+            <th class="border border-gray-300 p-2">1</th>
+            <th class="border border-gray-300 p-2">Avg</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border p-2">Example</td>
+            <td class="border p-2">4</td>
+            <td class="border p-2">5</td>
+            <td class="border p-2">3</td>
+
+            <td class="border p-2">4.0</td>
+            <td class="border p-2">39</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Example</td>
+            <td class="border p-2">4</td>
+            <td class="border p-2">5</td>
+            <td class="border p-2">3</td>
+
+            <td class="border p-2">4.0</td>
+            <td class="border p-2">39</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Example</td>
+            <td class="border p-2">4</td>
+            <td class="border p-2">5</td>
+            <td class="border p-2">3</td>
+
+            <td class="border p-2">4.0</td>
+            <td class="border p-2">39</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Example</td>
+            <td class="border p-2">4</td>
+            <td class="border p-2">5</td>
+            <td class="border p-2">3</td>
+
+            <td class="border p-2">4.0</td>
+            <td class="border p-2">39</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Example</td>
+            <td class="border p-2">4</td>
+            <td class="border p-2">5</td>
+            <td class="border p-2">3</td>
+
+            <td class="border p-2">4.0</td>
+            <td class="border p-2">39</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Example</td>
+            <td class="border p-2">4</td>
+            <td class="border p-2">5</td>
+            <td class="border p-2">3</td>
+
+            <td class="border p-2">4.0</td>
+            <td class="border p-2">39</td>
+          </tr>
+          <tr>
+            <td class="border p-2">Example</td>
+            <td class="border p-2">4</td>
+            <td class="border p-2">5</td>
+            <td class="border p-2">3</td>
+
+            <td class="border p-2">4.0</td>
+            <td class="border p-2">39</td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</script>
+<script>
+  // helper to get a meta tag
+  function getCSRFToken() {
+    const tokenElement = document.querySelector('meta[name="csrf-token"]');
+    if (!tokenElement) {
+      console.error('CSRF token meta tag not found!');
+      return null;
+    }
+    return tokenElement.getAttribute('content');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    const csrftoken = getCSRFToken();
+    if (!csrftoken) {
+      console.error('Cannot proceed without CSRF token.');
+      return;
+    }
+
+    fetch("{% url 'api-report' %}", {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        {% if mode != 'dept' %}
+          mode: "{{mode}}",
+      {% endif %}
+        {% if mode == 'class' %}
+  key: "{{section}}",
+    sem: { { sem } },
+  dept: "{{dept}}"
+  {% elif mode == 'staffsub' %}
+  key: "{{key}}",
+    dept: "{{dept}}",
+      sem: null
+  {% elif mode == 'stu' %}
+  key: {{ student.id }},
+  sem: null,
+    dept: "{{dept}}"
+  {% elif mode == 'dept' %}
+  dept: "{{key}}"
+  {% else %}
+  key: {{ id }},
+  sem: null,
+    dept: "{{dept}}"
+  {% endif %}
+      })
+    })
+      .then(res => {
+    if (!res.ok) {
+      return res.text().then(text => {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}. Response body: ${text}`);
+      });
+    }
+    return res.json();
+  })
+    .then(json => {
+      if (!json || !json.data || !json.terms) {
+        console.error('Invalid data structure received from API:', json);
+        throw new Error('Invalid data structure received from API.');
+      }
+      const { data, terms } = json;
+
+      const categoryKeys = Object.keys(data).filter(k => k.startsWith('cat_'));
+      // This warning will persist until the backend sends matching counts
+      if (terms.length !== categoryKeys.length) {
+        console.warn(`Data Inconsistency: Terms count (${terms.length}) does not match data category count (${categoryKeys.length}). Check the API response.`);
+      }
+      // Check against expected charts (can be adjusted if HTML changes)
+      const expectedCharts = 10;
+      if (terms.length !== expectedCharts || categoryKeys.length !== expectedCharts) {
+        console.warn(`Mismatch between terms count (${terms.length}), data categories (${categoryKeys.length}), and expected charts (${expectedCharts}).`);
+      }
+
+
+      // ▶︎ 3. Render Charts
+      for (let i = 1; i <= expectedCharts; i++) { // Loop based on expected charts
+        const catKey = `cat_${i}`;
+        if (!data[catKey]) {
+          console.warn(`Data for ${catKey} not found in API response. Skipping chart ${i}.`);
+          continue;
+        }
+        if (i > terms.length) {
+          console.warn(`Term for chart index ${i - 1} not found. Using fallback label.`);
+        }
+
+        const stats = data[catKey];
+        const termLabel = terms[i - 1] || `Category ${i}`;
+
+        // --- FIX IS HERE ---
+        // Changed 'const' to 'let' for ctx to allow reassignment
+        let ctx = document.getElementById(`chart${i}`);
+        // --- END OF FIX ---
+
+        if (!ctx) {
+          console.error(`Canvas element with id chart${i} not found.`);
+          continue;
+        }
+        // Now this assignment is valid because ctx is declared with 'let'
+        const chartContext = ctx.getContext('2d');
+        if (!chartContext) {
+          console.error(`Could not get 2D context for chart${i}.`);
+          continue;
+        }
+
+        const percentage_5s = stats.percentage_5s ?? 0;
+        const percentage_3s = stats.percentage_3s ?? 0;
+        const percentage_1s = stats.percentage_1s ?? 0;
+
+        new Chart(chartContext, { // Use chartContext here
+          type: 'bar',
+          data: {
+            labels: ['5s', '3s', '1s'],
+            datasets: [{
+              label: termLabel,
+              data: [
+                percentage_5s,
+                percentage_3s,
+                percentage_1s
+              ],
+              backgroundColor: ['#3b82f6', '#10b981', '#ef4444']
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false }, title: { display: true, text: termLabel } },
+            scales: { y: { beginAtZero: true, max: 100 }, x: { display: false } },
+            responsive: true, maintainAspectRatio: false
+          }
+        });
+      }
+
+      // ▶︎ 4. Build Table Body
+      const tbody = document.querySelector('table tbody');
+      if (!tbody) {
+        console.error('Table body element not found.');
+        return;
+      }
+      tbody.innerHTML = '';
+
+      // Loop through the category keys actually present in the data
+      categoryKeys.forEach((catKey, idx) => {
+        if (idx >= terms.length) {
+          console.warn(`Term for table row index ${idx} (key: ${catKey}) not found. Using fallback label.`);
+        }
+
+        const stats = data[catKey];
+        // Use the term corresponding to the index of the key in the filtered list
+        const termLabel = terms[idx] || `Category ${idx + 1}`;
+
+        const percentage_1s = stats.percentage_1s ?? 0;
+        const percentage_3s = stats.percentage_3s ?? 0;
+        const percentage_5s = stats.percentage_5s ?? 0;
+        const average = stats.average ?? 0;
+
+        const tr = document.createElement('tr');
+        // Ensure table data order matches headers (5, 3, 1, Avg)
+        tr.innerHTML = `
+              <td class="border border-gray-300 p-2">${termLabel}</td>
+              <td class="border border-gray-300 p-2">${percentage_5s.toFixed(2)}%</td>
+              <td class="border border-gray-300 p-2">${percentage_3s.toFixed(2)}%</td>
+              <td class="border border-gray-300 p-2">${percentage_1s.toFixed(2)}%</td>
+              <td class="border border-gray-300 p-2">${average.toFixed(2)}</td>
+            `;
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(err => {
+      console.error('Dashboard error:', err); // Log the actual error object
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4'; // Added margin top
+      // Display a clearer message including the error type if available
+      errorDiv.textContent = `Failed to load dashboard data: ${err.name || 'Error'} - ${err.message || 'Unknown error'}`;
+      const gridElement = document.querySelector('.grid.grid-cols-5'); // Target the chart grid
+      if (gridElement) {
+        // Insert error message before the grid
+        gridElement.parentNode.insertBefore(errorDiv, gridElement);
+      } else {
+        // Fallback: append to body or another prominent element
+        document.body.appendChild(errorDiv);
+      }
+    });
+  });
+</script>
+
+</html>
